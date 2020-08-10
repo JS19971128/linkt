@@ -86,7 +86,7 @@
 					{title:'平台直营',bg:require('@/static/images/shop/shape3.png'),url:'',key:'selfManage'},
 					{title:'一乡一品',bg:require('@/static/images/shop/shape4.png'),url:'',key:''},
 					{title:'免税商品',bg:require('@/static/images/shop/shape5.png'),url:'',key:''},
-					{title:'夺宝专区',bg:require('@/static/images/shop/shape6.png'),url:'',key:'draw'}
+					// {title:'夺宝专区',bg:require('@/static/images/shop/shape6.png'),url:'',key:'draw'}
 				],
 				//产品数据
 				navList:[],
