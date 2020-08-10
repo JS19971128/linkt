@@ -1,0 +1,537 @@
+{
+	"pages": [
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "商城首页",
+				"enablePullDownRefresh":true
+			}
+		},
+		{
+			"path": "pages/find/index",
+			"style": {
+				"navigationBarTitleText": "发现",
+				"enablePullDownRefresh":true
+			}
+		},
+		{
+			"path": "pages/order/index",
+			"style": {
+				"navigationBarTitleText": "订单"
+			}
+		},
+		{
+			"path": "pages/coupon/index",
+			"style": {
+				"navigationBarTitleText": "优惠券",
+				"enablePullDownRefresh":true
+			}
+		},
+		{
+			"path": "pages/my/index",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "注册"
+			}
+		},
+		{
+			"path": "pages/payment/index",
+			"style": {
+				"navigationBarTitleText": "支付"
+			}
+		},
+		{
+			"path": "pages/payFailed/index",
+			"style": {
+				"navigationBarTitleText": "支付"
+			}
+		},
+		{
+			"path": "pages/payAbout/payIndex/payIndex",
+			"style": {
+				"navigationBarTitleText": "结算"
+			}
+		},
+		{
+			"path": "pages/shopList/index",
+			"style": {
+				"navigationBarTitleText": "店铺列表"
+			}
+		},
+		{
+			"path": "pages/shopDetails/index",
+			"style": {
+				"navigationBarTitleText": "店铺详情"
+			}
+		}
+	],
+	"subPackages":[
+		{
+			"root":"userPages",
+			"pages":[
+				{
+					"path": "orderDetails/index",
+					"style": {
+						"navigationBarTitleText": "订单详情"
+					}
+				},
+				{
+					"path": "agreement/index",
+					"style": {
+						"navigationBarTitleText": "服务协议"
+					}
+				},
+				{
+					"path": "orderRecording/index",
+					"style": {
+						"navigationBarTitleText": "订单"
+					}
+				},
+				{
+					"path": "userInfo/index",
+					"style": {
+						"navigationBarTitleText": "个人资料"
+					}
+				},
+				{
+					"path": "friends/index",
+					"style": {
+						"navigationBarTitleText": "我的好友"
+					}
+				},
+				{
+					"path": "inviteCode/index",
+					"style": {
+						"navigationBarTitleText": "我的邀请码"
+					}
+				},
+				{
+					"path": "mobile/index",
+					"style": {
+						"navigationBarTitleText": "绑定手机号"
+					}
+				},
+				{
+					"path": "announcement/index",
+					"style": {
+						"navigationBarTitleText": "公告"
+					}
+				}
+				// #ifdef MP-ALIPAY
+				,
+				{
+					"path": "realname/index",
+					"style": {
+						"navigationBarTitleText": "实名信息"
+					}
+				}
+				// #endif
+			]
+		},
+		{
+			"root":"businessPages",
+			"pages":[
+				// #ifdef MP-WEIXIN
+				{
+					"path":"businessApplyOne/index",
+					"style": {
+						"navigationBarTitleText": "商家入驻"
+					}
+				},
+				{
+					"path":"businessApplyTwo/index",
+					"style": {
+						"navigationBarTitleText": "商家入驻"
+					}
+				},
+				{
+					"path":"businessApplyThree/index",
+					"style": {
+						"navigationBarTitleText": "商家入驻"
+					}
+				},
+				{
+					"path":"businessApplyFour/index",
+					"style": {
+						"navigationBarTitleText": "商家入驻"
+					}
+				},
+				{
+					"path":"wxBusinessApply/index",
+					"style": {
+						"navigationBarTitleText": "商家入驻"
+					}
+				},
+				// #endif
+				{
+					"path":"review/index",
+					"style": {
+						"navigationBarTitleText": "商家入驻"
+					}
+				},
+				// #ifdef MP-ALIPAY
+				{
+					"path":"aliBusinessApplyOne/index",
+					"style": {
+						"navigationBarTitleText": "商家入驻"
+					}
+				},
+				{
+					"path":"aliBusinessApplyTwo/index",
+					"style": {
+						"navigationBarTitleText": "商家入驻"
+					}
+				},
+				{
+					"path":"aliBusinessApplyThree/index",
+					"style": {
+						"navigationBarTitleText": "商家入驻"
+					}
+				},
+				{
+					"path":"aliContract/index",
+					"style": {
+						"navigationBarTitleText": "商家入驻"
+					}
+				},
+				{
+					"path":"aliContractStatus/index",
+					"style": {
+						"navigationBarTitleText": "商家入驻"
+					}
+				},
+				{
+					"path":"aliSign/index",
+					"style": {
+						"navigationBarTitleText": "商家入驻"
+					}
+				},
+				// #endif
+				{
+					"path":"businessCenter/index",
+					"style": {
+						"navigationBarTitleText": "商家中心"
+					}
+				},
+				{
+					"path":"createPoster/index",
+					"style": {
+						"navigationBarTitleText": "生成海报"
+					}
+				},
+				{
+					"path":"businessQrcode/index",
+					"style": {
+						"navigationBarTitleText": "商家二维码"
+					}
+				},
+				{
+					"path":"setCoupon/index",
+					"style": {
+						"navigationBarTitleText": "设置优惠券"
+					}
+				},
+				{
+					"path":"storeManagement/index",
+					"style": {
+						"navigationBarTitleText": "店铺管理"
+					}
+				},
+				{
+					"path":"customerList/index",
+					"style": {
+						"navigationBarTitleText": "我的客户"
+					}
+				},
+				{
+					"path":"createChainStore/index",
+					"style": {
+						"navigationBarTitleText": "创建连锁店"
+					}
+				},
+				{
+					"path":"chainStoreDetails/index",
+					"style": {
+						"navigationBarTitleText": "连锁店详情"
+					}
+				},
+				{
+					"path":"shop/index",
+					"style": {
+						"navigationBarTitleText": "商城管理"
+					}
+				},
+				{
+					"path":"shop/goodsManage",
+					"style": {
+						"navigationBarTitleText": "商品管理",
+						"enablePullDownRefresh":true
+					}
+				},
+				{
+					"path":"shop/order",
+					"style": {
+						"navigationBarTitleText": "商城订单",
+						"enablePullDownRefresh":true
+					}
+				},
+				{
+					"path":"shop/releaseGoods/index",
+					"style": {
+						"navigationBarTitleText": "发布商品"
+					}
+				},
+				{
+					"path":"shop/releaseGoods/UPImg",
+					"style": {
+						"navigationBarTitleText": "图片上传"
+					}
+				},
+				{
+					"path":"shop/releaseGoods/specs",
+					"style": {
+						"navigationBarTitleText": "商品规格"
+					}
+				},
+				{
+					"path":"shop/releaseGoods/price",
+					"style": {
+						"navigationBarTitleText": "商品价格"
+					}
+				},
+				{
+					"path":"shop/releaseGoods/stock",
+					"style": {
+						"navigationBarTitleText": "商品库存"
+					}
+				},
+				{
+					"path":"shop/releaseGoods/details",
+					"style": {
+						"navigationBarTitleText": "商品描述"
+					}
+				}
+			]
+		},
+		{
+			"root":"operationPages",
+			"pages":[
+				{
+					"path":"operationCenter/index",
+					"style": {
+						"navigationBarTitleText": "运营中心"
+					}
+				},
+				{
+					"path":"areaBusiness/index",
+					"style": {
+						"navigationBarTitleText": "区域商家",
+						"enablePullDownRefresh":true
+					}
+				},
+				{
+					"path":"entryBusiness/index",
+					"style": {
+						"navigationBarTitleText": "进件商家"
+					}
+				},
+				{
+					"path":"entryBusinessDetails/index",
+					"style": {
+						"navigationBarTitleText": "商家入驻"
+					}
+				},
+				{
+					"path":"areaExpand/index",
+					"style": {
+						"navigationBarTitleText": "区域拓展员"
+					}
+				},
+				{
+					"path":"operator/index",
+					"style": {
+						"navigationBarTitleText": "运营人员"
+					}
+				},
+				{
+					"path":"addOperator/index",
+					"style": {
+						"navigationBarTitleText": "运营人员设置"
+					}
+				},
+				{
+					"path":"businessApproval/index",
+					"style": {
+						"navigationBarTitleText": "商家详情"
+					}
+				},
+				{
+					"path":"profitList/index",
+					"style": {
+						"navigationBarTitleText": "分润明细",
+						"enablePullDownRefresh":true
+					}
+				},
+				{
+					"path":"profitDetails/index",
+					"style": {
+						"navigationBarTitleText": "分润详情"
+					}
+				},
+				{
+					"path":"authorize/index",
+					"style": {
+						"navigationBarTitleText": "电子授权牌"
+					}
+				},
+				{
+					"path":"addAuthorize/index",
+					"style": {
+						"navigationBarTitleText": "添加电子授权牌"
+					}
+				},
+				{
+					"path":"editAuthorize/index",
+					"style": {
+						"navigationBarTitleText": "修改电子授权牌"
+					}
+				},
+				{
+					"path":"authorization/index",
+					"style": {
+						"navigationBarTitleText": "授权书"
+					}
+				}
+			]
+		},
+		{
+			"root":"shoppingPages",
+			"pages":[
+				{
+					"path": "commodity/index",
+					"style": {
+						"navigationBarTitleText": "商品"
+					}
+				},
+				{
+					"path": "order/index",
+					"style": {
+						"navigationBarTitleText": "订单详情"
+					}
+				},
+				{
+					"path": "search/index",
+					"style": {
+						"navigationBarTitleText": "搜索"
+					}
+				},
+				{
+					"path": "classify/index",
+					"style": {
+						"navigationBarTitleText": "分类"
+					}
+				},
+				{
+					"path": "cart/index",
+					"style": {
+						"navigationBarTitleText": "购物车",
+						"enablePullDownRefresh":true
+					}
+				},
+				{
+					"path": "payment/index",
+					"style": {
+						"navigationBarTitleText": "支付" 
+					}
+				},
+				{
+					"path": "goodsList/index",
+					"style": {
+						"navigationBarTitleText": "商品列表",
+						"enablePullDownRefresh":true
+					}
+				},
+				{
+					"path": "prefecture/index",
+					"style": {
+						"navigationBarTitleText": "专区",
+						"enablePullDownRefresh":true
+					}
+				},
+				{
+					"path": "raidersZone/index",
+					"style": {
+						"navigationBarTitleText": "夺宝专区",
+						"enablePullDownRefresh":true
+					}
+				},
+				{
+					"path": "shop/index",
+					"style": {
+						"navigationBarTitleText": "店铺首页"	
+					}
+				}
+			]
+		}
+	],
+	"preloadRule":{
+		"userPages/orderDetails/index":{
+			"network":"all",
+			"packages":["__APP__"]
+		},
+		"businessPages/businessApplyOne/index":{
+			"network":"all",
+			"packages":["userPages"]
+		},
+		"operationPages/operationCenter/index":{
+			"network":"all",
+			"packages":["businessPages"]
+		},
+		"shoppingPages/commodity/index":{
+			"network":"all",
+			"packages":["shoppingPages"]
+		}
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#FFFFFF"
+	},
+	"tabBar": {
+		"color": "#333333",
+		"selectedColor":"#FF9733",
+		"list":[
+			{
+				"pagePath":"pages/index/index",
+				"iconPath":"static/images/tabbar/wechat/shopping.png",
+				"selectedIconPath":"static/images/tabbar/wechat/shopping_on.png",
+				"text":"商城"
+				
+			},
+			{
+				"pagePath":"pages/find/index",
+				"iconPath":"static/images/tabbar/wechat/sy.png",
+				"selectedIconPath":"static/images/tabbar/wechat/sy_on.png",
+				"text":"发现"
+			},
+			{
+				"pagePath":"pages/coupon/index",
+				"iconPath":"static/images/tabbar/wechat/coupon.png",
+				"selectedIconPath":"static/images/tabbar/wechat/coupon_on.png",
+				"text":"优惠券"
+			},
+			{
+				"pagePath":"pages/my/index",
+				"iconPath":"static/images/tabbar/wechat/my.png",
+				"selectedIconPath":"static/images/tabbar/wechat/my_on.png",
+				"text":"我的"
+			}
+		]
+	}
+}
