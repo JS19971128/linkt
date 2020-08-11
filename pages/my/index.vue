@@ -39,15 +39,18 @@
 			
 			<view class="coupon_buddy">
 				<view class="number_text">
-					<view class="number">*</view>
+					<view class="number" v-if="balanceValue">{{balanceValue.couponsCount}}</view>
+					<view class="number" v-else>*</view>
 					<view class="text">优惠券</view>
 				</view>
 				<view class="number_text" @click="goWhere('/userPages/friends/index')">
-					<view class="number">*</view>
+					<view class="number" v-if="balanceValue">{{balanceValue.friendsCount}}</view>
+					<view class="number" v-else>*</view>
 					<view class="text">我的好友</view>
 				</view>
 				<view class="number_text">
-					<view class="number">*</view>
+					<view class="number" v-if="balanceValue">{{balanceValue.balance}}</view>
+					<view class="number" v-else>*</view>
 					<view class="text">零钱包</view>
 				</view>
 			</view>
@@ -187,6 +190,7 @@
 	export default{
 		data() {
 			return {
+				balanceValue: '', // 优惠券，好友数量
 				phone:'0898-65324520', //联系电话
 				levelImg:'../../static/images/my/star.png',
 				merchantEntry: '商家入驻',
@@ -303,11 +307,7 @@
 				this.$fly.get(`/user/getUserData?userId=${this.userInfo.id}`)
 				.then(res=>{
 					if(res.code == 0){
-						if(res.data){
-							
-						}else{
-							
-						}
+						this.balanceValue = res.data;
 					}else{
 						
 					}
