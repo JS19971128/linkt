@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
-		<view class="top flex_center" @click="goWhereWithReg('/userPages/userInfo/index')">
-			<view class="user_info flex_between">
+		<view class="top" >
+			<view class="user_info flex_between" @click="goWhereWithReg('/userPages/userInfo/index')">
 				<view class="info-left flex_center">
 					<!-- #ifdef MP-WEIXIN -->
 					<view class="avatar">
@@ -36,9 +36,27 @@
 				</view>
 				<view class="more flex_center"><image src="../../static/images/common/more.png" mode="widthFix"></image></view>
 			</view>
+			
+			<view class="coupon_buddy">
+				<view class="number_text">
+					<view class="number" v-if="balanceValue">{{balanceValue.couponsCount}}</view>
+					<view class="number" v-else>*</view>
+					<view class="text">优惠券</view>
+				</view>
+				<view class="number_text" @click="goWhere('/userPages/friends/index')">
+					<view class="number" v-if="balanceValue">{{balanceValue.friendsCount}}</view>
+					<view class="number" v-else>*</view>
+					<view class="text">我的好友</view>
+				</view>
+				<view class="number_text">
+					<view class="number" v-if="balanceValue">{{balanceValue.balance}}</view>
+					<view class="number" v-else>*</view>
+					<view class="text">零钱包</view>
+				</view>
+			</view>
 		</view>
-		<view class="main">
-			<view class="bar fz-14">
+		<view class="main mart_top">
+			<view class="fz-14">
 				<!-- 我的订单 -->
 				<view class="item flex_between" @click="goWhereWithReg('/userPages/orderRecording/index')">
 					<view class="title flex_center">
@@ -72,7 +90,7 @@
 					</view>
 				</view>
 				<!-- 我的好友 -->
-				<view class="item flex_between" @click="goWhere('/userPages/friends/index')">
+				<!-- <view class="item flex_between" @click="goWhere('/userPages/friends/index')">
 					<view class="title flex_center">
 						<image src="../../static/images/my/friends.png" mode="widthFix"></image>
 						<text>我的好友</text>
@@ -80,7 +98,7 @@
 					<view class="more">
 						<image src="../../static/images/common/more_gray.png" mode="widthFix"></image>
 					</view>
-				</view>
+				</view> -->
 			</view>
 			<view class="bar fz-14">
 				<!-- 商家入驻 -->
@@ -173,6 +191,7 @@
 	export default{
 		data() {
 			return {
+				balanceValue: '', // 优惠券，好友数量
 				phone:'0898-65324520', //联系电话
 				levelImg:'../../static/images/my/star.png',
 				merchantEntry: '商家入驻',
@@ -288,6 +307,16 @@
 					}
 				})
 			},
+			getUserData() {
+				this.$fly.get(`/user/getUserData?userId=${this.userInfo.id}`)
+				.then(res=>{
+					if(res.code == 0){
+						this.balanceValue = res.data;
+					}else{
+						
+					}
+				})
+			},
 			businessApply(){ //商户入驻
 				if(this.userInfo.inviteCode){
 					uni.navigateTo({
@@ -342,6 +371,7 @@
 				// 更新运营人员类型，商家状态，是否实名
 				this.getOperator();
 				this.getBussinessStatus();
+				this.getUserData();
 				if(this.userInfo.aliRealName){
 					this.isRealName = true;
 				}else{
@@ -355,9 +385,50 @@
 <style lang="scss" scoped>
 	.top{
 		width: 100%;
-		height: 100px;
-		background: url('../../static/images/my/bg.png') no-repeat;
+		height: 280rpx;
+		background: url('../../static/images/my/bg_min.png') no-repeat;
 		background-size: 100% 100%;
+		display: flex;
+		justify-content: center;
+		padding-top: 40rpx;
+		box-sizing: border-box;
+		position: relative;
+		.coupon_buddy {
+			position: absolute;
+			width:710rpx;
+			height:180rpx;
+			background:rgba(255,255,255,1);
+			box-shadow:0px 2px 6px 0px rgba(0, 0, 0, 0.15);
+			border-radius:10rpx;
+			position: absolute;
+			left: 20rpx;
+			bottom: -90rpx;
+			padding: 30rpx 0;
+			box-sizing: border-box;
+			display: flex;
+			.number_text {
+				flex: 1;
+				text-align: center;
+				&:nth-child(2) {
+					border-left: 1px solid #DEDEDE;
+					border-right: 1px solid #DEDEDE;
+				}
+				.number {
+					font-size:42rpx;
+					font-family:'PingFang SC';
+					font-weight:bold;
+					color:rgba(255,152,52,1);
+					margin-top: 10rpx;
+					margin-bottom: 10rpx;
+				}
+				.text {
+					font-size:26rpx;
+					font-family:'PingFang SC';
+					font-weight:400;
+					color:rgba(153,153,153,1);
+				}
+			}
+		}
 		.user_info{
 			width: 90%;
 			height: 60px;
@@ -401,6 +472,9 @@
 			color: #F04242;
 			line-height: 24rpx;
 		}
+	}
+	.mart_top {
+		margin-top: 120rpx;
 	}
 	.main{
 		color: #333333;

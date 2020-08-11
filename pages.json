@@ -15,6 +15,14 @@
 			}
 		},
 		{
+			"path": "pages/raidersZone/index",
+			"style": {
+				"navigationBarTitleText": "夺宝专区",
+				"enablePullDownRefresh":false
+				
+			}
+		},
+		{
 			"path": "pages/order/index",
 			"style": {
 				"navigationBarTitleText": "订单"
@@ -482,13 +490,6 @@
 					}
 				},
 				{
-					"path": "raidersZone/index",
-					"style": {
-						"navigationBarTitleText": "夺宝专区",
-						"enablePullDownRefresh":true
-					}
-				},
-				{
 					"path": "shop/index",
 					"style": {
 						"navigationBarTitleText": "店铺首页"	
@@ -539,10 +540,10 @@
 				"text":"发现"
 			},
 			{
-				"pagePath":"pages/coupon/index",
-				"iconPath":"static/images/tabbar/wechat/coupon.png",
-				"selectedIconPath":"static/images/tabbar/wechat/coupon_on.png",
-				"text":"优惠券"
+				"pagePath":"pages/raidersZone/index",
+				"iconPath":"static/images/tabbar/wechat/treasure.png",
+				"selectedIconPath":"static/images/tabbar/wechat/treasure_on.png",
+				"text":"夺宝"
 			},
 			{
 				"pagePath":"pages/my/index",
