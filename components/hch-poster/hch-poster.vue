@@ -50,12 +50,6 @@ export default {
     }
   },
   props: {
-    canvasAttr:{
-      type:Object,
-      default:{
-       
-      }
-    },
     posterBgFlag:{//是否展示海报背景图
       type:Boolean,
       default:false
@@ -64,6 +58,10 @@ export default {
       type:Boolean,
       default:false
     },
+	codeUrl: {
+		type: String,
+		default:''
+	}
   },
   mounted() {
     this.system = this.getSystem();
@@ -79,35 +77,35 @@ export default {
       this.canvasShow = true
       Object.assign(this.attrs,this.canvasAttr)
       this.attrs={
-        marginLR: this.attrs.marginLR*this.systemScale,
-        marginTB: this.attrs.marginTB*this.systemScale,
-        innerLR: this.attrs.innerLR*this.systemScale,
-        innerTB: this.attrs.innerTB*this.systemScale,
-        radius: this.attrs.radius,
+        marginLR: 20*this.systemScale,
+        marginTB: 40*this.systemScale,
+        innerLR: 20*this.systemScale,
+        innerTB: 20*this.systemScale,
+        radius: '',
         fillColor: this.attrs.fillColor,
-        posterRatio: this.attrs.posterRatio,
+        posterRatio: 1.45,
         posterImgUrl:this.attrs.posterImgUrl,
-        title: this.attrs.title,
+        title: [],
         titleFontSize: this.attrs.titleFontSize*this.systemScale,
         titleLineHeight: this.attrs.titleLineHeight*this.systemScale,
-        posterCodeUrl: this.attrs.posterCodeUrl,
-        codeWidth: this.attrs.codeWidth*this.systemScale,
-        codeRatio: this.attrs.codeRatio,
-        codeRadius: this.attrs.codeRadius,
-        codeMT: this.attrs.codeMT*this.systemScale,
-        codeName: this.attrs.codeName,
-        codeNameMT: this.attrs.codeNameMT*this.systemScale,
+        posterCodeUrl: this.codeUrl,
+        codeWidth: 0.45*this.systemScale,
+        codeRatio: 1.136,
+        codeRadius: '',
+        codeMT: 119*this.systemScale,
+        codeName: '链客',
+        codeNameMT: 20*this.systemScale,
         tips: this.attrs.tips,
-        posterBgUrl: this.attrs.posterBgUrl,
-        codeML: this.attrs.codeML*this.systemScale,
-        desTextMT:this.attrs.desTextMT*this.systemScale,
-        desTextML:this.attrs.desTextML*this.systemScale,
+        posterBgUrl: 'http://xlzx.oss-cn-shenzhen.aliyuncs.com/user/20200810185436904_bg_zf-min.png',
+        codeML: 84*this.systemScale,
+        desTextMT:70,
+        desTextML:240,
       }
       // if(this.simpleFlag){
 		  // 简单版海报
-        this.creatSimplePoster(this.attrs)
+        // this.creatSimplePoster(this.attrs)
       // }else{
-        // this.creatPoster(this.attrs)
+        this.creatPoster(this.attrs)
       // }
     },
     /**
@@ -146,13 +144,19 @@ export default {
       if(this.posterBgFlag){
          await this.creatBgImg(ctx,canvasAttr)
       }
-      let imgAttr = await this.creatImg(ctx,canvasAttr)
+	  // // 绘制小程序码
+	  this.creatSimpleCode(ctx,canvasAttr,canvasAttr.marginTB)
+	  wx.hideLoading()
+	  // // 绘制纵向文本
+	  // this.creatVerticalTitle(ctx,canvasAttr)
+	  // wx.hideLoading()
+      // let imgAttr = await this.creatImg(ctx,canvasAttr)
       // 绘制标题 textY 绘制文本的y位置
       let textY = this.creatTitle(ctx,canvasAttr)
       // 绘制小程序码
-      this.creatCode(ctx,canvasAttr,textY)
+      // this.creatCode(ctx,canvasAttr,textY)
       // 小程序的名称
-      this.creatCodeText(ctx,canvasAttr,canvasAttr.codeName,textY,16,"#2f1709")
+      // this.creatCodeText(ctx,canvasAttr,canvasAttr.codeName,textY,16,"#2f1709")
       // 长按/扫描识别查看商品
       this.creatCodeText(ctx,canvasAttr,canvasAttr.tips,textY+30,14,"#2f1709")
       wx.hideLoading()
@@ -183,26 +187,7 @@ export default {
      * @param {number} desTextML 纵向文本描述 左边距
      * @author: hch
      */
-    async creatSimplePoster(canvasAttr){
-      wx.showLoading({
-        title: "生成海报中..."
-      })
-      const ctx = wx.createCanvasContext("myCanvas",this)
-      ctx.draw()//清空之前的海报
-      // 根据设备屏幕大小和距离屏幕上下左右距离，及圆角绘制背景
-      this.roundRect(ctx,canvasAttr.marginLR,canvasAttr.marginTB,this.system.w-2*canvasAttr.marginLR,(this.scale*this.system.w)-2*canvasAttr.marginTB-200, (this.system.w-2*canvasAttr.marginLR)*canvasAttr.radius,canvasAttr.fillColor );
-	  console.log(this.posterBgFlag);
-	  console.log(canvasAttr);
-	  // 是否展示背景图
-      if(this.posterBgFlag){
-         await this.creatBgImg(ctx,canvasAttr)
-      }
-      // 绘制小程序码
-      this.creatSimpleCode(ctx,canvasAttr,canvasAttr.marginTB)
-      // 绘制纵向文本
-      this.creatVerticalTitle(ctx,canvasAttr)
-      wx.hideLoading()
-    },
+
     /**
       * 
       * @param {CanvasContext} ctx canvas上下文

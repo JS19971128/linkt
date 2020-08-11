@@ -11,7 +11,7 @@
 			<view class="flex_center btn fz-16" @click="saveImg">保存至相册</view>
 		</view>
 		
-		<hchPoster ref="hchPoster" @cancel="canvasCancel" :simpleFlag="simpleFlag" :posterBgFlag="posterBgFlag" :canvasAttr.sync="posterObj" />
+		<hchPoster ref="hchPoster" @cancel="canvasCancel" :simpleFlag="simpleFlag" :codeUrl='codeUrl' :posterBgFlag="posterBgFlag" />
 	</view>
 </template>
 
@@ -24,23 +24,7 @@
 				posterBgFlag: true,//是否展示海报背景图
 				simpleFlag: false,//是否展示简单版海报
 				posterObj:{},
-				posterSimpleData:{//简单版的海报
-				  marginLR: 40,
-				  marginTB: 40,
-				  radius: 0.05,
-				  title: ["夏天的风","带着这清香的果橙味"],
-				  titleFontSize: 16,
-				  titleLineHeight: 25,
-				  posterCodeUrl: "https://huangchunhongzz.gitee.io/imgs/poster/code.png",
-				  codeWidth: 0.2,
-				  codeRatio: 1,
-				  codeRadius: 0.5,
-				  codeMT: 50,
-				  posterBgUrl:'http://xlzx.oss-cn-shenzhen.aliyuncs.com/user/20200810185436904_bg_zf-min.png',
-				  codeML:140,
-				  desTextMT:70,
-				  desTextML:240,
-				},
+				
 			}
 		},
 		components: {
@@ -49,27 +33,7 @@
 		methods:{
 			saveImg(){
 				this.simpleFlag = true
-				this.posterObj = this.posterSimpleData
 				this.$refs.hchPoster.posterShow()
-				// uni.getImageInfo({
-				// 	src:this.codeUrl,
-				// 	success: (res) => {
-				// 		console.log(res)
-				// 		uni.saveImageToPhotosAlbum({
-				// 			filePath:res.path,
-				// 			success: (res) => {
-				// 				console.log(res)
-				// 			}
-				// 		})
-				// 	},
-				// 	fail: (err) => {
-				// 		console.log(err)
-				// 		uni.showToast({
-				// 			title:err.message,
-				// 			icon:'none'
-				// 		})
-				// 	}
-				// })
 			}
 		},
 		onLoad:function(query){

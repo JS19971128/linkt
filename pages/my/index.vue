@@ -299,6 +299,20 @@
 					}
 				})
 			},
+			getUserData() {
+				this.$fly.get(`/user/getUserData?userId=${this.userInfo.id}`)
+				.then(res=>{
+					if(res.code == 0){
+						if(res.data){
+							
+						}else{
+							
+						}
+					}else{
+						
+					}
+				})
+			},
 			businessApply(){ //商户入驻
 				if(this.userInfo.inviteCode){
 					uni.navigateTo({
@@ -353,6 +367,7 @@
 				// 更新运营人员类型，商家状态，是否实名
 				this.getOperator();
 				this.getBussinessStatus();
+				this.getUserData();
 				if(this.userInfo.aliRealName){
 					this.isRealName = true;
 				}else{
