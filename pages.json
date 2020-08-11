@@ -113,7 +113,7 @@
 				{
 					"path": "mobile/index",
 					"style": {
-						"navigationBarTitleText": "绑定手机号"
+						"navigationBarTitleText": "同步手机号"
 					}
 				},
 				{
@@ -163,6 +163,24 @@
 				},
 				{
 					"path":"wxBusinessApply/index",
+					"style": {
+						"navigationBarTitleText": "商家入驻"
+					}
+				},
+				{
+					"path":"wxBusinessApply/index2",
+					"style": {
+						"navigationBarTitleText": "商家入驻"
+					}
+				},
+				{
+					"path":"wxBusinessApply/index3",
+					"style": {
+						"navigationBarTitleText": "商家入驻"
+					}
+				},
+				{
+					"path":"wxBusinessApply/index4",
 					"style": {
 						"navigationBarTitleText": "商家入驻"
 					}

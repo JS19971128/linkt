@@ -3,7 +3,7 @@
 		<view class="top fz-14">
 			<view class="flex_center item">
 				<view class="">手机号码</view>
-				<input type="text" v-model="mobile" placeholder="请输入手机号码" placeholder-style="font-size:28rpx;line-height:28rpx;color:#BCBCBC"/>
+				<input type="text" v-model="mobile" placeholder="请输入真实有效的手机号" placeholder-style="font-size:28rpx;line-height:28rpx;color:#BCBCBC"/>
 			</view>
 		</view>
 		<view class="top fz-14">
@@ -14,10 +14,10 @@
 			<view class="code fz-14" @click="gainCode">{{codeText}}</view>
 		</view>
 		<view class="notice fz-14">
-			<view class="">因支付宝收益的功能需要使用到您的真实姓名，所以请务必填写真实的姓名，否则将会导致您收益出现缺失的情况。</view>
-			<view class="">如果因执意使用虚假名字而导致收益缺失，平台将不承担相关责任。</view>
+			<view class="">同步手机号后，可以同步保存您的优惠券与夺宝券数量，为您的消费保障权益喔~</view>
 		</view>
-		<view class="btn flex_center fz-14" @click="submit">保存</view>
+		<!-- <button class="btn item flex_center fz-14" open-type="getUserInfo" @getuserinfo="getWxUserInfo">开启我的链客智慧商圈</button> -->
+		<view class="btn flex_center fz-14" @click="checking">保存</view>
 	</view>
 </template>
 
@@ -28,6 +28,8 @@
 				mobile:'',  //手机号
 				code:'', //验证码
 				codeText:'',  //验证码文字
+				timer:true,
+				userInfo:{}
 			}
 		},
 		methods:{
@@ -44,7 +46,7 @@
 				}
 				this.$fly.post('/base/smssend2',{
 					account: this.mobile,
-					type: 1
+					type: 4
 				})
 				.then(res=>{
 					if(res.code == 0){
@@ -63,7 +65,65 @@
 				})
 				.catch(err=>{})
 			},
-			submit(){
+			getWxUserInfo($event){ //获取微信用户信息
+				if($event.detail.userInfo){
+					this.userInfo = $event.detail.userInfo;
+					this.checking();
+				}else{
+					uni.showToast({
+						title:'请授权才能完成同步'
+					})
+				}
+			},
+			async checking(){
+				if(!this.timer){
+					setTimeout(()=>{
+						this.timer = true
+					},3000)
+				}
+				this.timer = false
+				try{
+					const regPhone = /^((1[0-9]{2})+\d{8})$/;
+					if(!regPhone.test(this.mobile)){
+						uni.showToast({
+							title:'手机号格式不正确'
+						})
+						return
+					}
+					let params = {
+					  "account": this.mobile,
+					  "loginType": 0,
+					  "openId": this.$store.state.userInfo.openId,
+					  "validationCode": Number(this.code)
+					}
+					uni.showLoading({
+						title:'加载中'
+					})
+					let userBindPhone = await this.$fly.post('/user/userBindPhone',params)
+					uni.hideLoading();
+					if(userBindPhone.code!=0){
+						uni.showToast({
+						    title: userBindPhone.message,
+							icon:'none',
+						    duration: 2000
+						});
+						return false;
+					}
+					this.$store.commit('SETUSERINFO',userBindPhone.data)
+					uni.switchTab({
+						url:'/pages/index/index'
+					})
+				}catch(e){
+					uni.showToast({
+					    title: '同步手机号码失败！',
+						icon:'none',
+					    duration: 2000
+					});
+				}finally{
+					uni.hideLoading();
+				}
+				
+				
 				
 			}
 		},

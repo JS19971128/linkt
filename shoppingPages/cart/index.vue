@@ -23,14 +23,14 @@
 							</view>
 							<view class="goods-detail-home">
 								<view class="goods-detail-title">{{goods.commodityName}}</view>
-								<view class="goods-detail-specs" v-if="goods.specName && goods.stockStatus == 'onSale' && goods.commodityDeleteFlag == 0">
+								<view class="goods-detail-specs" v-if="goods.stockStatus=='onSale' && goods.commodityDeleteFlag == 0 && goods.specName">
 									<view class="goods-detail-specs-info" @click.stop="onClickSpec(goods.id,goods.commodityId,goods.specId,goods.commodityNum)">
 										<text class="specs-name">{{goods.specName}}</text>
 										<image class="specs-more" src="../../static/images/shop/more-up.png" mode="widthFix"></image>
 									</view>
 									<view class="goods-detail-specs-zw"></view>
 								</view>
-								<view class="goods-detail-info" v-if="goods.specNam && goods.stockStatus == 'onSale' && goods.commodityDeleteFlag == 0">
+								<view class="goods-detail-info" v-if="goods.stockStatus=='onSale' && goods.commodityDeleteFlag == 0 && goods.specName">
 									<view class="info-price">
 										<text class="info-price-f">￥</text>
 										{{goods.priceSale}}

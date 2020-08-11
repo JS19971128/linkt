@@ -2,12 +2,12 @@
 	<view class="container">
 		<view class="fz-12 top">
 			<view class="step flex_center">
-				<view class="step-item active flex_center">
+				<view class="step-item active flex_center" @click="clickURl('/businessPages/wxBusinessApply/index')">
 					<view class="num flex_center">1</view>
 					<view class="">法人信息</view>
 				</view>
 				<view class="line">----</view>
-				<view class="step-item flex_center" @click="clickURl('/businessPages/wxBusinessApply/index2')">
+				<view class="step-item active flex_center">
 					<view class="num flex_center">2</view>
 					<view class="">企业信息</view>
 				</view>
@@ -26,28 +26,68 @@
 			</view>
 		</view>
 		<view class="info fz-14">
-			<view class="title">法人信息</view>
+			<view class="title">企业信息</view>
 			<view class="main">
-				<!-- 法人姓名 -->
+				<!-- 经营类型 -->
 				<view class="item flex_center">
-					<view class="item-name">法人姓名</view>
-					<view class="item-content">
-						<input type="text" v-model="legalPersonFrom.legalPerson" placeholder="请输入法人姓名" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+					<view class="item-name">经营类型</view>
+					<view class="item-content ">
+						<!-- 经营类型选择 -->
+						<picker mode="selector" :range="jylx" range-key="label" @change="bindTypeChange($event,'jylx')">
+							<view class="flex_between">
+								<view>
+								<input type="text" v-model="jylxLabel" disabled placeholder="请选择商户的经营类型" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+								</view>
+								<view>
+									<image src="../../static/images/common/xiala.png" mode="widthFix"></image>
+								</view>
+							</view>
+						</picker>
 					</view>
 				</view>
-				<!-- 证件号码 -->
+				<!-- 经营类目 -->
 				<view class="item flex_center">
-					<view class="item-name">身份证号</view>
-					<view class="item-content">
-						<input type="text" v-model="legalPersonFrom.legalPersonID" placeholder="请输入法人18位身份证号码" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+					<view class="item-name">经营类目</view>
+					<view class="item-content ">
+						<!-- 经营类目选择 -->
+						<picker mode="selector" :range="jylm" range-key="label" @change="bindTypeChange($event,'jylm')">
+							<view class="flex_between">
+								<view>
+								<input type="text" v-model="jylmLabel" disabled placeholder="请选择经营类目与行业" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+								</view>
+								<view>
+									<image src="../../static/images/common/xiala.png" mode="widthFix"></image>
+								</view>
+							</view>
+						</picker>
 					</view>
 				</view>
-				<!-- 证件照 -->
+				<!-- 商家名称 -->
 				<view class="item flex_center">
-					<view class="item-name">身份证照</view>
+					<view class="item-name">商家名称</view>
+					<view class="item-content">
+						<input type="text" v-model="signName" placeholder="必须与营业执照上的名称一致" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+					</view>
+				</view>
+				<!-- 商家简称 -->
+				<view class="item flex_center">
+					<view class="item-name">商家简称</view>
+					<view class="item-content">
+						<input type="text" v-model="showName" placeholder="请输入10个字以内的简称" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+					</view>
+				</view>
+				<!-- 注册号 -->
+				<view class="item flex_center">
+					<view class="item-name">注册号</view>
+					<view class="item-content">
+						<input type="text" v-model="businessLicense" placeholder="请输入营业执照上的注册号" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+					</view>
+				</view>
+				<!-- 经营资质 -->
+				<view class="item flex_center">
+					<view class="item-name">经营资质</view>
 					<view class="item-content flex_center fz-12">
 						<view class="upload flex_center" v-for="(item,index) in imgArr" :key="index">
-							<!-- 正面 -->
 							<view class="uploadPic flex_center" v-if="item.credentialUrl" @click="upload(index,'credentialUrl')">
 								<image :src="item.credentialUrl" mode="aspectFit"></image>
 							</view>
@@ -58,37 +98,39 @@
 						</view>
 					</view>
 				</view>
-				<!-- 有效期 -->
+				<!-- 经营期限 -->
 				<view class="item flex_center">
-					<view class="item-name">有效期</view>
-					<view class="item-content flex_center">
-						<view class="">
-							<!-- 有效期选择 -->
-							<picker mode="date" @change="startDateChange">
-								<view class="flex_between" :class="{date:legalPersonFrom.idCardStartDate=='yyyymmdd',active:legalPersonFrom.idCardStartDate!=='yyyymmdd'}">{{legalPersonFrom.idCardStartDate}}</view>
-							</picker>
-						</view>
-						<view class="line">—</view>
-						<view class="">
-							<!-- 有效期选择 -->
-							<picker mode="date" @change="stopDateChange">
-								<view class="flex_between" :class="{date:legalPersonFrom.idCardEndDate=='yyyymmdd',active:legalPersonFrom.idCardEndDate!=='yyyymmdd'}">{{legalPersonFrom.idCardEndDate}}</view>
-							</picker>
-						</view>
+					<view class="item-name">经营期限</view>
+					<view class="item-content ">
+						<!-- 经营类型选择 -->
+						<picker mode="selector" :range="jyqx" range-key="label" @change="bindTypeChange($event,'jyqx')">
+							<view class="flex_between">
+								<view>
+								<input type="text" v-model="jyqxLabel" disabled placeholder="请选择经营期限" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+								</view>
+								<view>
+									<image src="../../static/images/common/xiala.png" mode="widthFix"></image>
+								</view>
+							</view>
+						</picker>
 					</view>
 				</view>
-				<!-- 联系电话 -->
+				<!-- 起始时间 -->
 				<view class="item flex_center">
-					<view class="item-name">联系电话</view>
+					<view class="item-name">起始时间</view>
 					<view class="item-content">
-						<input type="number" v-model="legalPersonFrom.linkPhone" placeholder="请输入联系电话" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+						<picker mode="date" @change="startDateChange">
+							<view class="flex_between" :class="{date:businessDateStart=='请选择营业执照上的经营起始时间',active:businessDateStart!=='请选择营业执照上的经营起始时间'}">{{businessDateStart}}</view>
+						</picker>
 					</view>
 				</view>
-				<!-- 联系邮箱 -->
-				<view class="item flex_center">
-					<view class="item-name">联系邮箱</view>
+				<!-- 期限时间 -->
+				<view class="item flex_center" v-if="jyqxLabel!=='长期'">
+					<view class="item-name">期限时间</view>
 					<view class="item-content">
-						<input type="text" v-model="legalPersonFrom.email" placeholder="请输入联系邮箱" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+						<picker mode="date" @change="stopDateChange">
+							<view class="flex_between" :class="{date:businessDateLimit=='请选择营业执照上的经营期限时间',active:businessDateLimit!=='请选择营业执照上的经营期限时间'}">{{businessDateLimit}}</view>
+						</picker>
 					</view>
 				</view>
 			</view>
@@ -98,19 +140,34 @@
 </template>
 
 <script>
+	import jylm from '@/common/util/wx_jylm.js'
 	export default{
 		data() {
-			return {				
+			return {
+				jylx:[{label:'个体户',type:'INDIVIDUALBISS'},{label:'企业',type:'ENTERPRISE'}],
+				jylxLabel:'',
+				MerchantType:'',
 				
+				jylm:[],
+				jylmLabel:'',
+				MerchantCategory:'',
+				
+				jyqx:[{label:'长期'},{label:'短期'}],
+				jyqxLabel:'',
+				
+				signName:'',
+				showName:'',
+				businessLicense:'',
+				businessDateStart:'请选择营业执照上的经营起始时间',
+				businessDateLimit:'请选择营业执照上的经营期限时间'
 			}
 		},
 		computed:{
 			imgArr(){
 				let arr = [];
 				let obj = {
-					FRONT_OF_ID_CARD:true,
-					BACK_OF_ID_CARD:true,
-					HANDHELD_OF_ID_CARD:true
+					BUSINESS_LICENSE:true,
+					PERMIT_FOR_BANK_ACCOUNT:true
 				};
 				for(let i of this.$store.state.shop.merchantCredential){
 					if(obj[i.credentialType]){
@@ -121,12 +178,28 @@
 			},
 			merchantCredential(){
 				return this.$store.state.shop.merchantCredential
-			},
-			legalPersonFrom(){
-				return this.$store.state.shop.legalPerson
-			},
+			}
 		},
 		methods:{ 
+			bindTypeChange($event,type){
+				if(type==='jylx'){
+					this.jylxLabel = this.jylx[$event.detail.value].label;
+					this.MerchantType = this.jylx[$event.detail.value].type;
+				}else if(type==='jylm'){
+					this.jylmLabel = this.jylm[$event.detail.value].label;
+					this.MerchantCategory = this.jylm[$event.detail.value].type;
+				}else if(type==='jyqx'){
+					this.jyqxLabel = this.jyqx[$event.detail.value].label
+				}
+			},
+			// 选择起始日期
+			startDateChange($event){
+				this.businessDateStart = $event.detail.value;
+			},
+			// 选择结束日期
+			stopDateChange($event){
+				this.businessDateLimit = $event.detail.value;
+			},
 			// 上传证件照
 			upload(index,type){
 				uni.chooseImage({
@@ -158,29 +231,24 @@
 					}
 				})
 			},
-			// 选择起始日期
-			startDateChange($event){
-				this.legalPersonFrom.idCardStartDate = $event.detail.value;
-			},
-			// 选择结束日期
-			stopDateChange($event){
-				this.legalPersonFrom.idCardEndDate = $event.detail.value;
-			},
 			clickURl(url){
 				uni.redirectTo({
 					url
 				})
 			},
 			next(){
-				let {legalPersonFrom,imgArr,merchantCredential} = this;
+				const {MerchantType,MerchantCategory,jyqxLabel,signName,showName,businessLicense,businessDateStart,businessDateLimit,imgArr,merchantCredential} = this;
 				let data = {
-					...legalPersonFrom,
-					linkman:legalPersonFrom.legalPerson,
-					servicePhone:legalPersonFrom.linkPhone,
-					idType:'IDCARD',
-					accountName:legalPersonFrom.legalPerson,
-					bindMobile:legalPersonFrom.linkPhone,
-					linkManId:legalPersonFrom.legalPersonID,
+					merchantType:MerchantType,
+					merchantCategory:MerchantCategory,
+					jyqxLabel,
+					signName,
+					showName,
+					businessLicense,
+					businessDateStart
+				}
+				if(jyqxLabel!=='长期'){
+					data.businessDateLimit = businessDateLimit;
 				}
 				
 				for(let i in data){
@@ -212,22 +280,27 @@
 					}
 				}
 				
-				console.log(merchantCredential,data)
-				this.$store.commit('SETLEGALPERSON',data);
+				this.$store.commit('SETENTERPRISE',data);
 				this.$store.commit('SETMERCHANTCREDENTIAL',merchantCredential);
 				
+				console.log(merchantCredential,data)
 				uni.navigateTo({
-					url:"/businessPages/wxBusinessApply/index2"
+					url:"/businessPages/wxBusinessApply/index3"
 				})
 			}
+		},
+		onLoad() {
+			this.jylm = jylm
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
 	.container{
-		padding-bottom: 100rpx;
+		padding-bottom: 130rpx;
 		box-sizing: border-box;
+		min-height: 100vh;
+		height: auto;
 	}
 	.top{
 		padding: 50rpx 0;
@@ -286,10 +359,10 @@
 					width: 80%;
 					input{
 						width: 90%;
-						padding: 0;
-						font-size: 28rpx;
 						line-height: 28rpx;
+						height: 28rpx;
 						color: #333;
+						font-size: 28rpx;
 					}
 					image{
 						width: 24rpx;
@@ -333,14 +406,14 @@
 	}
 	.btn{
 		width: 670rpx;
-		height: 38px;
-		border-radius: 19px;
+		height: 74rpx;
+		border-radius: 37rpx;
 		background: #FF9D11;
 		color: #fff;
 		position: fixed;
 		left: 50%;
 		transform: translateX(-50%);
 		bottom: 30rpx;
-		z-index: 99;
+		z-index: 999;
 	}
 </style>
