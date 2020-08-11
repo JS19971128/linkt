@@ -38,19 +38,19 @@
 			</view>
 			
 			<view class="coupon_buddy">
-				<view class="number_text">
+				<view class="number_text" @click="goWhere('/pages/coupon/index')">
 					<view class="number" v-if="balanceValue">{{balanceValue.couponsCount}}</view>
-					<view class="number" v-else>*</view>
+					<view class="number" v-else>***</view>
 					<view class="text">优惠券</view>
 				</view>
 				<view class="number_text" @click="goWhere('/userPages/friends/index')">
 					<view class="number" v-if="balanceValue">{{balanceValue.friendsCount}}</view>
-					<view class="number" v-else>*</view>
+					<view class="number" v-else>***</view>
 					<view class="text">我的好友</view>
 				</view>
-				<view class="number_text">
+				<view class="number_text" @click="goWhereWithReg('/userPages/coinPurse/index')">
 					<view class="number" v-if="balanceValue">{{balanceValue.balance}}</view>
-					<view class="number" v-else>*</view>
+					<view class="number" v-else>***</view>
 					<view class="text">零钱包</view>
 				</view>
 			</view>

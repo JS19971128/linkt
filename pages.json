@@ -77,7 +77,8 @@
 				"navigationBarTitleText": "店铺详情"
 			}
 		}
-	],
+       
+    ],
 	"subPackages":[
 		{
 			"root":"userPages",
@@ -128,6 +129,42 @@
 					"path": "announcement/index",
 					"style": {
 						"navigationBarTitleText": "公告"
+					}
+				},
+				{
+					"path": "coinPurse/index",
+					"style": {
+						"navigationBarTitleText": "零钱包"
+					}
+				},
+				{
+					"path": "coinList/index",
+					"style": {
+						"navigationBarTitleText": "零钱包"
+					}
+				},
+				{
+					"path": "withdrawList/index",
+					"style": {
+						"navigationBarTitleText": "零钱包"
+					}
+				},
+				{
+					"path": "bankCardList/index",
+					"style": {
+						"navigationBarTitleText": "银行卡列表"
+					}
+				},
+				{
+					"path": "addBankCard/index",
+					"style": {
+						"navigationBarTitleText": "添加银行卡"
+					}
+				},
+				{
+					"path": "detailedDetails/index",
+					"style": {
+						"navigationBarTitleText": "明细详情"
 					}
 				}
 				// #ifdef MP-ALIPAY
