@@ -3,6 +3,8 @@ import App from './App'
 import store from './store'
 import fly from './API'
 import util from './common/util/util.js'
+import websocket from './common/util/websocket'
+
 
 Vue.prototype.$store = store
 // 封装ajax
@@ -32,7 +34,7 @@ const getWxCode = ()=>{
 	})
 }
 // 用拿到的code请求后台登录接口
-const wxLogin = ()=>{
+const wxLogin = async ()=>{
 	getWxCode().then(code=>{
 		uni.showLoading({
 			title:'加载中'
@@ -51,6 +53,7 @@ const wxLogin = ()=>{
 			// 保存用户信息
 			// store.state.userInfo = res.data;
 			store.commit('SETUSERINFO',res.data)
+			websocket.init(res.data);
 		})
 		.catch(err=>{
 			uni.showToast({

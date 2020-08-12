@@ -8,8 +8,57 @@ const state = {
 		linkPhone:'',
 		email:'',
 	}, //法人信息
-	enterprise:{},//企业
-	bank:{},
+	enterprise:{
+		jylxLabel:'',
+		merchantType:'',
+		jylxIndex:0,
+		jylxKey:'个体工商户',
+		
+		jylmLabel:'',
+		merchantCategory:'',
+		jylmIndex:0,
+		jylmKey:'线下零售',
+		
+		jyhyIndex:0,
+		jyhyLabel:'',
+		industryTypeCode:'',
+		
+		regionCode:'',
+		addressName:'',
+		
+		jyqxLabel:'',
+		jyqxIndex:0,
+		longTerm:true,
+		
+		signName:'',
+		showName:'',
+		businessLicense:'',
+		businessDateStart:'请选择营业执照上的经营起始时间',
+		businessDateLimit:'请选择营业执照上的经营期限时间'
+	},//企业
+	bank:{
+		settleBankType:'',
+		bankName:'',
+		bankCode:'',
+		accountNo:''
+	},
+	shopIndex:{
+		shopBusinessId:'',
+		shopBusinessName:'',
+		shopStartTime:'开始时间',
+		shopStopTime:'结束时间',
+		profits:'',
+		areaCode:'',
+		areaCodeCity:'',
+		areaCodeAreas:'',
+		area:'',
+		address:'',
+		positive:'', //门头照
+		piclist:'', //内景照
+		defaultRegion:["浙江省","杭州市","滨江区"],
+		latitude:'',
+		longitude:''
+	},
 	merchantCredential:[
 		{
 			credentialType:'FRONT_OF_ID_CARD',
@@ -48,6 +97,9 @@ const mutations = {
 	},
 	SETBANK(state,n){
 		state.bank = n;
+	},
+	SETSHOPINDEX(state,n){
+		state.shopIndex = n;
 	},
 	SETMERCHANTCREDENTIAL(state,n){
 		state.merchantCredential = n;
