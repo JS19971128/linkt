@@ -533,6 +533,27 @@
 					}
 				}
 			]
+		},
+		{
+			"root":"treasure",
+			"pages":[
+				{
+					"path": "myTreasure/index",
+					"style": {
+						"navigationBarTitleText": "我的夺宝"
+					}
+				},{
+					"path": "productDetails/index",
+					"style": {
+						"navigationBarTitleText": "夺宝商品"	
+					}
+				},{
+					"path": "winningOrder/index",
+					"style": {
+						"navigationBarTitleText": "中奖订单"	
+					}
+				}
+			]
 		}
 	],
 	"preloadRule":{
@@ -551,6 +572,10 @@
 		"shoppingPages/commodity/index":{
 			"network":"all",
 			"packages":["shoppingPages"]
+		},
+		"treasure/myTreasure/index":{
+			"network":"all",
+			"packages":["treasure"]
 		}
 	},
 	"globalStyle": {
