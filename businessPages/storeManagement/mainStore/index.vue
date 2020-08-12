@@ -111,6 +111,13 @@
 						</view>
 					</view>
 				</view>
+				<!-- 语音播报 -->
+				<view class="item flex_center">
+					<view class="item-name">语音播报</view>
+					<view class="item-content">
+						<switch :checked="isOpenVoice" @change="switch1Change" />
+					</view>
+				</view>
 			</view>
 		</view>
 		<view class="btn fz-14 flex_center" @click="checkForm">保存修改</view>
@@ -151,6 +158,7 @@
 				picList:[],
 				showPop:false,
 				defaultRegion:["浙江省","杭州市","滨江区"],
+				isOpenVoice:true,
 			}
 		},
 		computed:{
@@ -175,9 +183,13 @@
 				this.picList = val.shopImageUrl?val.shopImageUrl.split(','):[];
 				this.latitude = val.latitude;
 				this.longitude = val.longitude;
+				this.isOpenVoice = val.isOpenVoice;
 			}
 		},
 		methods:{
+			switch1Change(e){
+				this.isOpenVoice = e.detail.value;
+			},
 			onConfirm($event){
 				
 			},
@@ -324,6 +336,7 @@
 					area: this.area,
 					latitude: this.latitude,
 					longitude: this.longitude,
+					isOpenVoice:this.isOpenVoice
 				}
 				this.$fly.post(`/merchant/completionInfo`,params)
 				.then(res=>{

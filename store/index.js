@@ -4,14 +4,21 @@ Vue.use(Vuex)
 import goods from '@/store/modules/goods.js';//商城
 import order from '@/store/modules/order.js';//订单
 import shop from '@/store/modules/shop.js';//商家入驻进件
+
+
 const store = new Vuex.Store({
    state: {
-		// baseUrl:'http://chainguest.3zone.net/api',
+		baseUrl:'https://chainguest.3zone.net/api',
 		// baseUrl:'https://v.liankedl.com/api',
 		// baseUrl:'http://192.168.3.197:8566',  //shuguang
 		// baseUrl:'http://192.168.3.150:8569', //xianwen
-		baseUrl:'http://192.168.3.148:8566', //liangrongcai
+		// baseUrl:'http://192.168.3.148:8566', //liangrongcai
 		// mapKey:'LUSBZ-5JYWP-NVMDR-VC5OY-FZI3F-OFBLO',
+		
+		webSocket:'wss://chainguest.3zone.net/api',
+		baiduKey:'tPpZUMTqGG5xjz5XtPYH1kIH',
+		baiduSecret:'DcMMBTbGsZ171GAlr8bAEWETyheAZw8L',
+		
 		mapKey:'L5ZBZ-4NTCP-UZ7D6-LXYJE-2KLKV-TLFPJ',
 		scanCodeQuery:'',
 		userInfo:{},

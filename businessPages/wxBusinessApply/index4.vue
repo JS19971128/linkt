@@ -12,12 +12,12 @@
 					<view class="">企业信息</view>
 				</view>
 				<view class="line">----</view>
-				<view class="step-item active flex_center">
+				<view class="step-item active flex_center" @click="clickURl('/businessPages/wxBusinessApply/index3')">
 					<view class="num flex_center">3</view>
 					<view class="">银行信息</view>
 				</view>
 				<view class="line">----</view>
-				<view class="step-item active flex_center" @click="clickURl('/businessPages/wxBusinessApply/index4')">
+				<view class="step-item active flex_center">
 					<view class="num flex_center">
 						<uni-icons class="flex_center" type="checkmarkempty" :size="24" color="#999999"></uni-icons>
 					</view>
@@ -36,7 +36,7 @@
 						<picker mode="selector" :range="industryList" range-key="name" @change="bindChange">
 							<view class="flex_between">
 								<view>
-									<input type="text" v-model="shopBusinessName" disabled placeholder="请选择所属行业" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+									<input type="text" v-model="shopIndex.shopBusinessName" disabled placeholder="请选择所属行业" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 								</view>
 								<view>
 									<image src="../../static/images/common/xiala.png" mode="widthFix"></image>
@@ -51,7 +51,7 @@
 					<view class="item-content">
 						<view class="flex_between">
 							<view class="rate">
-								<input v-model="profits" type="text" placeholder="请输入5%-30%范围内的让利比率" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+								<input v-model="shopIndex.profits" type="text" placeholder="请输入5%-30%范围内的让利比率" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 							</view>
 							<view>%</view>
 						</view>
@@ -61,7 +61,7 @@
 				<view class="item flex_center" @click="show=true">
 					<view class="item-name">所在地区</view>
 					<view class="item-content">
-						<input type="text" v-model="area" disabled placeholder="请选择" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+						<input type="text" v-model="shopIndex.area" disabled placeholder="请选择" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 					</view>
 				</view>
 				<!-- 详细地址 -->
@@ -69,7 +69,7 @@
 					<view class="item-name">详细地址</view>
 					<view class="item-content flex_center">
 						<image class="location" src="../../static/images/common/location.png" mode="widthFix"></image>
-						<view class="address" v-if="address">{{address}}</view>
+						<view class="address" v-if="shopIndex.address">{{shopIndex.address}}</view>
 						<view class="flex_center" v-else>
 							<input type="text" :disabled="true" placeholder="点击前往地图选择" placeholder-style="color:#CBCBCB;font-size:14px;line-height:14px"/>
 						</view>
@@ -82,14 +82,14 @@
 						<view class="">
 							<!-- 营业时间选择 -->
 							<picker mode="time" @change="startDateChange">
-								<view class="flex_between" :class="{date:shopStartTime=='开始时间',active:shopStartTime!=='开始时间'}">{{shopStartTime}}</view>
+								<view class="flex_between" :class="{date:shopIndex.shopStartTime=='开始时间',active:shopIndex.shopStartTime!=='开始时间'}">{{shopIndex.shopStartTime}}</view>
 							</picker>
 						</view>
 						<view class="line">—</view>
 						<view class="">
 							<!-- 营业时间选择 -->
 							<picker mode="time" @change="stopDateChange">
-								<view class="flex_between" :class="{date:shopStopTime=='结束时间',active:shopStopTime!=='结束时间'}">{{shopStopTime}}</view>
+								<view class="flex_between" :class="{date:shopIndex.shopStopTime=='结束时间',active:shopIndex.shopStopTime!=='结束时间'}">{{shopIndex.shopStopTime}}</view>
 							</picker>
 						</view>
 					</view>
@@ -100,8 +100,8 @@
 					<view class="item-content flex_center fz-12">
 						<view class="upload flex_center">
 							<!-- 正面 -->
-							<view class="uploadPic flex_center" v-if="positive">
-								<image :src="positive" mode="aspectFit"></image>
+							<view class="uploadPic flex_center" v-if="shopIndex.positive">
+								<image :src="shopIndex.positive" mode="aspectFit"></image>
 							</view>
 							<view class="frame flex_center" v-else @click="upload('positive')">
 								<uni-icons class="flex_center" type="plusempty" :size="24" color="#CBCBCB"></uni-icons>
@@ -116,8 +116,8 @@
 						<!-- 反面 -->
 						<view class="upload" style="flex-direction: column;display: flex;">
 							<!-- 正面 -->
-							<view class="uploadPic flex_center" v-if="piclist">
-								<image :src="piclist" mode="aspectFit"></image>
+							<view class="uploadPic flex_center" v-if="shopIndex.piclist">
+								<image :src="shopIndex.piclist" mode="aspectFit"></image>
 							</view>
 							<view class="frame flex_center" v-else @click="upload('piclist')">
 								<uni-icons class="flex_center" type="plusempty" :size="24" color="#CBCBCB"></uni-icons>
@@ -128,13 +128,14 @@
 				</view>
 			</view>
 		</view>
-		<view class="btn fz-14 flex_center" @click="submit">提交审核</view>
+		<view class="btn fz-14 flex_center bc" @click="submit()">保存</view>
+		<view class="btn fz-14 flex_center" @click="submit(true)">提交审核</view>
 		<!-- 地区选择 -->
 		<w-picker
 			class="address"
 			mode="region" 
 			:visible.sync="show" 
-			:value="defaultRegion"
+			:value="shopIndex.defaultRegion"
 			default-type="label"
 			@confirm="onConfirm($event,'region')" 
 			@cancel="onCancel" 
@@ -148,25 +149,7 @@
 		data() {
 			return {
 				industryList:[],
-				shopBusinessId:'',
-				shopBusinessName:'',
-				
-				shopStartTime:'开始时间',
-				shopStopTime:'结束时间',
-				
-				profits:'',
-				areaCode:'',
-				areaCodeCity:'',
-				areaCodeAreas:'',
-				area:'',
-				address:'',
-				positive:'', //门头照
-				piclist:'', //内景照
 				show:false,
-				defaultRegion:["浙江省","杭州市","滨江区"],
-				contactAddress:'',
-				latitude:'',
-				longitude:''
 			}
 		},
 		computed:{
@@ -184,16 +167,19 @@
 			},
 			userId(){
 				return this.$store.state.userInfo.id || 22222234;
+			},
+			shopIndex(){
+				return this.$store.state.shop.shopIndex;
 			}
 		},
 		methods:{ 
 			onConfirm($event){ //省市区选择
 				console.log($event)
-				this.area = $event.obj.province.label + ' ' + $event.obj.city.label + ' ' + $event.obj.area.label;
+				this.shopIndex.area = $event.obj.province.label + ' ' + $event.obj.city.label + ' ' + $event.obj.area.label;
 				let adcode = $event.value[2];
-				this.areaCode = adcode.substring(0,2);
-				this.areaCodeCity = adcode.substring(0,4);
-				this.areaCodeAreas = adcode;
+				this.shopIndex.areaCode = adcode.substring(0,2);
+				this.shopIndex.areaCodeCity = adcode.substring(0,4);
+				this.shopIndex.areaCodeAreas = adcode;
 			},
 			onCancel(){
 				this.show = false;
@@ -202,9 +188,9 @@
 				uni.chooseLocation({
 					success:res=>{
 						console.log(res)
-						this.address = res.address;
-						this.latitude = res.latitude;
-						this.longitude = res.longitude;
+						this.shopIndex.address = res.address;
+						this.shopIndex.latitude = res.latitude;
+						this.shopIndex.longitude = res.longitude;
 					}
 				})
 			},
@@ -218,8 +204,8 @@
 			},
 			// 选择证件类型
 			bindChange($event){
-				this.shopBusinessName = this.industryList[$event.detail.value].name
-				this.shopBusinessId = this.industryList[$event.detail.value].id
+				this.shopIndex.shopBusinessName = this.industryList[$event.detail.value].name
+				this.shopIndex.shopBusinessId = this.industryList[$event.detail.value].id
 			},
 			clickURl(url){
 				uni.redirectTo({
@@ -248,7 +234,7 @@
 										name:' file',
 										success:res=>{
 											let url = JSON.parse(res.data).data;
-											this[type] = url.replace('http','https');
+											this.shopIndex[type] = url.replace('http','https');
 										}
 									})
 								}
@@ -259,29 +245,18 @@
 			},
 			// 选择起始日期
 			startDateChange($event){
-				this.shopStartTime = $event.detail.value;
+				this.shopIndex.shopStartTime = $event.detail.value;
 			},
 			// 选择结束日期
 			stopDateChange($event){
-				this.shopStopTime = $event.detail.value;
+				this.shopIndex.shopStopTime = $event.detail.value;
 			},
-			submit(){
+			submit(go){
 				
-				const {shopBusinessId,shopBusinessName,shopStartTime,shopStopTime,profits,areaCode,areaCodeCity,areaCodeAreas,positive,piclist,area,address} = this;
+				const {shopIndex} = this;
 				let data = {
-					shopBusinessId,
-					shopBusinessName,
-					shopStartTime,
-					shopStopTime,
-					profits,
-					areaCode,
-					areaCodeCity,
-					areaCodeAreas,
-					regionCode:areaCodeAreas,
-					positive,
-					piclist,
-					area,
-					contactAddress:address
+					...shopIndex,
+					contactAddress:shopIndex.address
 				}
 				
 				for(let i in data){
@@ -294,70 +269,122 @@
 						return ;
 					}
 				}
-				if(this.profits < 5 || this.profits > 30){
+				if(this.shopIndex.profits < 5 || this.shopIndex.profits > 30){
 					uni.showToast({
 						title:'请输入5%-30%范围内的让利比率',
 						icon: 'none'
 					})
 					return ;
 				}
-				let {legalPerson,enterprise,bank,merchantCredential,userId,longitude,latitude} = this;
 				
-				if(JSON.stringify(legalPerson)=="{}"){
-					wx.showToast({
-					  title:'请完善法人信息',
-					  icon: 'none',
-					  duration: 2500
-					})
-					return ;
+				this.$store.commit('SETSHOPINDEX',data);
+				if(go){
+					let {legalPerson,enterprise,bank,merchantCredential,userId} = this;
+					
+					if(JSON.stringify(legalPerson)=="{}"){
+						wx.showToast({
+						  title:'请完善法人信息',
+						  icon: 'none',
+						  duration: 2500
+						})
+						return ;
+					}
+					if(JSON.stringify(enterprise)=="{}"){
+						wx.showToast({
+						  title:'请完善企业信息',
+						  icon: 'none',
+						  duration: 2500
+						})
+						return ;
+					}
+					if(JSON.stringify(bank)=="{}"){
+						wx.showToast({
+						  title:'请完善银行卡信息',
+						  icon: 'none',
+						  duration: 2500
+						})
+						return ;
+					}
+					let SIGN_BOARD = false,INTERIOR_PHOTO = false;
+					for(let i of merchantCredential){
+						if(i.credentialType==='SIGN_BOARD'){
+							SIGN_BOARD = true;
+						}
+						
+						if(i.credentialType==='INTERIOR_PHOTO'){
+							INTERIOR_PHOTO = true;
+						}
+					}
+					
+					if(!SIGN_BOARD){
+						merchantCredential.push({
+							credentialType:'SIGN_BOARD',
+							credentialUrl:shopIndex.positive,
+						});
+					}
+					if(!INTERIOR_PHOTO){
+						merchantCredential.push({
+							credentialType:'INTERIOR_PHOTO',
+							credentialUrl:shopIndex.piclist,
+						});
+					}
+					
+					console.log(data)
+					let idCardStartDate = legalPerson.idCardStartDate.split('-');
+					let idCardEndDate = legalPerson.idCardEndDate.split('-');
+					let businessDateStart = enterprise.businessDateStart.split('-');
+					let businessDateLimit = enterprise.businessDateLimit.split('-');
+					let prams = {
+						...data,
+						...legalPerson,
+						...enterprise,
+						...bank,
+						
+						idCardStartDate:idCardStartDate.join(''),
+						idCardEndDate:idCardEndDate.join(''),
+						businessDateStart:businessDateStart.join(''),
+						businessDateLimit:businessDateLimit.join(''),
+						
+						userId,
+						appPayType:'WXPAY',
+						merchantCredential,
+					}
+					
+					this.stm(prams);
+				}else{
+					uni.showToast({
+					    title: '保存成功！',
+					    duration: 2000,
+						icon:'none'
+					});
 				}
-				if(JSON.stringify(enterprise)=="{}"){
-					wx.showToast({
-					  title:'请完善企业信息',
-					  icon: 'none',
-					  duration: 2500
-					})
-					return ;
-				}
-				if(JSON.stringify(bank)=="{}"){
-					wx.showToast({
-					  title:'请完善银行卡信息',
-					  icon: 'none',
-					  duration: 2500
-					})
-					return ;
-				}
-				merchantCredential.push({
-					credentialType:'SIGN_BOARD',
-					credentialUrl:positive,
-				});
-				merchantCredential.push({
-					credentialType:'INTERIOR_PHOTO',
-					credentialUrl:piclist,
-				});
-				console.log(data)
-				let prams = {
-					...data,
-					...legalPerson,
-					...enterprise,
-					...bank,
-					userId,
-					appPayType:'WXPAY',
-					merchantCredential,
-					longitude,
-					latitude
-				}
-				
-				this.stm(prams);
 			},
 			async stm(prams){
 				try{
+					uni.showLoading({
+						title:'加载中'
+					})
 					let doEntry = await this.$fly.post('/entry/doEntry',prams);
+					if(doEntry.entryStatus!=='AUDITED'){
+						uni.showToast({
+						    title:doEntry.msg,
+						    duration: 2000,
+							icon:'none'
+						});
+						return ;
+					}
 					
+					uni.redirectTo({
+						url:'/businessPages/wxBusinessApply/autograph'
+					})
 				}catch(e){
-					
+					uni.showToast({
+					    title: '连接网络失败，请重试！',
+					    duration: 2000,
+						icon:'none'
+					});
 				}finally{
-					
+					uni.hideLoading();
 				}
 			}
 		},
@@ -495,5 +522,11 @@
 		color: #fff;
 		margin: 0 auto;
 		margin-top: 30rpx;
+		box-sizing: border-box;
+		&.bc{
+			background: #fff;
+			color: #FF9D11;
+			border: solid 2rpx #FF9D11;
+		}
 	}
 </style>

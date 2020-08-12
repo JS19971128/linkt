@@ -32,10 +32,10 @@
 				<view class="item flex_center">
 					<view class="item-name">账户类型</view>
 					<view class="item-content">
-						<picker mode="selector" :range="zhlx" range-key="label" @change="bindTypeChange($event,'zhlx')">
+						<picker mode="selector" :range="zhlx" :value="bank.zhlxIndex" range-key="label" @change="bindTypeChange($event,'zhlx')">
 							<view class="flex_between">
 								<view>
-								<input type="text" v-model="zhlxLabel" disabled placeholder="请选择账户类型" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+								<input type="text" v-model="bank.zhlxLabel" disabled placeholder="请选择账户类型" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 								</view>
 								<view>
 									<image src="../../static/images/common/xiala.png" mode="widthFix"></image>
@@ -48,21 +48,21 @@
 				<view class="item flex_center">
 					<view class="item-name">开户银行</view>
 					<view class="item-content">
-						<input type="text" v-model="bankName" placeholder="请输入开户银行" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+						<input type="text" v-model="bank.bankName" placeholder="请输入开户银行" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 					</view>
 				</view>
 				<!-- 联行号 -->
 				<view class="item flex_center">
 					<view class="item-name">联行号</view>
 					<view class="item-content">
-						<input type="text" v-model="bankCode" placeholder="开户支行联行号，可与开户支行咨询" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+						<input type="text" v-model="bank.bankCode" placeholder="开户支行联行号，可与开户支行咨询" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 					</view>
 				</view>
 				<!-- 账户卡号 -->
 				<view class="item flex_center">
 					<view class="item-name">账户卡号</view>
 					<view class="item-content">
-						<input type="text" v-model="accountNo" placeholder="请输入账户卡号" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+						<input type="text" v-model="bank.accountNo" placeholder="请输入账户卡号" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 					</view>
 				</view>
 			</view>
@@ -77,17 +77,25 @@
 			return {
 				zhlx:[{label:'对公账户',type:'TOPUBLIC'},{label:'个人账户',type:'TOPRIVATE'}],
 				zhlxLabel:'',
+				zhlxIndex:0,
+				
 				settleBankType:'',
 				bankName:'',
 				bankCode:'',
 				accountNo:''
 			}
 		},
+		computed:{
+			bank(){
+				return this.$store.state.shop.bank
+			},
+		},
 		methods:{ 
 			// 选择证件类型
 			bindTypeChange($event,type){
-				this.zhlxLabel = this.zhlx[$event.detail.value].label;
-				this.settleBankType = this.zhlx[$event.detail.value].type;
+				this.bank.zhlxLabel = this.zhlx[$event.detail.value].label;
+				this.bank.settleBankType = this.zhlx[$event.detail.value].type;
+				this.bank.zhlxIndex = $event.detail.value;
 			},
 			clickURl(url){
 				uni.redirectTo({
@@ -95,8 +103,8 @@
 				})
 			},
 			next(){
-				const {settleBankType,bankName,bankCode,accountNo} = this;
-				let data = {settleBankType,bankName,bankCode,accountNo};
+				const {bank} = this;
+				let data = {...bank};
 				console.log(data)
 				for(let i in data){
 					if(!data[i]){
@@ -113,6 +121,8 @@
 					url:"/businessPages/wxBusinessApply/index4"
 				})
 			}
+		},
+		created() {
 		}
 	}
 </script>

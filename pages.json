@@ -193,6 +193,12 @@
 						"navigationBarTitleText": "商家入驻"
 					}
 				},
+				{
+					"path":"wxBusinessApply/autograph",
+					"style": {
+						"navigationBarTitleText": "签约"
+					}
+				},
 				// #endif
 				{
 					"path":"review/index",
