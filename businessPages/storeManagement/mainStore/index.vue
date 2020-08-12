@@ -345,6 +345,9 @@
 						uni.showToast({
 							title:'保存成功'
 						})
+						if(this.isOpenVoice){
+							this.$wxLogin();
+						}
 					}else{
 						uni.showToast({
 							title:res.message,
