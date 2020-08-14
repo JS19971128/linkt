@@ -8,7 +8,7 @@
 					<view class="second_uni">夺宝券</view>
 				</view>
 				<view class="left_voucher right_my" @click="goMyTreasure">
-					<view class="frist_uni">{{drawMyData.drawCommodityCount}}</view>
+					<view class="frist_uni">{{drawMyData.drawCommodityCount || 0}}</view>
 					<view class="second_uni">我的夺宝</view>
 				</view>
 			</view>
