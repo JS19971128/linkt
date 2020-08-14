@@ -22,6 +22,7 @@ const store = new Vuex.Store({
 		mapKey:'L5ZBZ-4NTCP-UZ7D6-LXYJE-2KLKV-TLFPJ',
 		scanCodeQuery:'',
 		userInfo:{},
+		bankInfo: '', // 选择银行卡信息储存
 		uid:'',
 		longitude: '', //首页经度
 		latitude: '', //首页纬度

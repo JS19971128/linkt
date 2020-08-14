@@ -8,7 +8,7 @@
 					<view class="second_uni">夺宝券</view>
 				</view>
 				<view class="left_voucher right_my" @click="goMyTreasure">
-					<view class="frist_uni">0</view>
+					<view class="frist_uni">{{drawMyData.drawCommodityCount}}</view>
 					<view class="second_uni">我的夺宝</view>
 				</view>
 			</view>
@@ -39,31 +39,31 @@
 				<image class="shut_down" @click="consumptionRule=false" src="../../static/images/shop/border_close.png" mode=""></image>
 				<view class="commodity_list">
 					<view class="left_wrap_image">
-						<image src="http://xlzx.oss-cn-shenzhen.aliyuncs.com/user/20200808164252707_statr.png" mode=""></image>
+						<image :src="participateTreasureHunt.listUrl" mode=""></image>
 					</view>
 					<view class="right_info_show">
-						<view class="info_title">一二三四五六七八九十一二三四五一二三四五六七八九十一二三四五...</view>
-						<view class="info_amount">价值：999.00</view>
-						<view class="info_amount">价值：999.00</view>
+						<view class="info_title">{{participateTreasureHunt.commodityName}}</view>
+						<view class="info_amount">价值：{{participateTreasureHunt.priceOriginal }}</view>
+						<view class="info_amount">已参与：{{participateTreasureHunt.totalCount }}张</view>
 					</view>
 				</view>
 				<!-- 进度条 -->
 				<view class="progress_bar">
-					<view class="uni_self" :style="{width:width + '%'}"></view>
+					<view class="uni_self" :style="{width: participateTreasureHunt.drawPercent + '%'}"></view>
 				</view>
 				<view class="participation_progress">
-					<view class="left_participation"><text>已参与夺宝：</text><text class="frequency">2530人次</text></view>
-					<view class="left_participation"><text>夺宝进度：</text><text class="frequency">23%</text></view>
+					<view class="left_participation"><text>已参与夺宝：</text><text class="frequency">{{participateTreasureHunt.drawCount || 0}}人次</text></view>
+					<view class="left_participation"><text>夺宝进度：</text><text class="frequency">{{participateTreasureHunt.drawPercent}}%</text></view>
 				</view>
 				<!-- 夺宝券 -->
-				<view class="lottery_ticket"><text>夺宝券：</text><text class="sheet">35张</text></view>
+				<view class="lottery_ticket"><text>夺宝券：</text><text class="sheet">{{drawMyData.drawCouponCount}}张</text></view>
 				<view class="lottery_ticket_frequency">1张夺宝券可增加1人次，使用的越多夺宝几率越大</view>
 				<view class="lottery_ticket_num">
-					<view class="less">-</view>
-					<view class="less_num_add"><input type="number"  /></view>
-					<view class="less">+</view>
+					<view class="less" :class="{'active': voucher === 0}" @click="lessVoucher">-</view>
+					<view class="less_num_add"><input type="number" v-model="voucher" /></view>
+					<view class="less" @click="addVoucher">+</view>
 				</view>
-				<view class="participate_treasure_hunt">参与夺宝</view>
+				<view class="participate_treasure_hunt" @click="statrTreasure">参与夺宝</view>
 			</view>
 		</view>
 		
@@ -74,27 +74,38 @@
 			<image src="../../static/images/shop/hot.png" mode=""></image>
 		</view>
 		<!-- 列表 -->
-		<view class="treasure_bdi">
+		<view class="treasure_bdi" v-if="navList.length > 0">
 			
-			<view class="wrap_list_content" @click="goProductDetails">
+			<view class="wrap_list_content" v-for="(item,index) in navList" :key='index' @click="goProductDetails">
 				<view class="left_img_src">
-					<image class="statr_oss" src="http://xlzx.oss-cn-shenzhen.aliyuncs.com/user/20200808164252707_statr.png" mode=""></image>
+					<image class="statr_oss" :src="item.listUrl " mode=""></image>
 				</view>
 				<view class="right_title_schedule">
-					<view class="product_title">日式米饭碗 复古陶瓷碗汤面碗4.5寸 创意日系小碗盘 日式米饭碗 复古陶瓷碗汤面碗4.5寸 创意日系小碗盘</view>
-					<view class="worth">价值：999.00</view>
-					<view class="worth">数量：2</view>
-					<view class="worth"><text>夺宝进度：</text><text class="percentage">23%</text></view>
+					<view class="product_title">{{item.commodityName}}</view>
+					<view class="worth">价值：{{item.priceOriginal}}</view>
+					<view class="worth">数量：{{item.totalCount }}</view>
+					<view class="worth"><text>夺宝进度：</text><text class="percentage">{{item.drawPercent}}%</text></view>
 					<view class="schedule">
-						<view class="topline" :style="{width:width + '%'}"></view>
+						<view class="topline" :style="{width:item.drawPercent + '%'}"></view>
 					</view>
-					<view class="treasure_icon" @click="openConsumptionRule">
+					<view class="treasure_icon" @click.native.stop="openConsumptionRule(item)">
 						<image src="../../static/images/shop/treasure.png" mode=""></image>
 					</view>
 				</view>
 			</view>
-			
+			<uni-load-more :iconSize="20" color="#999999" :status="status" :contentText="contentText"></uni-load-more>
 		</view>
+		
+		<view class="no_data" v-else>
+			<view class="wrap_image_src">
+				<image src="../../static/images/shop/underConstruction.png" mode="widthFix"></image>
+			</view>
+			<view class="tip">
+				<view class="fz-14">即将开放</view>
+				<view class="fz-12">开发小哥哥们正在全力开发中</view>
+			</view>
+		</view>
+		
 	</view>
 </template>
 
@@ -106,16 +117,32 @@
 				width: 23,
 				//产品数据
 				navList:[],
+				contentText: {
+					contentdown: '向上滑动加载更多',
+					contentrefresh: '加载中',
+					contentnomore: '没有更多了',
+				},
 				page:0,//页码
 				status:'noMore',//请求切换
 				total: 0,
 				voucherRule: false,
 				consumptionRule: false, // 消费夺宝
+				drawMyData: '',
+				participateTreasureHunt: '', // 参与消费夺宝商品
+				voucher: 0, // 参与使用夺宝卷数
 			}
 		},
 		components:{goodsList},
+		computed:{
+			userId(){
+				return this.$store.state.userInfo.id;
+			}
+		},
 		onLoad() {
+			// 获取夺宝商品列表
 			this.navListFun();
+			// 查询夺宝商品详情
+			this.getTreasureDetails();
 		},
 		onReachBottom(){
 			if(this.status == 'noMore'){
@@ -124,13 +151,81 @@
 			this.navListFun();
 		},
 		methods: {
+			// 参与夺宝
+			statrTreasure() {
+				if (this.voucher == 0) {
+					uni.showToast({
+					    title: '夺宝劵数量不能为0或为空',
+						icon: 'none',
+					    duration: 2000
+					});
+					return false;
+                }
+				
+				if (this.voucher > Number(this.drawMyData.drawCouponCount)) {
+					uni.showToast({
+					    title: '数量大于已有夺宝券数量',
+						icon: 'none',
+					    duration: 2000
+					});
+					return false;
+				}
+				
+				// 夺宝劵总数减去使用劵数
+				let num = this.participateTreasureHunt.totalCount - this.participateTreasureHunt.drawCount;
+				console.log(num);
+				if (this.voucher > num) {
+					uni.showToast({
+					    title: '夺宝失败，剩余人次不足',
+				        icon: 'none',
+					    duration: 2000
+					});
+					return false;
+				}
+				
+				this.startGrabTreasure();
+			},
+			startGrabTreasure() {
+				let participateTreasureHunt = this.participateTreasureHunt
+				this.$fly.get(`/app/draw/addDraw?userId=` + this.$store.state.userInfo.id + '&drawCommodityId=' + participateTreasureHunt.id + '&couponCount=' + this.voucher)
+				.then(res => {
+					uni.hideLoading();
+					if (res.code == 0) {
+						this.consumptionRule = false;
+						this.voucher = 0;
+						// 更新夺宝劵数量
+						this.getTreasureDetails();
+						uni.showToast({
+							title: '夺宝成功！',
+							icon: 'none',
+							duration: 2000
+						});
+					} else {
+						uni.showToast({
+							title: res.message,
+							icon: 'none',
+							duration: 2000
+						});
+					}
+				})
+			},
+			lessVoucher() {
+				if (this.voucher == 0) {
+					return false;
+				}
+				this.voucher --
+			},
+			addVoucher() {
+				this.voucher ++
+			},
 			goProductDetails() {
 				uni.navigateTo({
 					url:'/treasure/productDetails/index'
 				})
 			},
 			// 消费夺宝
-			openConsumptionRule() {
+			openConsumptionRule(item) {
+				this.participateTreasureHunt = item;
 				this.consumptionRule = true;
 			},
 			goMyTreasure() {
@@ -139,7 +234,7 @@
 				})
 			},
 			navListFun() {
-				this.$fly.get(`/app/mall/list?size=10&page=${this.page}&sortType=sort_time&searchType=draw&sort=createDate,desc`).then(res=>{
+				this.$fly.get(`/app/draw/list?size=10&page=${this.page}&userId=${this.userId}&sort=createDate,desc`).then(res=>{
 					let data = res.data;
 					this.total = data.totalElements;
 					if(this.page === 0){
@@ -152,6 +247,14 @@
 					}else{
 						this.status = 'more';
 					}
+				})
+			},
+			getTreasureDetails() {
+				this.$fly.get(`/app/draw/myData?userId=${this.userId}`).then(res=>{
+					if (res.code == 0) {
+						let data = res.data;
+						this.drawMyData = data;
+					}				
 				})
 			}
 		}
@@ -313,6 +416,7 @@
 						font-size:28rpx;
 						font-family:PingFang SC;
 						font-weight:500;
+						min-height: 77rpx;
 						color:rgba(0,0,0,1);
 						overflow: hidden;
 						text-overflow: ellipsis;
@@ -358,6 +462,33 @@
 							height: 24rpx;
 						}
 					}
+				}
+			}
+		}
+		.no_data {
+			flex-direction: column;
+			position: absolute;
+			top: 78%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		
+			image {
+				width: 115rpx;
+				display: block;
+				margin: 0 auto;
+			}
+		
+			.tip {
+				margin-top: 22rpx;
+				text-align: center;
+				line-height: 40rpx;
+		
+				.fz-14 {
+					color: #999999;
+				}
+		
+				.fz-12 {
+					color: #CBCBCB;
 				}
 			}
 		}
@@ -424,7 +555,6 @@
 				.progress_bar {
 					height:24rpx;
 					background:rgba(229,229,229,1);
-					box-shadow:0px 1px 6px 0px rgba(209,209,209,1);
 					border-radius:12rpx;
 					margin-top: 20rpx;
 					.uni_self {
@@ -499,6 +629,9 @@
 							font-weight:500;
 							color:rgba(51,51,51,1);
 						}
+					}
+					.active {
+					    background-color: #e3e3e3!important;
 					}
 				}
 				

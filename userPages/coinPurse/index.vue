@@ -4,7 +4,7 @@
 			<view class="my_coin flex_between" >
 				<view class="left_num" @click="goWithdrawList">
 					<view class="my_coin_text">我的零钱</view>
-					<view class="number_withdraw"><text class="amount">228896589.369</text><text class="withdraw">提现</text></view>
+					<view class="number_withdraw"><text class="amount">{{userInfo.balance}}</text><text class="withdraw">提现</text></view>
 				</view>
 				<view class="right_detail" @click="goCoinList">
 					<text class="text_more">零钱明细</text><image class="image_common" src="../../static/images/common/more_gray.png" mode=""></image>
@@ -45,6 +45,11 @@
 				
 			}
 		},
+		computed: {
+			userInfo() {
+				return this.$store.state.userInfo;
+			}
+		},
 		methods: {
 			goDetailsInfo() {
 				uni.navigateTo({
@@ -63,6 +68,9 @@
 					url:'/userPages/withdrawList/index'
 				})
 			}
+		},
+		onLoad() {
+			
 		}
 	}
 </script>
@@ -106,9 +114,11 @@
 				   .number_withdraw {
 					   margin-top: 25rpx;
 					   .amount {
+						   width: 410rpx;
 						   font-size: 56rpx;
-						   margin-right: 10rpx;
+						   margin-right: 20rpx;
 						   vertical-align: bottom;
+						   display: inline-block;
 					   }
 					   .withdraw {
 						   font-size:26rpx;
