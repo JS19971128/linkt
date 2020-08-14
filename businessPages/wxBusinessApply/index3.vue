@@ -55,14 +55,14 @@
 				<view class="item flex_center">
 					<view class="item-name">联行号</view>
 					<view class="item-content">
-						<input type="text" v-model="bank.bankCode" placeholder="开户支行联行号，可与开户支行咨询" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+						<input type="number" v-model="bank.bankCode" placeholder="开户支行联行号，可与开户支行咨询" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 					</view>
 				</view>
 				<!-- 账户卡号 -->
 				<view class="item flex_center">
 					<view class="item-name">账户卡号</view>
 					<view class="item-content">
-						<input type="text" v-model="bank.accountNo" placeholder="请输入账户卡号" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+						<input type="number" v-model="bank.accountNo" placeholder="请输入账户卡号" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 					</view>
 				</view>
 			</view>
@@ -117,7 +117,7 @@
 					}
 				}
 				this.$store.commit('SETBANK',data);
-				uni.navigateTo({
+				uni.redirectTo({
 					url:"/businessPages/wxBusinessApply/index4"
 				})
 			}

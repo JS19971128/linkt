@@ -334,7 +334,7 @@
 				this.$store.commit('SETENTERPRISE',data);
 				this.$store.commit('SETMERCHANTCREDENTIAL',merchantCredential);
 				
-				uni.navigateTo({
+				uni.redirectTo({
 					url:"/businessPages/wxBusinessApply/index3"
 				})
 			},

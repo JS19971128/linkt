@@ -18,7 +18,11 @@ const init = async (data) =>{
 	wsUrl = store.state.webSocket+'/ws?userId='+data.id;
 	
 	//判断是否已经存在有连接  有就关闭
-	ws && ws.close()
+	
+	if(ws){
+		console.log('已经存在连接')
+		return
+	}
 	
 	ws = uni.connectSocket({
 		// 【非常重要】必须确保你的服务器是成功的,如果是手机测试千万别使用ws://127.0.0.1:9099【特别容易犯的错误】
@@ -28,6 +32,13 @@ const init = async (data) =>{
 		},
 	});
 	
+	ws.onClose((data)=>{
+		clearInterval(timeSend);
+		console.log(data)
+	})
+	ws.onError((data)=>{
+		console.log(data)
+	})
 	
 	ws.onMessage((data)=>{
 	   console.log('接收到消息');

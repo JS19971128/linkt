@@ -51,7 +51,7 @@
 					<view class="item-content">
 						<view class="flex_between">
 							<view class="rate">
-								<input v-model="shopIndex.profits" type="text" placeholder="请输入5%-30%范围内的让利比率" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+								<input v-model="shopIndex.profits" type="number" placeholder="请输入5%-30%范围内的让利比率" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 							</view>
 							<view>%</view>
 						</view>
@@ -59,9 +59,9 @@
 				</view>
 				<!-- 所在地区 -->
 				<view class="item flex_center" @click="show=true">
-					<view class="item-name">所在地区</view>
+					<view class="item-name">店铺地址</view>
 					<view class="item-content">
-						<input type="text" v-model="shopIndex.area" disabled placeholder="请选择" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+						<input type="text" v-model="shopIndex.area" disabled placeholder="请选择店铺地址" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 					</view>
 				</view>
 				<!-- 详细地址 -->
@@ -122,7 +122,7 @@
 							<view class="frame flex_center" v-else @click="upload('piclist')">
 								<uni-icons class="flex_center" type="plusempty" :size="24" color="#CBCBCB"></uni-icons>
 							</view>
-							<view class="flex_center">请上传1张门店内景照，才可通过审核喔~</view>
+							<view class="flex_center">请上传1张门店室内照，才可通过审核喔~</view>
 						</view>
 					</view>
 				</view>
@@ -281,7 +281,7 @@
 				if(go){
 					let {legalPerson,enterprise,bank,merchantCredential,userId} = this;
 					
-					if(JSON.stringify(legalPerson)=="{}"){
+					if(!legalPerson.legalPersonID){
 						wx.showToast({
 						  title:'请完善法人信息',
 						  icon: 'none',
@@ -289,7 +289,7 @@
 						})
 						return ;
 					}
-					if(JSON.stringify(enterprise)=="{}"){
+					if(!enterprise.industryTypeCode){
 						wx.showToast({
 						  title:'请完善企业信息',
 						  icon: 'none',
@@ -297,7 +297,7 @@
 						})
 						return ;
 					}
-					if(JSON.stringify(bank)=="{}"){
+					if(!bank.bankCode){
 						wx.showToast({
 						  title:'请完善银行卡信息',
 						  icon: 'none',
@@ -365,9 +365,28 @@
 						title:'加载中'
 					})
 					let doEntry = await this.$fly.post('/entry/doEntry',prams);
-					if(doEntry.entryStatus!=='AUDITED'){
+					
+					if(doEntry.code!=0){
 						uni.showToast({
-						    title:doEntry.msg,
+						    title:doEntry.message,
+						    duration: 2000,
+							icon:'none'
+						});
+						return ;
+					}
+					
+					if(doEntry.data.code!=200){
+						uni.showToast({
+						    title:doEntry.data.msg,
+						    duration: 2000,
+							icon:'none'
+						});
+						return ;
+					}
+					
+					if(doEntry.data.data.entryStatus!=='AUDITED'){
+						uni.showToast({
+						    title:'资料不正确，请填写真实的资料',
 						    duration: 2000,
 							icon:'none'
 						});
@@ -375,16 +394,15 @@
 					}
 					
 					uni.redirectTo({
-						url:'/businessPages/wxBusinessApply/autograph'
+						url:'/businessPages/review/index'
 					})
 				}catch(e){
 					uni.showToast({
-					    title: '连接网络失败，请重试！',
+					    title: '数据异常，请稍后重试！',
 					    duration: 2000,
 						icon:'none'
 					});
 				}finally{
-					uni.hideLoading();
 				}
 			}
 		},
