@@ -4,12 +4,15 @@
 			<view class="my_coin" >
 				<view class="left_num" @click="goBankCardList">
 					<view class="my_coin_text">
-						<view class="arrive"><text>到账银行卡</text><image class="wallet_icon" src="../../static/images/common/bank.png" mode=""></image></view>
+						<view class="arrive"><text>到账银行卡</text><image v-if="list" class="wallet_icon" src="../../static/images/common/bank.png" mode=""></image></view>
 					</view>
 					<view class="number_withdraw flex_between">
-						<view class="wrap_out">
-							<view class="bank"><text class="name">建设银行</text><text class="account">对公账户</text></view>
-							<view class="card_number">**** **** **** 4322</view>
+						<view class="wrap_out" v-if="list">
+							<view class="bank"><text class="name">{{list.bankName}}</text><text class="account">{{list.settleBankType}}</text></view>
+							<view class="card_number">{{list.accountNo}}</view>
+						</view>
+						<view class="add_bank" v-else>
+							<text class="icon_bg">+</text> <text class="add_text_bank">添加银行卡</text>
 						</view>
 						<image class="image_common" src="../../static/images/common/more_gray.png" mode=""></image>
 					</view>
@@ -17,7 +20,7 @@
 				<view class="right_detail">
 					<view class="withdraw_title">提现金额</view>
 					<view class="number_amount">
-						<text class="icon_character">￥</text><input type="number" placeholder="请输入金额"/>
+						<text class="icon_character">￥</text><input type="number" v-model="withdrawAmount" placeholder="请输入金额"/>
 					</view>
 					<view class="coin_withdraw margin_top">
 						<text class="left_text">零钱可提现余额￥400000.00，</text><text class="all_withdraw">全部提现</text>
@@ -25,7 +28,11 @@
 					<view class="coin_withdraw">
 						<text class="left_text">提现手续费: 1.00元</text>
 					</view>
-					<view class="withdraw_bnt">
+				
+					<view v-if="withdrawAmount" class="withdraw_bnt active_bg" @click="withdraw">
+						提现
+					</view>
+					<view v-else class="withdraw_bnt">
 						提现
 					</view>
 				</view>
@@ -34,17 +41,17 @@
 		</view>
 		
 		<!-- 零钱明细列表 -->
-		<view class="coin_list">
+		<view class="coin_list" v-if="transferlList.length > 0">
 			
-			<view class="amount_withdraw">
+			<view class="amount_withdraw" v-for="(item,index) in transferlList">
 				<view class="flex_between">
 					<view class="left_list_img">
 						<view class="detail_icon">
 							<image class="balance_img" src="../../static/images/common/balance.png" mode=""></image>
 						</view>
 						<view class="flex">
-							<view class="flex_name">太兴茶餐厅（商家回馈）</view>
-							<view class="flex_date">2020-05-23 12:45:14</view>
+							<view class="flex_name">{{item.title}}</view>
+							<view class="flex_date">{{item.createDate}}</view>
 						</view>
 					</view>
 					<view class="right_amount">
@@ -53,92 +60,7 @@
 					</view>
 				</view>
 			</view>
-			
-			<view class="amount_withdraw">
-				<view class="flex_between">
-					<view class="left_list_img">
-						<view class="detail_icon">
-							<image class="balance_img" src="../../static/images/common/balance.png" mode=""></image>
-						</view>
-						<view class="flex">
-							<view class="flex_name">太兴茶餐厅（商家回馈）</view>
-							<view class="flex_date">2020-05-23 12:45:14</view>
-						</view>
-					</view>
-					<view class="right_amount">
-						<!-- <text class="add_amount">+ 320</text> -->
-						<text class="cut_back">- 500</text>
-					</view>
-				</view>
-			</view>
-			<view class="amount_withdraw">
-				<view class="flex_between">
-					<view class="left_list_img">
-						<view class="detail_icon">
-							<image class="balance_img" src="../../static/images/common/balance.png" mode=""></image>
-						</view>
-						<view class="flex">
-							<view class="flex_name">太兴茶餐厅（商家回馈）</view>
-							<view class="flex_date">2020-05-23 12:45:14</view>
-						</view>
-					</view>
-					<view class="right_amount">
-						<!-- <text class="add_amount">+ 320</text> -->
-						<text class="cut_back">- 500</text>
-					</view>
-				</view>
-			</view>
-			<view class="amount_withdraw">
-				<view class="flex_between">
-					<view class="left_list_img">
-						<view class="detail_icon">
-							<image class="balance_img" src="../../static/images/common/balance.png" mode=""></image>
-						</view>
-						<view class="flex">
-							<view class="flex_name">太兴茶餐厅（商家回馈）</view>
-							<view class="flex_date">2020-05-23 12:45:14</view>
-						</view>
-					</view>
-					<view class="right_amount">
-						<!-- <text class="add_amount">+ 320</text> -->
-						<text class="cut_back">- 500</text>
-					</view>
-				</view>
-			</view>
-			<view class="amount_withdraw">
-				<view class="flex_between">
-					<view class="left_list_img">
-						<view class="detail_icon">
-							<image class="balance_img" src="../../static/images/common/balance.png" mode=""></image>
-						</view>
-						<view class="flex">
-							<view class="flex_name">太兴茶餐厅（商家回馈）</view>
-							<view class="flex_date">2020-05-23 12:45:14</view>
-						</view>
-					</view>
-					<view class="right_amount">
-						<!-- <text class="add_amount">+ 320</text> -->
-						<text class="cut_back">- 500</text>
-					</view>
-				</view>
-			</view>
-			<view class="amount_withdraw">
-				<view class="flex_between">
-					<view class="left_list_img">
-						<view class="detail_icon">
-							<image class="balance_img" src="../../static/images/common/balance.png" mode=""></image>
-						</view>
-						<view class="flex">
-							<view class="flex_name">太兴茶餐厅（商家回馈）</view>
-							<view class="flex_date">2020-05-23 12:45:14</view>
-						</view>
-					</view>
-					<view class="right_amount">
-						<!-- <text class="add_amount">+ 320</text> -->
-						<text class="cut_back">- 500</text>
-					</view>
-				</view>
-			</view>
+			<uni-load-more :iconSize="20" color="#999999" :status="status" :contentText="contentText"></uni-load-more>
 			
 		</view>
 	</view>
@@ -148,7 +70,16 @@
 	export default {
 		data() {
 			return {
-				
+				contentText: {
+					contentdown: '向上滑动加载更多',
+					contentrefresh: '加载中',
+					contentnomore: '没有更多了',
+				},
+				status: 'noMore', //more,loading,noMore
+				list: '',
+				page: 0,
+				withdrawAmount: '', //提现
+				transferlList: []
 			}
 		},
 		methods: {
@@ -156,6 +87,119 @@
 				uni.navigateTo({
 					url:'/userPages/bankCardList/index'
 				})
+			},
+			getBankInfo() {
+				this.$fly.post(`/transfer/findBank?userId=` + this.$store.state.userInfo.id)
+					.then(res => {
+						uni.hideLoading();
+						if (res.code == 0) {
+							if (res.data.length > 0) {
+								this.list = res.data[0];
+							}
+							
+						} else {
+							uni.showToast({
+							    title: res.message,
+								icon: 'none',
+							    duration: 2000
+							});
+						}
+					})
+			},
+			// 提现
+			withdraw() {
+				var _this = this;
+				if (this.list == '') {
+					uni.showToast({
+					    title: '请添加银行卡哦',
+						icon:'none',
+					    duration: 2000
+					});
+					return false;
+				}
+				
+				if (!this.withdrawAmount) {
+					uni.showToast({
+					    title: '请输入提现金额',
+						icon:'none',
+					    duration: 2000
+					});
+					return false;
+				}
+				uni.showModal({
+				    title: '提示',
+				    content: '确认提现?',
+				    success: function (res) {
+				        if (res.confirm) {
+				            _this.confirmWithdraw();
+				        } else if (res.cancel) {
+				            console.log('用户点击取消');
+				        }
+				    }
+				});
+			},
+			// 确认提现
+			confirmWithdraw() {
+				let param = {
+					amount: this.withdrawAmount,
+					bankAccountName: this.list.bankName,
+					bankAccountNo: this.list.accountNo,
+					// bankCode
+					bankUnionCode: this.list.bankCode,
+                    userId: this.$store.state.userInfo.id
+				}
+				
+				this.$fly.post(`/transfer/pay`, param)
+					.then(res => {
+						uni.hideLoading();
+						if (res.code == 0) {
+							uni.showToast({
+							    title: '提现成功！',
+								icon: 'success',
+							    duration: 2000
+							});
+							
+						} else {
+							uni.showToast({
+							    title: res.message,
+								icon: 'none',
+							    duration: 2000
+							});
+						}
+					})
+			},
+			transferList() {
+			    this.$fly.post(`/transfer/list?userId=` + this.$store.state.userInfo.id + '&page=0&size=20&sort=createDate,desc')
+				.then(res => {
+					uni.hideLoading();
+					if (res.code == 0) {
+						this.transferlList = res.data.content;
+					} else {
+						uni.showToast({
+							title: res.message,
+							icon: 'none',
+							duration: 2000
+						});
+					}
+				})
+			}
+		},
+		onLoad() {
+			// 默认获取银行卡信息 
+			this.getBankInfo();
+			// 获取提现记录列表
+			this.transferList();
+		},
+		onReachBottom: function() { //触底加载
+			if (this.status == 'noMore') {
+				return
+			}
+			this.transferList();
+		},
+		onShow() {
+			let bankInfo = this.$store.state.bankInfo;
+			if (bankInfo) {
+				this.list = bankInfo;
 			}
 		}
 	}
@@ -217,6 +261,28 @@
 				   .number_withdraw {
 					   flex: 1;
 					   vertical-align: top;
+					   .add_bank {
+						   display: flex;
+						   justify-content: flex-start;
+						   align-items: center;
+						   .icon_bg {
+							   width:50rpx;
+							   height:50rpx;
+							   background:rgba(255,185,85,1);
+							   border-radius:50%;
+							   display: flex;
+							   justify-content: center;
+							   align-items: center;
+							   margin-right: 15rpx;
+							   color: #FFFFFF;
+						   }
+						   .add_text_bank {
+							   font-size:32rpx;
+							   font-family:PingFang SC;
+							   font-weight:500;
+							   color:rgba(51,51,51,1);
+						   }
+					   }
 					   .wrap_out {
 						   .bank {
 							   .name {
@@ -297,8 +363,8 @@
 					   }
 				   }
 				   .withdraw_bnt {
-					   height:74rpx;
-					   background:rgba(255,157,17,1);
+					   height:74rpx;   
+					   background-color: #CCCCCC;
 					   border-radius:37rpx;
 					   line-height: 74rpx;
 					   text-align: center;
@@ -307,6 +373,9 @@
 					   font-weight:500;
 					   color:rgba(255,255,255,1);
 					   margin-top: 43rpx;
+				   }
+				   .active_bg {
+					   background:rgba(255,157,17,1)!important;
 				   }
 			   }
 		   }

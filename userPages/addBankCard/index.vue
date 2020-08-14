@@ -18,27 +18,27 @@
 					</picker>
 				</view>
 			</view>
-			<view class="wrap_type_list">
+			<view class="wrap_type_list" v-if="index == 0">
 				<view class="left_text">联行号</view>
 				<view class="right_check">
-					<input type="text" placeholder="开户支行联行号，可与开户支行咨询" />
+					<input type="number" v-model="bankCode" placeholder="开户支行联行号，可与开户支行咨询" />
 				</view>
 			</view>
 			<view class="wrap_type_list">
 				<view class="left_text">持卡人</view>
 				<view class="right_check">
-					<input type="text" placeholder="请输入真实姓名/对公账户输入公司全称" />
+					<input type="text" v-model="accountName" placeholder="请输入真实姓名/对公账户输入公司全称" />
 				</view>
 			</view>
 			<view class="wrap_type_list">
 				<view class="left_text">卡号</view>
 				<view class="right_check">
-					<input type="text" placeholder="请输入银行卡号" />
+					<input type="number" v-model="bankName" placeholder="请输入银行卡号" />
 				</view>
 			</view>
 		</view>
 		<view class="input_info">请输入真实有效的银行卡信息，否则会造成无法正常收款。</view>
-		<view class="commit_add">
+		<view class="commit_add" @click="confirmAdd">
 			确认添加
 		</view>
 	</view>
@@ -52,7 +52,10 @@
 				array: ['对公账户', '个人账户'],
 				index: 0,
 				bankAccount: [],
-				bank: 0
+				bank: 0,
+				bankCode: '', // 银联号
+				accountName: '', // 持卡人
+				bankName: '', // 银行卡号
 			}
 		},
 		methods: {
@@ -64,6 +67,69 @@
 				console.log('picker发送选择改变，携带值为', e.target.value)
 				this.bank = e.target.value
 			},
+			// 确认添加
+			confirmAdd() {
+				if (this.index == 0 && !this.bankCode) {
+					uni.showToast({
+					    title: '请输入支行银联号',
+						icon: 'none',
+					    duration: 2000
+					});
+					return false;
+				}
+				
+				if (!this.accountName) {
+					uni.showToast({
+					    title: '请输入持卡人姓名',
+						icon: 'none',
+					    duration: 2000
+					});
+					return false;
+				}
+				
+				if (!this.bankName) {
+					uni.showToast({
+					    title: '请输入银行卡号',
+						icon: 'none',
+					    duration: 2000
+					});
+					return false;
+				}
+				let params = {
+				   accountName: this.accountName,
+				   accountNo: this.bankName,
+				   bankName: this.bankAccount[this.bank],
+				   settleBankType: this.array[this.index],
+				   userId: this.$store.state.userInfo.id
+				}
+				if (this.index == 0) {
+					params.bankCode = this.bankCode;
+				}
+				this.addbank(params);
+			},
+			addbank(params) {
+				this.$fly.post(`/transfer/addbank`, params)
+					.then(res => {
+						uni.hideLoading();
+						if (res.code == 0) {
+							uni.showToast({
+							    title: '添加成功！',
+								icon: 'none',
+							    duration: 2000
+							});
+							
+							uni.navigateBack({
+							    delta: 1
+							});
+						} else {
+							uni.showToast({
+							    title: res.message,
+								icon: 'none',
+							    duration: 2000
+							});
+						}
+					})
+			}
 		},
 		onLoad() {
 			this.bankAccount = code;

@@ -1,22 +1,13 @@
 <template>
 	<view class="bank_card_list">
-	   <view class="china_bank">
+	   <view class="china_bank" v-for="(item,index) in list" :class="{'bg_color': oddEven(index) == false}" @click="pickBank(item)">
 	   	  <view class="build">
-	   	  	<text class="name">建设银行</text> <text class="account">个人账户</text>
+	   	  	<text class="name">{{item.bankName}}</text> <text class="account">{{item.settleBankType}}</text>
 	   	  </view>
 		  <view class="card_number">
-		  	****  ****  ****  8547
+		  	{{item.accountNo}}
 		  </view>
 		  <image class="card_logo" src="../../static/images/common/card_logo.png" mode=""></image>
-	   </view>
-	   <view class="china_bank bg_color">
-	   	  <view class="build">
-	   	  	<text class="name">建设银行</text> <text class="account">个人账户</text>
-	   	  </view>
-	   		  <view class="card_number">
-	   		  	****  ****  ****  8547
-	   		  </view>
-	   		  <image class="card_logo" src="../../static/images/common/card_logo.png" mode=""></image>
 	   </view>
 	   
 	   <!-- 添加银行卡 -->
@@ -30,15 +21,49 @@
 	export default {
 		data() {
 			return {
-				
+				list: null
 			}
 		},
 		methods: {
+			// 选择银行卡号
+			pickBank(item) {
+			    console.log(item);
+				this.$store.state.bankInfo = item;
+				uni.navigateBack({
+				    delta: 1
+				});
+			},
 			goAddBankCard() {
 				uni.navigateTo({
 					url:'/userPages/addBankCard/index'
 				})
+			},
+			// 获取银行卡列表
+			getBankList() {
+				this.$fly.post(`/transfer/findBank?userId=` + this.$store.state.userInfo.id)
+					.then(res => {
+						uni.hideLoading();
+						if (res.code == 0) {
+							this.list = res.data;
+						} else {
+							uni.showToast({
+							    title: res.message,
+								icon: 'none',
+							    duration: 2000
+							});
+						}
+					})
+			},
+			oddEven(index) {
+				if (index%2 == 0) {
+					return true;
+				} else {
+					return false;
+				}
 			}
+		},
+		onShow() {
+			this.getBankList();
 		}
 	}
 </script>
