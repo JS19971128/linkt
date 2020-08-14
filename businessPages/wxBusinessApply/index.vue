@@ -125,6 +125,9 @@
 			legalPersonFrom(){
 				return this.$store.state.shop.legalPerson
 			},
+			userinfo(){
+				return this.$store.state.userInfo
+			}
 		},
 		methods:{ 
 			// 上传证件照
@@ -182,7 +185,9 @@
 					bindMobile:legalPersonFrom.linkPhone,
 					linkManId:legalPersonFrom.legalPersonID,
 				}
-				
+				uni.showLoading({
+					title:'加载中'
+				})
 				for(let i in data){
 					if(!data[i]){
 						wx.showToast({
@@ -216,9 +221,15 @@
 				this.$store.commit('SETLEGALPERSON',data);
 				this.$store.commit('SETMERCHANTCREDENTIAL',merchantCredential);
 				
-				uni.navigateTo({
+				uni.redirectTo({
 					url:"/businessPages/wxBusinessApply/index2"
 				})
+			}
+		},
+		onLoad() {
+			// legalPersonFrom
+			if(!this.legalPersonFrom.linkPhone){
+				this.legalPersonFrom.linkPhone = this.userinfo.username
 			}
 		}
 	}

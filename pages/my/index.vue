@@ -199,6 +199,8 @@
 				isOperator:false, //是否运营人员
 				operatorType:'',  //运营人员类型
 				isRealName:false,  //是否实名
+				Trurl:'',
+				TRstatus:''
 			}
 		},
 		computed:{
@@ -263,6 +265,15 @@
 					url:'/userPages/mobile/index'
 				})
 			},
+			getJInjian(){
+				this.$fly.post('/entry/findMerchantEntryByUserId?userId='+this.userInfo.id).then(res=>{
+					if(res.code == 0){
+						if(res.data.status === 'AUDITED'){
+							this.Trurl = `/businessPages/review/index`;
+						}
+					}
+				})
+			},
 			getBussinessStatus(){  //获取商户状态
 				this.$fly.get(`/merchant/getMerchantByUserId/${this.userInfo.id}`)
 				.then(res=>{
@@ -272,6 +283,7 @@
 							if(res.data.merchant.status == 'normal'){
 								this.merchantEntry = '商家中心';
 								this.url = '/businessPages/businessCenter/index';
+								this.TRstatus = 'normal'
 							}else{
 								if(res.data.merchant.status == 'audit'){
 									var status = 1;
@@ -319,8 +331,12 @@
 			},
 			businessApply(){ //商户入驻
 				if(this.userInfo.inviteCode){
+					let url = this.url;
+					if(this.Trurl && this.TRstatus !=='normal'){
+						url = this.Trurl
+					}
 					uni.navigateTo({
-						url:this.url
+						url
 					})
 				}else{
 					uni.navigateTo({
@@ -371,6 +387,7 @@
 				// 更新运营人员类型，商家状态，是否实名
 				this.getOperator();
 				this.getBussinessStatus();
+				this.getJInjian()
 				this.getUserData();
 				if(this.userInfo.aliRealName){
 					this.isRealName = true;

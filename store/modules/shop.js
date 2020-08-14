@@ -87,6 +87,14 @@ const state = {
 		},
 		
 	], //图片集合
+	statusData:{
+		email:'',
+		phone:'',
+		legalPerson:'',
+		legalPersonID:'',
+		signName:'',
+		address:''
+	}
 }
 const mutations = {
 	SETLEGALPERSON(state,n){
@@ -103,6 +111,9 @@ const mutations = {
 	},
 	SETMERCHANTCREDENTIAL(state,n){
 		state.merchantCredential = n;
+	},
+	SETSTATUSDATA(state,n){
+		state.statusData = n;
 	}
 }
 const actions = {

@@ -17,6 +17,10 @@
 			<!-- #endif -->
 			<!-- <view class="btn fz-14 flex_center" @click="goEditshopInfo">修改店铺资料</view> -->
 			<!-- <view class="notice fz-12">如果店铺资料填错了，可以点击按钮修改</view> -->
+			<view class="btn rz fz-14 flex_center" v-if="!signStatus" @click="copy()">复制签约链接</view>
+			<view class="notice fz-12" v-if="!signStatus">请将签约地址复制至手机浏览器打开，即可完成签约</view>
+			
+			<view class="btn nrz fz-14 flex_center" v-else>已完成签约</view>
 		</view>
 		<!-- 审核未通过 -->
 		<view class="" v-else>
@@ -38,7 +42,14 @@
 			return {
 				status:1,
 				note: '',
+				signStatus:false,
+				CopyUrl:''
 			}
+		},
+		computed:{
+			userId(){
+				return this.$store.state.userInfo.id || 22222234;
+			},
 		},
 		methods:{
 			goApply(){
@@ -53,6 +64,13 @@
 				})
 				// #endif
 			},
+			clicURl(){
+				uni.navigateTo({
+					url:'/businessPages/wxBusinessApply/autograph'
+				})
+				
+				
+			},
 			goEditshopInfo(){
 				// #ifdef MP-ALIPAY
 				uni.navigateTo({
@@ -64,7 +82,47 @@
 				uni.navigateTo({
 					url:'/businessPages/aliSign/index'
 				})
-			}
+			},
+			init(){
+				uni.showLoading({
+					title:'加载中'
+				})
+				this.$fly.post('/entry/findMerchantEntryByUserId?userId='+this.userId).then(res=>{
+					this.signStatus = res.data.signStatus;
+					let data = res.data;
+					let prams = {
+						email:data.email,
+						phone:data.linkPhone,
+						legalPerson:data.legalPerson,
+						legalPersonID:data.legalPersonID,
+						signName:data.signName,
+						address:data.address
+					}
+					let url = `?email=${prams.email}&phone=${prams.phone}&legalPerson=${prams.legalPerson}&legalPersonID=${prams.legalPersonID}&signName=${prams.signName}&address=${prams.address}&`
+					// this.$store.commit('SETSTATUSDATA',statusData);
+					return this.$fly.post('/entry/signContract'+url);
+				}).then(res=>{
+					this.CopyUrl = res.data.data;
+					uni.hideLoading();
+				})
+			},
+			// 复制
+			copy(){
+				uni.setClipboardData({
+					data:this.CopyUrl,
+					success: () => {
+						uni.showToast({
+							title:'复制成功！'
+						})
+					},
+					fail: (err) => {
+						// console.log('copy',err)
+					}
+				})
+			},
+		},
+		onShow() {
+			this.init();
 		},
 		onLoad:function(query){
 			this.status = query.status;
@@ -113,6 +171,15 @@
 		background: #fff;
 		margin: 0 auto;
 		margin-top: 100rpx;
+		&.rz{
+			background: #FF9D11;
+			color: #fff;
+		}
+		&.nrz{
+			background: #DDDDDD;
+			border: 2rpx solid #DDDDDD;
+			color: #fff;
+		}
 	}
 	.notice{
 		color: #ccc;
