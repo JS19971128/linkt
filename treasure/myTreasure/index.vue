@@ -19,15 +19,16 @@
 						<view class="worth">已参与：{{item.drawCount }}张券</view>
 						<view class="worth" v-if="drawStatus == 'success'">中奖编号：{{item.drawCommodityNo}}</view>
 						<view class="flex_between progress_bar" v-if="drawStatus == 'pending'">
-							<view class="left_progress"><view class="bar" :style="{width:item.drawPercent + '%'}"></view></view>
-							<view class="percentage">{{item.drawPercent}}%</view>
+							<view class="left_progress"><view class="bar" :style="{width:Math.trunc(item.drawPercent * 100) + '%'}"></view></view>
+							<view class="percentage">{{Math.trunc(item.drawPercent * 100)}}%</view>
 						</view>
 						<view class="treasure_status"><text class="active_status" :style="{color:returnOrderStatus(item.drawStatus).color}">{{returnOrderStatus(item.drawStatus).status}}</text><image src="../../static/images/common/more_gray.png" mode=""></image></view>
 					</view>
 				</view>
 				<!-- 继续夺宝--确认订单 -->
 				<view class="Keep_winning" v-if="drawStatus == 'success' || drawStatus == 'pending'">
-					<view class="winning"><view class="winning_text">继续夺宝</view></view>
+					<!-- <view class="winning" v-if="drawStatus == 'pending'"><view class="winning_text" :class="{'background_active' : item.drawPercent < 1}"  @click="startTreasure(item)">继续夺宝</view></view> -->
+					<view class="winning" ><view class="winning_text background_active" @click="confirmOrder(item)">确认订单</view></view>
 				</view>
 			</view>
 			<uni-load-more :iconSize="20" color="#999999" :status="status" :contentText="contentText"></uni-load-more>
@@ -40,10 +41,46 @@
 				<image src="../../static/images/order/order_none.png" mode="widthFix"></image>
 			</view>
 			<view class="tip">
-				<view class="fz-14">暂无订单</view>
-				<view class="fz-12">您还没有夺宝过喔~</view>
+				<view class="fz-14">暂无记录</view>
+				<!-- <view class="fz-12">您还没有夺宝过喔~</view> -->
 			</view>
 		</view>
+		
+		<!-- 消费夺宝--参与夺宝 -->
+		<view class="consumption" v-if="consumptionRule">
+			<view class="middle_content">
+				<image class="shut_down" @click="consumptionRule=false" src="../../static/images/shop/border_close.png" mode=""></image>
+				<view class="commodity_list">
+					<view class="left_wrap_image">
+						<image :src="drawDetails.listUrl" mode=""></image>
+					</view>
+					<view class="right_info_show">
+						<view class="info_title">{{drawDetails.commodityName}}</view>
+						<view class="info_amount">价值：{{drawDetails.priceOriginal}}</view>
+						<view class="info_amount">数量：{{drawDetails.totalCount}}张</view>
+					</view>
+				</view>
+				<!-- 进度条 -->
+				<view class="progress_bar">
+					<view class="uni_self" :style="{width: Math.trunc(drawDetails.drawPercent * 100) + '%'}"></view>
+				</view>
+				<view class="participation_progress">
+					<view class="left_participation"><text>已参与夺宝：</text><text class="frequency">{{drawDetails.drawCount || 0}}人次</text></view>
+					<view class="left_participation"><text>夺宝进度：</text><text class="frequency">{{Math.trunc(drawDetails.drawPercent * 100)}}%</text></view>
+				</view>
+				<!-- 夺宝券 -->
+				<view class="lottery_ticket"><text>夺宝券：</text><text class="sheet">{{drawMyData.drawCouponCount}}张</text></view>
+				<view class="lottery_ticket_frequency">1张夺宝券可增加1人次，使用的越多夺宝几率越大</view>
+				<view class="lottery_ticket_num">
+					<view class="less" :class="{'active': voucher === 0}" @click="lessVoucher">-</view>
+					<view class="less_num_add"><input type="number" v-model="voucher" /></view>
+					<view class="less" @click="addVoucher">+</view>
+				</view>
+				<view class="participate_treasure_hunt" @click="participateTreasure">参与夺宝</view>
+			</view>
+		</view>
+		
+		
 	</view>
 </template>
 
@@ -62,6 +99,10 @@
 				page: 0,
 				drawStatus: 'pending',
 				myDrawCount: '', // 商品数量
+				consumptionRule: false,
+				drawDetails: '',
+				drawMyData: '',  // 夺宝劵数量
+				voucher: 0
 			}
 		},
 		computed: {
@@ -70,9 +111,107 @@
 			}
 		},
 		methods: {
+			lessVoucher() {
+				if (this.voucher == 0) {
+					return false;
+				}
+				this.voucher --
+			},
+			addVoucher() {
+				this.voucher ++
+			},
 			tabItem(status) {
 				this.drawStatus = status;
+				this.page = 0;
+				this.list = [];
+				this.getList();
+			},
+			// 确认订单发货
+			confirmOrder(item) {
+			
+				uni.navigateTo({
+					url: `/treasure/winningOrder/index?id=` + item.id
+				})
+			},
+			// 参与夺宝
+			participateTreasure() {
+				if (this.voucher == 0) {
+					uni.showToast({
+					    title: '夺宝劵数量不能为0或为空',
+						icon: 'none',
+					    duration: 2000
+					});
+					return false;
+				}
 				
+				if (this.voucher > Number(this.drawMyData.drawCouponCount)) {
+					uni.showToast({
+					    title: '数量大于已有夺宝券数量',
+						icon: 'none',
+					    duration: 2000
+					});
+					return false;
+				}
+				
+				// 夺宝劵总数减去使用劵数
+				let num = this.drawDetails.totalCount - this.drawDetails.drawCount;
+				console.log(num);
+				if (this.voucher > num) {
+					uni.showToast({
+					    title: '夺宝失败，剩余人次不足',
+				        icon: 'none',
+					    duration: 2000
+					});
+					return false;
+				}
+				uni.showLoading({
+				    title: '加载中'
+				});
+				this.startGrabTreasure();
+			},
+			startGrabTreasure() {
+				let drawDetails = this.drawDetails
+				this.$fly.get(`/app/draw/addDraw?userId=` + this.$store.state.userInfo.id + '&drawCommodityId=' + drawDetails.id + '&couponCount=' + this.voucher)
+				.then(res => {
+					uni.hideLoading();
+					if (res.code == 0) {
+						this.consumptionRule = false;
+						this.voucher = 0;
+						this.page = 0;
+						this.list = [];
+						this.drawDetails = '';
+						this.getList();
+						this.getMyDrawCount();
+						// 查询夺宝数量
+						this.getTreasureDetails();
+						uni.showToast({
+							title: '夺宝成功！',
+							icon: 'none',
+							duration: 2000
+						});
+					} else {
+						uni.showToast({
+							title: res.message,
+							icon: 'none',
+							duration: 2000
+						});
+					}
+				})
+			},
+			getTreasureDetails() {
+				this.$fly.get(`/app/draw/myData?userId=${this.userInfo.id}`).then(res=>{
+					if (res.code == 0) {
+						let data = res.data;
+						this.drawMyData = data;
+					}				
+				})
+			},
+			startTreasure(item) {
+				this.drawDetails = item;
+				if (this.drawDetails.drawPercent >= 1) {
+					return false;
+				}
+			    this.consumptionRule = true;
 			},
 			returnOrderStatus(status) {
 				switch (status) {
@@ -155,6 +294,8 @@
 				if (this.list.length == 0) {
 					this.getList();
 					this.getMyDrawCount();
+					// 查询夺宝数量
+					this.getTreasureDetails();
 				}
 			}
 			// #endif
@@ -166,6 +307,8 @@
 				if (this.list.length == 0) {
 					this.getList();
 					this.getMyDrawCount();
+					// 查询夺宝数量
+					this.getTreasureDetails();
 				}
 			}
 			// #endif
@@ -180,7 +323,7 @@
 		padding-top: 68rpx;
 		box-sizing: border-box;
 		.treasure_table {
-			height: 68rpx;
+			height: 70rpx;
 			background-color: #EEEEEE;
 			display: flex;
 			font-size:26rpx;
@@ -316,6 +459,9 @@
 							color:rgba(255,255,255,1);
 							line-height:46rpx;
 						}
+						.background_active {
+							background-color: #FF9D11!important;
+						}
 					}
 				}
 			}
@@ -345,6 +491,165 @@
 				.fz-12 {
 					color: #CBCBCB;
 				}
+			}
+		}
+		
+		.consumption {
+			position: fixed;
+			top: 0;
+			right: 0;
+			left: 0;
+			bottom: 0;
+			background: rgba(0,0,0,0.7);
+			z-index: 666;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			.middle_content {
+				width: 94.66vw;
+				background:rgba(255,255,255,1);
+				box-shadow:0px 1px 5px 0px rgba(0, 0, 0, 0.2);
+				border-radius:8rpx;
+				padding: 58rpx 20rpx 49rpx 20rpx;
+				box-sizing: border-box;
+				position: relative;
+				.shut_down {
+					width: 28rpx;
+					height: 28rpx;
+					position: absolute;
+					top: 10rpx;
+					right: 10rpx;
+				}
+				.commodity_list {
+					display: flex;
+					.left_wrap_image {
+						width: 140rpx;
+						flex: 0 0 140rpx;
+						height: 140rpx;
+						margin-right: 20rpx;
+						image {
+							height: 100%;
+							width: 100%;
+						}
+					}
+					.right_info_show {
+						flex: 1;
+						.info_title {
+							font-size:32rpx;
+							font-family:PingFang SC;
+							font-weight:800;
+							color:rgba(51,51,51,1);
+							overflow: hidden;
+							text-overflow: ellipsis;
+							display: -webkit-box;
+							-webkit-line-clamp: 1;
+							-webkit-box-orient: vertical;
+						}
+						.info_amount {
+							font-size:26rpx;
+							font-family:PingFang SC;
+							font-weight:500;
+							color:rgba(153,153,153,1);
+							margin-top: 10rpx;
+						}
+					}
+				}
+				.progress_bar {
+					height:24rpx;
+					background:rgba(229,229,229,1);
+					border-radius:12rpx;
+					margin-top: 20rpx;
+					.uni_self {
+						height:24rpx;
+						background:linear-gradient(180deg,rgba(25,196,41,1),rgba(29,219,47,1));
+						border-radius:12rpx;
+					}
+				}
+				.participation_progress {
+					margin-top: 10rpx;
+					display: flex;
+					justify-content: space-between;
+					padding-bottom: 30rpx;
+					border-bottom: 2rpx solid #DBDBDB;
+					.left_participation {
+						font-size:26rpx;
+						font-family:PingFang SC;
+						font-weight:500;
+						color:#999999;
+						.frequency {
+							color: #FF9733;
+						}
+					}
+				}
+				.lottery_ticket {
+					margin-top: 48rpx;
+					font-size:32rpx;
+					font-family:PingFang SC;
+					font-weight:800;
+					color:rgba(51,51,51,1);
+					text-align: center;
+					.sheet {
+						color: #FF9733;
+					}
+				}
+				.lottery_ticket_frequency {
+					font-size:26rpx;
+					font-family:PingFang SC;
+					font-weight:500;
+					color:rgba(153,153,153,1);
+					text-align: center;
+					margin-top: 10rpx;
+				}
+				.lottery_ticket_num {
+		            margin-top: 30rpx;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					.less {
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						width:50rpx;
+						height:50rpx;
+						background:rgba(255,185,85,1);	
+						color: #FFFFFF;
+					}
+					.less_num_add {
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						margin: 0 30rpx;
+						width:90rpx;
+						height:50rpx;
+						background:rgba(227,227,227,1);
+						input {
+							width: 100%;
+							height: 100%;
+							text-align: center;
+							font-size:30rpx;
+							font-family:PingFang SC;
+							font-weight:500;
+							color:rgba(51,51,51,1);
+						}
+					}
+					.active {
+					    background-color: #e3e3e3!important;
+					}
+				}
+				
+				.participate_treasure_hunt {
+					margin-top: 50rpx;
+					height:74rpx;
+					line-height: 74rpx;
+					text-align: center;
+					background:rgba(255,157,17,1);
+					border-radius:37rpx;
+					font-size:32rpx;
+					font-family:PingFang SC;
+					font-weight:500;
+					color:rgba(255,255,255,1);
+				}
+				
 			}
 		}
 	}

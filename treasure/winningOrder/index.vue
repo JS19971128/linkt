@@ -15,27 +15,27 @@
 		<!-- 订单合计 -->
 		<view class="order-goods">
 			<view class="goods">
-				<view class="goods-list" v-for="item in goods">
-					<image class="goods-img" :src="item.listUrl"></image>
+				<view class="goods-list" >
+					<image class="goods-img" :src="drawDetails.listUrl"></image>
 					<view class="goods-detail">
-						<view class="goods-title">{{item.commodityName}}</view>
-						<view class="goods-price">￥{{item.priceSale}}</view>
+						<view class="goods-title">{{drawDetails.commodityName}}</view>
+						<view class="goods-price"></view>
 						<view class="goods-specs">
-							<view class="specs-txt">{{item.specName}}</view>
-							<view class="goods-num">x{{item.commodityNum}}</view>
+							<view class="specs-txt"></view>
+							<view class="goods-num">x1</view>
 						</view>
 					</view>
 				</view>
 			</view>
-			<view class="order-total">
+			<!-- <view class="order-total">
 				<view class="total-title">订单合计</view>
 				<view class="order-price">￥{{needPay.priceTotal}}</view>
-			</view>
+			</view> -->
 		</view>
 		<!-- 提交按钮 -->
 		<view class="commodiy-btn">
-			<view class="btn-price">需支付：￥{{needPay.priceTotal}}</view>
-			<button type="default" class="btn-go" @click="stm">确认</button>
+			<view class="btn-price"></view>
+			<button type="default" class="btn-go" @click="stm">确认订单</button>
 		</view>
 	</view>
 </template>
@@ -52,6 +52,7 @@
 				orderNo:'',
 				consumerInfo:{},
 				needPay:{},
+				drawDetails: ''
 			}
 		},
 		computed:{
@@ -60,34 +61,6 @@
 			},
 		},
 		methods: {
-			//获取商户信息
-			async getMerchant(id){ 
-				try{
-					uni.showLoading({
-						title:'加载中'
-					})
-					let merchant = await this.$fly.get(`/merchant/get?id=${id}`);
-					uni.hideLoading();
-					if(merchant.code!=0){
-						wx.showToast({
-						  title: merchant.message,
-						  icon: 'none',
-						  duration: 2500
-						})
-						return
-					};
-					this.$store.commit('SETPAYCOMMISSION',merchant.data.payCommission); //存储手续费
-				}catch(e){
-					//TODO handle the exception
-					uni.hideLoading();
-					console.error(e)
-					wx.showToast({
-					  title: '获取商户信息失败！',
-					  icon: 'none',
-					  duration: 2500
-					})
-				}
-			},
 			//获取地址栏
 			choiceAddress() {
 				let that = this;
@@ -100,6 +73,22 @@
 							mobile: res.telNumber,
 							address: res.provinceName + ' ' + res.cityName + ' ' + res.countyName + ' ' + res.detailInfo
 						}
+					}
+				})
+			},
+			getDrawDetails(id) {
+				this.$fly.get(`/app/draw/` + id).then(res=>{
+					if (res.code == 0) {
+						this.drawDetails = res.data;
+						this.drawDetails.drawPercent = Math.trunc(this.drawDetails.drawPercent * 100);
+						// this.article = res.data.mainUrl.split(';');
+						// this.description = res.data.description;
+					} else {
+						uni.showToast({
+							title: res.message,
+							icon: 'none',
+							duration: 2000
+						});
 					}
 				})
 			},
@@ -122,10 +111,8 @@
 			},
 		},
 		onLoad(res) {
-			let needPay = uni.getStorageSync('needPay');
-			this.needPay = needPay;
-			this.goods = needPay.cartRespDtoList;
-			this.getMerchant(this.orderMerchantId)
+			console.log(res)
+			this.getDrawDetails(res.id);
 			if(!this.$store.state.userInfo.uid){
 				this.$wxLogin();
 			}
@@ -215,7 +202,6 @@
 				.goods-title {
 					font-size: 30rpx;
 					color: #282828;
-					line-height: 1;
 					margin-bottom: 20rpx;
 				}
 
