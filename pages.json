@@ -11,7 +11,7 @@
 			"path": "pages/raidersZone/index",
 			"style": {
 				"navigationBarTitleText": "夺宝专区",
-				"enablePullDownRefresh":false
+				"enablePullDownRefresh":true
 				
 			}
 		},

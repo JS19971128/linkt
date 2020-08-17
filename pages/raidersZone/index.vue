@@ -8,7 +8,7 @@
 					<view class="second_uni">夺宝券</view>
 				</view>
 				<view class="left_voucher right_my" @click="goMyTreasure">
-					<view class="frist_uni">{{drawMyData.drawCommodityCount}}</view>
+					<view class="frist_uni">{{drawMyData.drawCommodityCount || 0}}</view>
 					<view class="second_uni">我的夺宝</view>
 				</view>
 			</view>
@@ -44,16 +44,16 @@
 					<view class="right_info_show">
 						<view class="info_title">{{participateTreasureHunt.commodityName}}</view>
 						<view class="info_amount">价值：{{participateTreasureHunt.priceOriginal }}</view>
-						<view class="info_amount">已参与：{{participateTreasureHunt.totalCount }}张</view>
+						<view class="info_amount">数量：{{participateTreasureHunt.totalCount }}张</view>
 					</view>
 				</view>
 				<!-- 进度条 -->
 				<view class="progress_bar">
-					<view class="uni_self" :style="{width: participateTreasureHunt.drawPercent + '%'}"></view>
+					<view class="uni_self" :style="{width: Math.trunc(participateTreasureHunt.drawPercent * 100) + '%'}"></view>
 				</view>
 				<view class="participation_progress">
 					<view class="left_participation"><text>已参与夺宝：</text><text class="frequency">{{participateTreasureHunt.drawCount || 0}}人次</text></view>
-					<view class="left_participation"><text>夺宝进度：</text><text class="frequency">{{participateTreasureHunt.drawPercent}}%</text></view>
+					<view class="left_participation"><text>夺宝进度：</text><text class="frequency">{{Math.trunc(participateTreasureHunt.drawPercent * 100)}}%</text></view>
 				</view>
 				<!-- 夺宝券 -->
 				<view class="lottery_ticket"><text>夺宝券：</text><text class="sheet">{{drawMyData.drawCouponCount}}张</text></view>
@@ -74,9 +74,9 @@
 			<image src="../../static/images/shop/hot.png" mode=""></image>
 		</view>
 		<!-- 列表 -->
-		<view class="treasure_bdi" v-if="navList.length > 0">
+	<!-- 	<view class="treasure_bdi" v-if="navList.length > 0">
 			
-			<view class="wrap_list_content" v-for="(item,index) in navList" :key='index' @click="goProductDetails">
+			<view class="wrap_list_content" v-for="(item,index) in navList" :key='index' @click="goProductDetails(item.id)">
 				<view class="left_img_src">
 					<image class="statr_oss" :src="item.listUrl " mode=""></image>
 				</view>
@@ -84,19 +84,22 @@
 					<view class="product_title">{{item.commodityName}}</view>
 					<view class="worth">价值：{{item.priceOriginal}}</view>
 					<view class="worth">数量：{{item.totalCount }}</view>
-					<view class="worth"><text>夺宝进度：</text><text class="percentage">{{item.drawPercent}}%</text></view>
+					<view class="worth"><text>夺宝进度：</text><text class="percentage">{{Math.trunc(item.drawPercent * 100)}}%</text></view>
 					<view class="schedule">
-						<view class="topline" :style="{width:item.drawPercent + '%'}"></view>
+						<view class="topline" :style="{width:Math.trunc(item.drawPercent * 100) + '%'}"></view>
 					</view>
-					<view class="treasure_icon" @click.native.stop="openConsumptionRule(item)">
+					<view class="treasure_icon" v-if="item.drawPercent < 1" @click.native.stop="openConsumptionRule(item)">
 						<image src="../../static/images/shop/treasure.png" mode=""></image>
+					</view>
+					<view v-else class="carry_out_status" :style="{color:returnOrderStatus(item.drawStatus).color}">
+						{{returnOrderStatus(item.drawStatus).status}}
 					</view>
 				</view>
 			</view>
 			<uni-load-more :iconSize="20" color="#999999" :status="status" :contentText="contentText"></uni-load-more>
-		</view>
+		</view> -->
 		
-		<view class="no_data" v-else>
+		<view class="no_data">
 			<view class="wrap_image_src">
 				<image src="../../static/images/shop/underConstruction.png" mode="widthFix"></image>
 			</view>
@@ -150,7 +153,45 @@
 			}
 			this.navListFun();
 		},
+		onPullDownRefresh(){
+			// this.clickTabListItem()
+			if(!this.$store.state.userInfo.uid){
+				this.$wxLogin();
+			}
+			this.page = 0;
+			this.navList = [];
+			// 获取夺宝商品列表
+			this.navListFun();
+			// 查询夺宝商品详情
+			this.getTreasureDetails();
+		},
 		methods: {
+			returnOrderStatus(status) {
+				switch (status) {
+					case "pending":
+						return {
+							color: "#47D347",
+							status: "进行中"
+						};
+					case "drawing":
+						return {
+							color: "#FF9733",
+							status: "待开奖"
+						};
+					case "success":
+						return {
+							color: "#EF4141",
+							status: "已中奖"
+						};
+					case "gameOver":
+						return {
+							color: "#999999",
+							status: "已结束"
+						};
+					default:
+						return "";
+				}
+			},
 			// 参与夺宝
 			statrTreasure() {
 				if (this.voucher == 0) {
@@ -182,7 +223,9 @@
 					});
 					return false;
 				}
-				
+				uni.showLoading({
+				    title: '加载中'
+				});
 				this.startGrabTreasure();
 			},
 			startGrabTreasure() {
@@ -195,6 +238,10 @@
 						this.voucher = 0;
 						// 更新夺宝劵数量
 						this.getTreasureDetails();
+						this.page = 0;
+						this.navList = [];
+						// 获取夺宝商品列表
+						this.navListFun();
 						uni.showToast({
 							title: '夺宝成功！',
 							icon: 'none',
@@ -218,9 +265,9 @@
 			addVoucher() {
 				this.voucher ++
 			},
-			goProductDetails() {
+			goProductDetails(id) {
 				uni.navigateTo({
-					url:'/treasure/productDetails/index'
+					url:'/treasure/productDetails/index?id=' + id
 				})
 			},
 			// 消费夺宝
@@ -229,9 +276,9 @@
 				this.consumptionRule = true;
 			},
 			goMyTreasure() {
-				uni.navigateTo({
-					url:'/treasure/myTreasure/index'
-				})
+				// uni.navigateTo({
+				// 	url:'/treasure/myTreasure/index'
+				// })
 			},
 			navListFun() {
 				this.$fly.get(`/app/draw/list?size=10&page=${this.page}&userId=${this.userId}&sort=createDate,desc`).then(res=>{
@@ -461,6 +508,14 @@
 							width: 36rpx;
 							height: 24rpx;
 						}
+					}
+					.carry_out_status {
+						position: absolute;
+						right: 25rpx;
+						bottom: 98rpx;
+						font-size:24rpx;
+						font-family:'PingFang SC';
+						font-weight:500;
 					}
 				}
 			}
