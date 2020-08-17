@@ -110,7 +110,6 @@
 				let obj = {
 					FRONT_OF_ID_CARD:true,
 					BACK_OF_ID_CARD:true,
-					HANDHELD_OF_ID_CARD:true
 				};
 				for(let i of this.$store.state.shop.merchantCredential){
 					if(obj[i.credentialType]){

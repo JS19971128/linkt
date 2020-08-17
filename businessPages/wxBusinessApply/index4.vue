@@ -100,10 +100,10 @@
 					<view class="item-content flex_center fz-12">
 						<view class="upload flex_center">
 							<!-- 正面 -->
-							<view class="uploadPic flex_center" v-if="shopIndex.positive">
+							<view class="uploadPic flex_center" v-if="shopIndex.positive" @click="upload('positive')">
 								<image :src="shopIndex.positive" mode="aspectFit"></image>
 							</view>
-							<view class="frame flex_center" v-else @click="upload('positive')">
+							<view class="frame flex_center" v-else @click="upload('positive')" >
 								<uni-icons class="flex_center" type="plusempty" :size="24" color="#CBCBCB"></uni-icons>
 							</view>
 						</view>
@@ -116,7 +116,7 @@
 						<!-- 反面 -->
 						<view class="upload" style="flex-direction: column;display: flex;">
 							<!-- 正面 -->
-							<view class="uploadPic flex_center" v-if="shopIndex.piclist">
+							<view class="uploadPic flex_center" v-if="shopIndex.piclist" @click="upload('piclist')">
 								<image :src="shopIndex.piclist" mode="aspectFit"></image>
 							</view>
 							<view class="frame flex_center" v-else @click="upload('piclist')">
@@ -128,6 +128,7 @@
 				</view>
 			</view>
 		</view>
+		<view class="service fz-12"><view class="shop-title-check checkbox" :class="{'active':isActive}" @click="txtParentActive()"></view><text>入驻需要勾选以下协议</text><text class="agreement" @click="goService">《商家隐私政策》</text></view>
 		<view class="btn fz-14 flex_center bc" @click="submit()">保存</view>
 		<view class="btn fz-14 flex_center" @click="submit(true)">提交审核</view>
 		<!-- 地区选择 -->
@@ -150,6 +151,7 @@
 			return {
 				industryList:[],
 				show:false,
+				isActive:false
 			}
 		},
 		computed:{
@@ -212,6 +214,14 @@
 					url
 				})
 			},
+			txtParentActive(){
+				this.isActive = !this.isActive;
+			},
+			goService(){  //进入商家隐私政策
+				uni.navigateTo({
+					url: '/businessPages/wxBusinessApply/help'
+				})
+			},
 			// 上传证件照
 			upload(type){
 				uni.chooseImage({
@@ -258,7 +268,6 @@
 					...shopIndex,
 					contactAddress:shopIndex.address
 				}
-				
 				for(let i in data){
 					if(!data[i]){
 						wx.showToast({
@@ -279,7 +288,7 @@
 				
 				this.$store.commit('SETSHOPINDEX',data);
 				if(go){
-					let {legalPerson,enterprise,bank,merchantCredential,userId} = this;
+					let {legalPerson,enterprise,bank,merchantCredential,userId,isActive} = this;
 					
 					if(!legalPerson.legalPersonID){
 						wx.showToast({
@@ -289,7 +298,7 @@
 						})
 						return ;
 					}
-					if(!enterprise.industryTypeCode){
+					if(!enterprise.merchantType){
 						wx.showToast({
 						  title:'请完善企业信息',
 						  icon: 'none',
@@ -305,8 +314,18 @@
 						})
 						return ;
 					}
+					
+					if(!isActive){
+						wx.showToast({
+						  title:'请勾选商家隐私政策！',
+						  icon: 'none',
+						  duration: 2500
+						})
+						return ;
+					}
+					
 					let SIGN_BOARD = false,INTERIOR_PHOTO = false;
-					for(let i of merchantCredential){
+					merchantCredential.forEach((i,v)=>{
 						if(i.credentialType==='SIGN_BOARD'){
 							SIGN_BOARD = true;
 						}
@@ -314,7 +333,11 @@
 						if(i.credentialType==='INTERIOR_PHOTO'){
 							INTERIOR_PHOTO = true;
 						}
-					}
+						
+						if(!i.credentialUrl){
+							merchantCredential.splice(v,1); 
+						}
+					})
 					
 					if(!SIGN_BOARD){
 						merchantCredential.push({
@@ -328,6 +351,8 @@
 							credentialUrl:shopIndex.piclist,
 						});
 					}
+					
+				
 					
 					console.log(data)
 					let idCardStartDate = legalPerson.idCardStartDate.split('-');
@@ -545,6 +570,44 @@
 			background: #fff;
 			color: #FF9D11;
 			border: solid 2rpx #FF9D11;
+		}
+	}
+	.service{
+		line-height: 32rpx;
+		text-align: center;
+		margin-top: 30rpx;
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: flex;
+		color: #999999;
+		align-content: center;
+		justify-content: center;
+
+		.agreement{
+			color: #50A9E6;
+		}
+	}
+	.checkbox{
+		width:32rpx;
+		height:32rpx;
+		border:2rpx solid rgba(204, 204, 204, 1);
+		border-radius:50%;
+		margin-right: 20rpx;
+		&.active{
+			background: #FFAD5D;
+			position: relative;
+			border-color:#FFAD5D ;
+			&::before{
+				content: "";
+				position: absolute;
+				background: url(../../static/images/shop/check.png) no-repeat;
+				background-size: 16rpx 16rpx;
+				width: 16rpx;
+				height: 16rpx;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%,-50%);
+			}
 		}
 	}
 </style>

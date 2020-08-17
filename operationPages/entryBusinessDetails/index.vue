@@ -1,21 +1,24 @@
 <template>
 	<view class="container">
-		<view class="top flex_center fz-14">
+		<view class="top flex_center fz-14" :class="[form.status]">
 			<view class="top-left">
-				<view class="">申请编号：<text>LK_asa74wf454548</text></view>
-				<view class="">商户号：<text>LK_asa74wf454548</text></view>
+				<view class="">申请编号：<text>{{form.id}}</text></view>
+				<view class="">商户号：<text>{{form.merchantNo}}</text></view>
 			</view>
-			<view class="top-right flex_between">待审核</view>
+			<view class="top-right flex_between">{{statusFun(form.status).name}}</view>
 		</view>
 		<view class="tab flex_center fz-14">
 			<view class="item flex_center" :class="{active:current == item.value}" v-for="item in tab" :key="item.id" @click="changeTab(item.value)">{{item.text}}</view>
 		</view>
 		<!-- 法人信息 -->
-		<legal-info :show="current == 'legal' ? true : false"></legal-info>
+		<legal-info ref="legalInfoForm" :show="current == 'legal' ? true : false"></legal-info>
 		<!-- 企业设置 -->
-		<company-info :show="current == 'company' ? true : false"></company-info>
+		<company-info ref="companyInfoForm" :show="current == 'company' ? true : false"></company-info>
 		<!-- 银行信息 -->
-		<bank-info :show="current == 'bank' ? true : false"></bank-info>
+		<bank-info ref="bankInfoForm" :show="current == 'bank' ? true : false"></bank-info>
+		<!-- 商家信息 -->
+		<shop-info ref="shopInfoForm" :show="current == 'shop' ? true : false"></shop-info>
+		<view class="btn fz-14 flex_center" @click="stm">查询并更新</view>
 	</view>
 </template>
 
@@ -23,26 +26,119 @@
 	import legalInfo from './legalInfo/index.vue';
 	import companyInfo from './companyInfo/index.vue';
 	import bankInfo from './bankInfo/index.vue';
+	import shopInfo from './shopInfo/index.vue';
+	import {formateObjToParamStr,formatTime} from '@/common/util/util.js'
 	export default{
 		components:{
 			legalInfo,
 			companyInfo,
-			bankInfo
+			bankInfo,
+			shopInfo
 		},
 		data() {
 			return {
 				current:'legal',
+				form:{},
+				imgMsg:{},
 				tab:[
 					{id:1,text:'法人信息',value:'legal'},
 					{id:2,text:'企业设置',value:'company'},
 					{id:3,text:'银行信息',value:'bank'},
+					{id:4,text:'商家信息',value:'shop'},
+				],
+				statusArr: [{
+						name: '待审核',
+						type: 'AUDITED',
+						color:'#6e9a02'
+					},
+					{
+						name: '已通过',
+						type: 'PASS',
+						color:'#5cbe88'
+					},
+					{
+						name: '已完成',
+						type: 'FINISH',
+						color:'#999999'
+					},
+					{
+						name: '未通过',
+						type: 'FAILED',
+						color:'#ce1212'
+					}
 				],
 			}
 		},
 		methods:{
+			statusFun(status){
+				for(let i of this.statusArr){
+					if(i.type === status){
+						return i;
+					}
+				}
+				return {
+						name: '未通过',
+						type: 'FAILED',
+						color:'#ce1212'
+					}
+			},
 			changeTab(value){
 				this.current = value;
 			},
+			async init(){
+				try{
+					uni.showLoading({
+						title:'加载中'
+					})
+					let {userId} = this;
+					let data = {
+						userId
+					}
+					let details = await this.$fly.post(`/entry/findMerchantEntryByUserId?${formateObjToParamStr(data)}`);
+					let form = details.data;
+					
+					let imgMsg = '';
+					let nameObj = {
+						FRONT_OF_ID_CARD:'正面身份证',
+						BACK_OF_ID_CARD:'反面身份证',
+						BUSINESS_LICENSE:'营业执照',
+						PERMIT_FOR_BANK_ACCOUNT:'开户许可证',
+						SIGN_BOARD:'门头照',
+						INTERIOR_PHOTO:'室内照'
+					}
+					for(let i of form.merchantCredential){
+						if(i.status!=='SUCCESS'){
+							imgMsg+=`${nameObj[i.credentialType]}审核未通过，`
+						}
+						i.name = nameObj[i.credentialType]
+					}
+					this.imgMsg = imgMsg&&form.msg + imgMsg+'请修改后重新上传。';
+					this.form = form;
+					
+					
+					this.$refs.legalInfoForm.init(form);
+					this.$refs.companyInfoForm.init(form);
+					this.$refs.bankInfoForm.init(form);
+					this.$refs.shopInfoForm.init(form);
+					
+					// debugger
+				}catch(e){
+					uni.showToast({
+					    title: '加载数据失败！',
+					    duration: 2000,
+						icon:'none'
+					});
+				}finally{
+					uni.hideLoading();
+				}
+			},
+			stm(){
+				console.log(this.form)
+			}
+		},
+		onLoad(query) {
+			this.userId = query.id;
+			this.init();
 		}
 	}
 </script>
@@ -51,6 +147,9 @@
 	.container{
 		padding-top: 50rpx;
 		min-height: 100vh;
+		box-sizing: border-box;
+		padding-bottom: 130rpx;
+		height: auto !important;
 		.top{
 			width: 710rpx;
 			height: 180rpx;
@@ -60,6 +159,21 @@
 			box-shadow: 0 0 20rpx 2rpx rgba(0,0,0,.1);
 			color: #999999;
 			margin-bottom: 50rpx;
+			background-repeat: no-repeat;
+			background-position: right;
+			background-size: 180rpx 180rpx;
+			&.AUDITED{
+				background-image: url(../../static/images/operation/sh_01.png);
+			}
+			&.PASS{
+				background-image: url(../../static/images/operation/sh_02.png);
+			}
+			&.FINISH{
+				background-image: url(../../static/images/operation/sh_03.png);
+			}
+			&.FAILED{
+				background-image: url(../../static/images/operation/sh_04.png);
+			}
 			.top-left{
 				width: 530rpx;
 				line-height: 50rpx;
@@ -69,7 +183,8 @@
 				}
 			}
 			.top-right{
-				width: 180rpx;
+				width: 130rpx;
+				color: #fff;
 			}
 		}
 		.tab{
@@ -97,5 +212,16 @@
 				}
 			}
 		}
+	}
+	.btn{
+		width: 670rpx;
+		height: 74rpx;
+		border-radius: 37rpx;
+		background: #FF9D11;
+		color: #fff;
+		position: fixed;
+		left: 50%;
+		transform: translateX(-50%);
+		bottom: 30rpx;
 	}
 </style>

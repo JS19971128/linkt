@@ -5,64 +5,29 @@
 			<view class="item flex_center">
 				<view class="item-name">法人姓名</view>
 				<view class="item-content">
-					<input class="frame" type="text" placeholder="请输入法人姓名" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+					<input v-model="form.legalPerson" disabled class="frame" type="text" placeholder="请输入法人姓名" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 				</view>
-			</view>
-			<!-- 证件类型 -->
-			<view class="item flex_center">
-				<view class="item-name">证件类型</view>
-				<view class="item-content ">
-					<!-- 证件类型选择 -->
-					<picker mode="selector" :range="certificates" @change="bindChange">
-						<view class="flex_between">
-							<view>{{current}}</view>
-							<view>
-								<image class="more" src="../../../static/images/common/xiala.png" mode="widthFix"></image>
-							</view>
-						</view>
-					</picker>
-				</view>
-			</view>
-			<!-- 身份证号 -->
+			</view> 
+			<!-- 证件号码 -->
 			<view class="item flex_center">
 				<view class="item-name">身份证号</view>
 				<view class="item-content">
-					<input class="frame" type="text" placeholder="请输入法人18位身份证号码" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+					<input v-model="form.legalPersonID" disabled class="frame" type="text" placeholder="请输入身份证号" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 				</view>
-			</view>
-			<!-- 身份证照 -->
+			</view> 
+			<!-- 证件照 -->
 			<view class="item flex_center">
 				<view class="item-name">身份证照</view>
 				<view class="item-content flex_center fz-12">
-					<view class="upload flex_center">
+					<view class="upload flex_center" v-for="(item,index) in imgArr" :key="index">
 						<!-- 正面 -->
-						<view class="uploadPic flex_center" v-if="positive">
-							<image class="pic" :src="positive" mode="aspectFit"></image>
+						<view class="uploadPic flex_center" v-if="item.credentialUrl" @click="upload(index,'credentialUrl')">
+							<image :src="item.credentialUrl" mode="aspectFit"></image>
 						</view>
-						<view class="frame flex_center" v-else @click="upload('positive')">
+						<view class="frame flex_center" v-else @click="upload(index,'credentialUrl')">
 							<uni-icons class="flex_center" type="plusempty" :size="24" color="#CBCBCB"></uni-icons>
 						</view>
-						<view>正面</view>
-					</view>
-					<!-- 反面 -->
-					<view class="upload flex_center">
-						<view class="uploadPic flex_center" v-if="opposite">
-							<image class="pic" :src="opposite" mode="aspectFit"></image>
-						</view>
-						<view class="frame flex_center" v-else @click="upload('opposite')">
-							<uni-icons class="flex_center" type="plusempty" :size="24" color="#CBCBCB"></uni-icons>
-						</view>
-						<view>反面</view>
-					</view>
-					<!-- 手持证件照 -->
-					<view class="upload flex_center">
-						<view class="uploadPic flex_center" v-if="handHold">
-							<image class="pic" :src="handHold" mode="aspectFit"></image>
-						</view>
-						<view class="frame flex_center" v-else @click="upload('handHold')">
-							<uni-icons class="flex_center" type="plusempty" :size="24" color="#CBCBCB"></uni-icons>
-						</view>
-						<view>手持证件照</view>
+						<view>{{item.name}}</view>
 					</view>
 				</view>
 			</view>
@@ -72,21 +37,30 @@
 				<view class="item-content flex_center">
 					<view class="">
 						<!-- 有效期选择 -->
-						<picker mode="date" @change="startDateChange">
-							<view class="flex_between" :class="{date:start=='yyyymmdd',active:start!=='yyyymmdd'}">{{start}}</view>
-						</picker>
+						{{form.idCardStartDate | dateTime}}
 					</view>
 					<view class="line">—</view>
 					<view class="">
 						<!-- 有效期选择 -->
-						<picker mode="date" @change="stopDateChange">
-							<view class="flex_between" :class="{date:stop=='yyyymmdd',active:stop!=='yyyymmdd'}">{{stop}}</view>
-						</picker>
+						{{form.idCardEndDate | dateTime}}
 					</view>
 				</view>
 			</view>
+			<!-- 证件号码 -->
+			<view class="item flex_center">
+				<view class="item-name">联系电话</view>
+				<view class="item-content">
+					<input v-model="form.linkPhone" disabled class="frame" type="text" placeholder="请输入联系电话" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+				</view>
+			</view> 
+			<!-- 联系邮箱 -->
+			<view class="item flex_center">
+				<view class="item-name">联系邮箱</view>
+				<view class="item-content">
+					<input v-model="form.email" disabled class="frame" type="text" placeholder="请输入联系邮箱" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+				</view>
+			</view> 
 		</view>
-		<view class="btn fz-14 flex_center">查询并更新</view>
 	</view>
 </template>
 
@@ -96,43 +70,70 @@
 		props:["show"],
 		data() {
 			return {
-				certificates:['身份证','护照','驾驶证'],
-				current:'身份证',
-				start:'yyyymmdd',
-				stop:'yyyymmdd',
-				positive:'',
-				opposite:'',
-				handHold:'',
+				form:{}
 			}
 		},
 		computed:{
 			ifShow(){
 				return this.show;
-			}
+			},
+			imgArr(){
+				let arr = [];
+				let obj = {
+					FRONT_OF_ID_CARD:true,
+					BACK_OF_ID_CARD:true,
+				};
+				console.log(this.form)
+				if(JSON.stringify(this.form) == "{}"){
+					return;
+				}
+				for(let i of this.form.merchantCredential){
+					if(obj[i.credentialType]){
+						arr.push(i)
+					}
+				}
+				return arr;
+			},
 		},
 		methods:{
-			// 选择证件类型
-			bindChange($event){
-				this.current = this.certificates[$event.detail.value]
-			},
-			// 上传证件照
-			upload(type){
+			upload(index,type){
 				uni.chooseImage({
 					count:1,
 					success: res => {
-						console.log(res)
-						this[type] = res.tempFilePaths[0];
+						// console.log(res)
+						let file = res.tempFilePaths[0];
+						uni.getFileInfo({
+							filePath:file,
+							success: (res) => {
+								if(res.size < 5000){
+									uni.showToast({
+										title:'请上传不小于5KB的图片'
+									})
+								}else{
+									uni.uploadFile({
+										url: `${this.$store.state.baseUrl}/upload/?serviceType=user`,
+										filePath: file,
+										fileType: 'image',
+										name:' file',
+										success:res=>{
+											let url = JSON.parse(res.data).data;
+											this.imgArr[index][type] = url.replace('http','https');
+										}
+									})
+								}
+							}
+						})
 					}
 				})
 			},
-			// 选择起始日期
-			startDateChange($event){
-				this.start = $event.detail.value;
-			},
-			// 选择结束日期
-			stopDateChange($event){
-				this.stop = $event.detail.value;
+			init(form){
+				this.form = form;
 			}
+		},
+		filters:{
+			dateTime(time){
+				return time && time.slice(0,4)+'-'+time.slice(4,6)+'-'+time.slice(6);
+			},
 		}
 	}
 </script>
@@ -192,6 +193,11 @@
 							height: 120rpx;
 							margin-bottom: 10rpx;
 							.pic{
+								width: 120rpx;
+								height: 120rpx;
+								display: block;
+							}
+							image{
 								width: 120rpx;
 								height: 120rpx;
 								display: block;

@@ -71,11 +71,6 @@ const state = {
 			name:'反面'
 		},
 		{
-			credentialType:'HANDHELD_OF_ID_CARD',
-			credentialUrl:'',
-			name:'手持证件照'
-		},
-		{
 			credentialType:'BUSINESS_LICENSE',
 			credentialUrl:'',
 			name:'营业执照'

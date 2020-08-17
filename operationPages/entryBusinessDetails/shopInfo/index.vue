@@ -1,25 +1,30 @@
 <template>
 	<view class="info fz-14" v-show="ifShow">
 		<view class="main">
-			<!-- 账户类型 -->
+			<!-- 所属行业 -->
 			<view class="item flex_center">
-				<view class="item-name">账户类型</view>
-				<view class="item-content">{{form.settleBankType|settleBankType}}</view>
+				<view class="item-name">所属行业</view>
+				<view class="item-content">{{form.shopBusinessName}}</view>
 			</view>
-			<!-- 开户银行 -->
+			<!-- 让利比率 -->
 			<view class="item flex_center">
-				<view class="item-name">开户银行</view>
-				<view class="item-content">{{form.bankName}}</view>
+				<view class="item-name">让利比率</view>
+				<view class="item-content">{{form.profits||0}}%</view>
 			</view>
-			<!-- 联行号 -->
+			<!-- 店铺地址 -->
 			<view class="item flex_center">
-				<view class="item-name">联行号</view>
-				<view class="item-content">{{form.bankCode}}</view>
+				<view class="item-name">店铺地址</view>
+				<view class="item-content">{{form.area}}</view>
 			</view>
-			<!-- 账户卡号 -->
+			<!-- 详细地址 -->
 			<view class="item flex_center">
-				<view class="item-name">账户卡号</view>
-				<view class="item-content">{{form.accountNo}}</view>
+				<view class="item-name">详细地址</view>
+				<view class="item-content">{{form.address}}</view>
+			</view>
+			<!-- 营业时间 -->
+			<view class="item flex_center">
+				<view class="item-name">营业时间</view>
+				<view class="item-content">{{form.shopStartTime}}-{{form.shopStopTime}}</view>
 			</view>
 		</view>
 	</view>
@@ -41,17 +46,7 @@
 		},
 		methods:{
 			init(form){
-				this.form = form;
-			}
-		},
-		filters:{
-			// 账户类型
-			settleBankType(data){
-				let obj = {
-					TOPUBLIC:'对公账户',
-					TOPRIVATE:'个人账户'
-				}
-				return obj[data];
+				this.form = form	
 			}
 		}
 	}

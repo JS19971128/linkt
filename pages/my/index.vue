@@ -246,7 +246,7 @@
 					})
 				}else{
 					uni.navigateTo({
-						url: '/pages/login/login'
+						url: '/pages/login/sign'
 					})
 				}
 			},
@@ -340,7 +340,7 @@
 					})
 				}else{
 					uni.navigateTo({
-						url: '/pages/login/login'
+						url: '/pages/login/sign'
 					})
 				}
 			},

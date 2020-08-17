@@ -138,6 +138,7 @@
 					}
 				})
 			}else{
+				this.mobile = this.$store.state.userInfo.username || '';
 				this.codeText = '获取验证码';
 			}
 		}
