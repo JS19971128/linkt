@@ -27,8 +27,8 @@
 				</view>
 				<!-- 继续夺宝--确认订单 -->
 				<view class="Keep_winning" v-if="drawStatus == 'success' || drawStatus == 'pending'">
-					<!-- <view class="winning" v-if="drawStatus == 'pending'"><view class="winning_text" :class="{'background_active' : item.drawPercent < 1}"  @click="startTreasure(item)">继续夺宝</view></view> -->
-					<view class="winning" ><view class="winning_text background_active" @click="confirmOrder(item)">确认订单</view></view>
+					<view class="winning" v-if="drawStatus == 'pending'"><view class="winning_text" :class="{'background_active' : item.drawPercent < 1}"  @click="startTreasure(item)">继续夺宝</view></view>
+					<view class="winning" v-if="drawStatus == 'success'" ><view class="winning_text background_active" @click="confirmOrder(item)">确认订单</view></view>
 				</view>
 			</view>
 			<uni-load-more :iconSize="20" color="#999999" :status="status" :contentText="contentText"></uni-load-more>

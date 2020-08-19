@@ -74,7 +74,7 @@
 			<image src="../../static/images/shop/hot.png" mode=""></image>
 		</view>
 		<!-- 列表 -->
-	<!-- 	<view class="treasure_bdi" v-if="navList.length > 0">
+		<view class="treasure_bdi" v-if="navList.length > 0">
 			
 			<view class="wrap_list_content" v-for="(item,index) in navList" :key='index' @click="goProductDetails(item.id)">
 				<view class="left_img_src">
@@ -97,9 +97,9 @@
 				</view>
 			</view>
 			<uni-load-more :iconSize="20" color="#999999" :status="status" :contentText="contentText"></uni-load-more>
-		</view> -->
+		</view>
 		
-		<view class="no_data">
+		<view class="no_data" v-else>
 			<view class="wrap_image_src">
 				<image src="../../static/images/shop/underConstruction.png" mode="widthFix"></image>
 			</view>
@@ -276,9 +276,9 @@
 				this.consumptionRule = true;
 			},
 			goMyTreasure() {
-				// uni.navigateTo({
-				// 	url:'/treasure/myTreasure/index'
-				// })
+				uni.navigateTo({
+					url:'/treasure/myTreasure/index'
+				})
 			},
 			navListFun() {
 				this.$fly.get(`/app/draw/list?size=10&page=${this.page}&userId=${this.userId}&sort=createDate,desc`).then(res=>{

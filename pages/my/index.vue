@@ -48,7 +48,7 @@
 					<view class="number" v-else>***</view>
 					<view class="text">我的好友</view>
 				</view>
-				<view class="number_text" @click="goWhereWithReg('/userPages/coinPurse/index')">
+				<view class="number_text">
 					<view class="number" v-if="balanceValue">{{balanceValue.balance}}</view>
 					<view class="number" v-else>***</view>
 					<view class="text">零钱包</view>

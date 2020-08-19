@@ -103,15 +103,38 @@
 					duration: 2500
 				})
 				
-				this.$store.commit('SETADDRESS',consumerInfo); //存储地址栏
-				
-				uni.redirectTo({
-					url: `/shoppingPages/payment/index`
+				let param = {
+					addrInfo: consumerInfo.address,
+					consigneeName: consumerInfo.name,
+					consigneePhone: consumerInfo.mobile,
+					drawNo: this.drawDetails.drawNo,
+					freight: 0,
+					orderNo: '',
+					pricePaid: 0
+				}
+				this.$fly.post(`/app/draw/order/save`,param).then(res => {
+					uni.hideLoading();
+					if (res.code == 0) {
+						wx.showToast({
+						  title: '成功！',
+						  icon: 'none',
+						  duration: 2500
+						})
+						uni.navigateBack({
+						    delta: 1
+						});
+					} else {
+						uni.showToast({
+							title: res.message,
+							icon: 'none',
+							duration: 2000
+						});
+					}
+					
 				})
 			},
 		},
 		onLoad(res) {
-			console.log(res)
 			this.getDrawDetails(res.id);
 			if(!this.$store.state.userInfo.uid){
 				this.$wxLogin();
