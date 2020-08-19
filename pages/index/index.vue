@@ -157,9 +157,11 @@
 			// #endif
 		},
 		onShow:function() {
-			if(!this.$store.state.userInfo.uid){
-				this.$wxLogin();
-			}
+			// #ifdef MP-WEIXIN
+				if(!this.$store.state.userInfo.uid){
+					this.$wxLogin();
+				}
+			// #endif
 		},
 		onPullDownRefresh: function(){
 			// 下拉刷新
@@ -170,6 +172,11 @@
 			this.getLocationAuth();
 			// #endif
 		},
+		onShareAppMessage(){
+			return {
+				path: 'pages/index/index',
+			}
+		}
 	}
 </script>
 

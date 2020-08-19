@@ -65,14 +65,14 @@
 						<view class="">
 							<!-- 有效期选择 -->
 							<picker mode="date" @change="startDateChange">
-								<view class="flex_between" :class="{date:legalPersonFrom.idCardStartDate=='yyyymmdd',active:legalPersonFrom.idCardStartDate!=='yyyymmdd'}">{{legalPersonFrom.idCardStartDate}}</view>
+								<view class="flex_between" :class="{date:legalPersonFrom.idCardStartDate=='',active:legalPersonFrom.idCardStartDate!==''}">{{legalPersonFrom.idCardStartDate || 'yyyymmdd'}}</view>
 							</picker>
 						</view>
 						<view class="line">—</view>
 						<view class="">
 							<!-- 有效期选择 -->
 							<picker mode="date" @change="stopDateChange">
-								<view class="flex_between" :class="{date:legalPersonFrom.idCardEndDate=='yyyymmdd',active:legalPersonFrom.idCardEndDate!=='yyyymmdd'}">{{legalPersonFrom.idCardEndDate}}</view>
+								<view class="flex_between" :class="{date:legalPersonFrom.idCardEndDate=='',active:legalPersonFrom.idCardEndDate!==''}">{{legalPersonFrom.idCardEndDate||"yyyymmdd"}}</view>
 							</picker>
 						</view>
 					</view>

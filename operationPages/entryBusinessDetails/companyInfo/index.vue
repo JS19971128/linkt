@@ -246,6 +246,11 @@
 								height: 120rpx;
 								display: block;
 							}
+							image{
+								width: 120rpx;
+								height: 120rpx;
+								display: block;
+							}
 						}
 					}
 				}

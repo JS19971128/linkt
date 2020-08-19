@@ -151,7 +151,7 @@
 					<view class="item-name">起始时间</view>
 					<view class="item-content">
 						<picker mode="date" :value="enterprise.businessDateStart" @change="startDateChange">
-							<view class="flex_between" :class="{date:enterprise.businessDateStart=='请选择营业执照上的经营起始时间',active:enterprise.businessDateStart!=='请选择营业执照上的经营起始时间'}">{{enterprise.businessDateStart}}</view>
+							<view class="flex_between" :class="{date:enterprise.businessDateStart=='',active:enterprise.businessDateStart!==''}">{{enterprise.businessDateStart||'请选择营业执照上的经营起始时间'}}</view>
 						</picker>
 					</view>
 				</view>
@@ -160,7 +160,7 @@
 					<view class="item-name">期限时间</view>
 					<view class="item-content">
 						<picker mode="date" :value="enterprise.businessDateLimit" @change="stopDateChange">
-							<view class="flex_between" :class="{date:enterprise.businessDateLimit=='请选择营业执照上的经营期限时间',active:enterprise.businessDateLimit!=='请选择营业执照上的经营期限时间'}">{{enterprise.businessDateLimit}}</view>
+							<view class="flex_between" :class="{date:enterprise.businessDateLimit=='',active:enterprise.businessDateLimit!==''}">{{enterprise.businessDateLimit||'请选择营业执照上的经营期限时间'}}</view>
 						</picker>
 					</view>
 				</view>

@@ -7,6 +7,7 @@
 			</view>
 			<view class="top-right flex_between">{{statusFun(form.status).name}}</view>
 		</view>
+		<view class="inError" v-if="form.status=='FAILED'">驳回原因：{{imgMsg}}</view>
 		<view class="tab flex_center fz-14">
 			<view class="item flex_center" :class="{active:current == item.value}" v-for="item in tab" :key="item.id" @click="changeTab(item.value)">{{item.text}}</view>
 		</view>
@@ -18,7 +19,11 @@
 		<bank-info ref="bankInfoForm" :show="current == 'bank' ? true : false"></bank-info>
 		<!-- 商家信息 -->
 		<shop-info ref="shopInfoForm" :show="current == 'shop' ? true : false"></shop-info>
-		<view class="btn fz-14 flex_center" @click="stm">查询并更新</view>
+		<view class="btns" v-if="form.status=='FAILED' || form.status==='PASS'">
+			<view class="btn fz-14 flex_center" v-if="form.status=='FAILED'" @click="submit">查询并更新</view>
+			<view class="btn fz-14 flex_center" v-if="form.status==='PASS'" @click="updateEntryStatus">已完成</view>
+		</view>
+		
 	</view>
 </template>
 
@@ -70,6 +75,31 @@
 			}
 		},
 		methods:{
+			//修改已通过状态
+			async updateEntryStatus(){
+				try{
+					let {id} = this.form;
+					uni.showLoading({
+						title:'加载中'
+					})
+					let data = await this.$fly.post(`/entry/updateEntryStatus?id=${id}&status=FINISH`);
+					uni.showToast({
+					    title: '修改成功！',
+					    duration: 2000,
+						icon:'none'
+					});
+					this.init();
+				}catch(e){
+					console.error(e)
+					uni.showToast({
+					    title: '修改失败，请稍后重试！',
+					    duration: 2000,
+						icon:'none'
+					});
+				}finally{
+					uni.hideLoading();
+				}
+			},
 			statusFun(status){
 				for(let i of this.statusArr){
 					if(i.type === status){
@@ -132,9 +162,36 @@
 					uni.hideLoading();
 				}
 			},
-			stm(){
-				console.log(this.form)
-			}
+			//提交
+			async submit(){
+				let {merchantCredential} = this.form;
+				try{
+					uni.showLoading({
+						title:'加载中'
+					})
+					for(let i of merchantCredential){
+						delete i.status;
+						let params = formateObjToParamStr(i);
+						await this.$fly.post(`/entry/alterCredential?${params}`);
+					}
+					uni.showToast({
+					    title: '修改成功！',
+					    duration: 2000,
+						icon:'none'
+					});
+					// let data = await request.call(this,{method: "post",url:API.alterCredential,params});
+				}catch(e){
+					//TODO handle the exception
+					console.error(e)
+					uni.showToast({
+					    title: '修改失败！',
+					    duration: 2000,
+						icon:'none'
+					});
+				}finally{
+					uni.hideLoading();
+				}
+			},
 		},
 		onLoad(query) {
 			this.userId = query.id;
@@ -213,15 +270,37 @@
 			}
 		}
 	}
-	.btn{
-		width: 670rpx;
-		height: 74rpx;
-		border-radius: 37rpx;
-		background: #FF9D11;
-		color: #fff;
+	.btns{
+		width: 100%;
 		position: fixed;
-		left: 50%;
-		transform: translateX(-50%);
-		bottom: 30rpx;
+		left: 0;
+		bottom: 0;
+		height: 100rpx;
+		background: #fff;
+		box-shadow:0px -1px 0px 0px rgba(222,222,222,1);
+		display: flex;
+		padding: 20rpx;
+		box-sizing: border-box;
+		.btn{
+			flex: 1;
+			margin: 0 20rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			line-height: 1.2;
+			color: #fff;
+			background: #FF9D12;
+			border-radius: 50rpx;
+		}
+	}
+	.inError{
+		margin: 0 20rpx 20rpx;
+		padding: 5px 10px;
+		background: #ffe5e5;
+		color: rgba(255,98,119,1);
+		border-radius: 4px;
+		display:inline-block;
+		line-height: 1.2;
+		font-size: 12px;
 	}
 </style>

@@ -82,14 +82,14 @@
 						<view class="">
 							<!-- 营业时间选择 -->
 							<picker mode="time" @change="startDateChange">
-								<view class="flex_between" :class="{date:shopIndex.shopStartTime=='开始时间',active:shopIndex.shopStartTime!=='开始时间'}">{{shopIndex.shopStartTime}}</view>
+								<view class="flex_between" :class="{date:shopIndex.shopStartTime=='',active:shopIndex.shopStartTime!==''}">{{shopIndex.shopStartTime||'开始时间'}}</view>
 							</picker>
 						</view>
 						<view class="line">—</view>
 						<view class="">
 							<!-- 营业时间选择 -->
 							<picker mode="time" @change="stopDateChange">
-								<view class="flex_between" :class="{date:shopIndex.shopStopTime=='结束时间',active:shopIndex.shopStopTime!=='结束时间'}">{{shopIndex.shopStopTime}}</view>
+								<view class="flex_between" :class="{date:shopIndex.shopStopTime=='',active:shopIndex.shopStopTime!==''}">{{shopIndex.shopStopTime||'结束时间'}}</view>
 							</picker>
 						</view>
 					</view>
@@ -122,7 +122,7 @@
 							<view class="frame flex_center" v-else @click="upload('piclist')">
 								<uni-icons class="flex_center" type="plusempty" :size="24" color="#CBCBCB"></uni-icons>
 							</view>
-							<view class="flex_center">请上传1张门店室内照，才可通过审核喔~</view>
+							<view class="mt10 flex_center">请上传1张门店室内照，才可通过审核喔~</view>
 						</view>
 					</view>
 				</view>
@@ -609,5 +609,8 @@
 				transform: translate(-50%,-50%);
 			}
 		}
+	}
+	.mt10{
+		margin-top: 20rpx;
 	}
 </style>

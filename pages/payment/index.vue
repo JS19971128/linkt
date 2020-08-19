@@ -203,48 +203,94 @@
 					})
 					return
 				}
+				
 				let params = {
 					"couponIds": this.couponIds.toString(),
 					"ip": "127.0.0.1",
 					"merchantId": this.queryInfo.merchantId,
 					"pricePaid": this.needPay,
 					"priceTotal": this.queryInfo.money,
-					"userId": this.$store.state.userInfo.id
+					"userId": this.$store.state.userInfo.id,
+					bizType:'AppPayApplet',
+					payType:'APPLET',
+					registType:'WECHAT',
+					openId:this.$store.state.userInfo.openId
 				}
+				// #ifdef MP-ALIPAY
+				params.bizType = 'AppPay';
+				params.payType = 'SCAN';
+				params.registType = 'ALIPAY';
+				// #endif
 				uni.showLoading({
 					title:'加载中'
 				})
-				// 请求后端支付接口
-				// #ifdef MP-ALIPAY
-				this.$fly.post('/order/pay/aliJsPay',params)
-				.then(res=>{
-					setTimeout(()=>{uni.hideLoading()},2000);
-					if(res.code == 0){
-						this.aliPay(res.data.tradeNo);
-					}else{
-						uni.showToast({
-							title:res.message,
-							icon: 'none'
-						})
-					}
-				})
-				.catch(err=>{})
-				// #endif
-				// #ifdef MP-WEIXIN
-				this.$fly.post('/order/pay/jsPay',params)
-				.then(res=>{
-					setTimeout(()=>{uni.hideLoading()},2000);
-					if(res.code == 0){
-						this.wechatPay(res.data);
-					}else{
-						uni.showToast({
-							title:res.message,
-							icon: 'none'
-						})
-					}
-				})
-				.catch(err=>{})
-				// #endif
+				try{
+					this.$fly.post('/transfer/wxpay',params)
+					.then(res=>{
+						setTimeout(()=>{uni.hideLoading()},2000);
+						if(res.code == 0){
+							let tradeNo = JSON.parse(res.data.data.rt10_payInfo);
+							// #ifdef MP-WEIXIN
+							// this.wechatPay(tradeNo);
+							// #endif
+							// #ifdef MP-ALIPAY
+							// this.aliPay(tradeNo);
+							// #endif
+						}else{
+							uni.showToast({
+								title:res.message,
+								icon: 'none'
+							})
+						}
+					})
+				}catch(e){
+					//TODO handle the exception
+					uni.showToast({
+						title:'拉起支付失败！',
+						icon: 'none'
+					})
+				}
+				
+				
+				// let params = {
+				// 	"couponIds": this.couponIds.toString(),
+				// 	"ip": "127.0.0.1",
+				// 	"merchantId": this.queryInfo.merchantId,
+				// 	"pricePaid": this.needPay,
+				// 	"priceTotal": this.queryInfo.money,
+				// 	"userId": this.$store.state.userInfo.id
+				// }
+				// // 请求后端支付接口
+				// // #ifdef MP-ALIPAY
+				// this.$fly.post('/order/pay/aliJsPay',params)
+				// .then(res=>{
+				// 	setTimeout(()=>{uni.hideLoading()},2000);
+				// 	if(res.code == 0){
+				// 		this.aliPay(res.data.tradeNo);
+				// 	}else{
+				// 		uni.showToast({
+				// 			title:res.message,
+				// 			icon: 'none'
+				// 		})
+				// 	}
+				// })
+				// .catch(err=>{})
+				// // #endif
+				// // #ifdef MP-WEIXIN
+				// this.$fly.post('/order/pay/jsPay',params)
+				// .then(res=>{
+				// 	setTimeout(()=>{uni.hideLoading()},2000);
+				// 	if(res.code == 0){
+				// 		this.wechatPay(res.data);
+				// 	}else{
+				// 		uni.showToast({
+				// 			title:res.message,
+				// 			icon: 'none'
+				// 		})
+				// 	}
+				// })
+				// .catch(err=>{})
+				// // #endif
 			},
 			aliPay(tradeNo){ //调起支付宝支付
 				uni.requestPayment({
@@ -253,7 +299,7 @@
 					success: (res) => {
 						// console.log('chenggong',res)
 						if(res.resultCode == '9000'){
-							uni.switchTab({
+							uni.redirectTo({
 								url:'/pages/coupon/index'
 							})
 						}else{
@@ -269,15 +315,16 @@
 				})
 			},
 			wechatPay(payInfo) {  //微信支付
+				debugger
 				uni.requestPayment({
-					provider: 'wxpay',
+					appId: payInfo.appId,
 					timeStamp: payInfo.timeStamp,
 					nonceStr: payInfo.nonceStr,
-					package: payInfo._package,
+					package: payInfo.package,
 					signType: payInfo.signType,
 					paySign: payInfo.paySign,
 					success: (res) => {
-						uni.switchTab({
+						uni.redirectTo({
 							url:'/pages/coupon/index'
 						})
 					},
@@ -297,7 +344,7 @@
 				.then(res=>{
 					setTimeout(()=>{uni.hideLoading()},2000);
 					if(res.code == 0){
-						uni.switchTab({
+						uni.redirectTo({
 							url:'/pages/coupon/index'
 						})
 					}else{

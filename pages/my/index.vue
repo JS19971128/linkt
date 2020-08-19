@@ -48,7 +48,8 @@
 					<view class="number" v-else>***</view>
 					<view class="text">我的好友</view>
 				</view>
-				<view class="number_text" @click="goWhereWithReg('/userPages/coinPurse/index')">
+				<!-- @click="goWhereWithReg('/userPages/coinPurse/index')" -->
+				<view class="number_text">
 					<view class="number" v-if="balanceValue">{{balanceValue.balance}}</view>
 					<view class="number" v-else>***</view>
 					<view class="text">零钱包</view>
@@ -192,7 +193,7 @@
 		data() {
 			return {
 				balanceValue: '', // 优惠券，好友数量
-				phone:'0898-65324520', //联系电话
+				phone:'4000871349', //联系电话
 				levelImg:'../../static/images/my/star.png',
 				merchantEntry: '商家入驻',
 				url:'',  //商家中心、商家入驻、商家审核状态
@@ -268,7 +269,7 @@
 			getJInjian(){
 				this.$fly.post('/entry/findMerchantEntryByUserId?userId='+this.userInfo.id).then(res=>{
 					if(res.code == 0){
-						if(res.data.status === 'AUDITED'){
+						if(res.data && (res.data.status === 'AUDITED' || res.data.status === 'PASS' || res.data.status === 'FINISH')){
 							this.Trurl = `/businessPages/review/index`;
 						}
 					}
@@ -394,6 +395,11 @@
 				}else{
 					this.isRealName = false;
 				}
+			}
+		},
+		onShareAppMessage(){
+			return {
+				path: 'pages/my/index',
 			}
 		}
 	}

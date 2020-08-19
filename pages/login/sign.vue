@@ -17,10 +17,10 @@
 				</view>
 				<view class="code fz-14" @click="gainCode">{{codeText}}</view>
 			</view>
-			<!-- #ifdef MP-ALIPAY -->
-			<button class="btn item flex_center fz-14" open-type="getAuthorize" scope="userInfo" @getAuthorize="getAliUserInfo" @error="aliAuthRefuse">开启我的链客智慧商圈</button>
-			<!-- #endif -->
 			<!-- #ifdef MP-WEIXIN -->
+			<button class="btn item flex_center fz-14" @click="getWxUserInfo">登录</button>
+			<!-- #endif -->
+			<!-- #ifdef MP-ALIPAY -->
 			<button class="btn item flex_center fz-14" @click="getWxUserInfo">登录</button>
 			<!-- #endif -->
 			<view class="zhuce" @click="clickUrl">立即注册</view>

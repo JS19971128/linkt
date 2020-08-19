@@ -12,7 +12,7 @@
 				<view class="detail">
 					<view class="fz-16 title">{{detail.shopNickName}}</view>
 					<view class="discount flex_center">
-						<view class="fz-14 coupon">优惠券可折扣{{lastData.discount}}%</view>
+						<view class="fz-14 coupon">最高可享{{profitsDiscount(lastData.discount)}}折</view>
 						<view class="fz-12">营业时间：{{lastData.start}} - {{lastData.stop}}</view>
 						<view class="heat flex_center">
 							<view class="flex_center">
@@ -79,6 +79,11 @@
 			}
 		},
 		methods:{
+			profitsDiscount(profits){
+				let shop = ((profits*10)*(0.7*10))/100; //70%可以用优惠券抵扣
+				let transform = ((100*10)-(shop*10))/100; //100份分成10份算折扣
+				return transform;
+			},
 			// 查看
 			lookMore() {
 				uni.navigateTo({

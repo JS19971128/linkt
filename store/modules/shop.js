@@ -2,8 +2,8 @@ const state = {
 	legalPerson:{
 		legalPerson:'',
 		legalPersonID:'',
-		idCardStartDate:'yyyymmdd',
-		idCardEndDate:'yyyymmdd',
+		idCardStartDate:'',
+		idCardEndDate:'',
 		linkman:'',
 		linkPhone:'',
 		email:'',
@@ -33,8 +33,8 @@ const state = {
 		signName:'',
 		showName:'',
 		businessLicense:'',
-		businessDateStart:'请选择营业执照上的经营起始时间',
-		businessDateLimit:'请选择营业执照上的经营期限时间'
+		businessDateStart:'',
+		businessDateLimit:''
 	},//企业
 	bank:{
 		settleBankType:'',
@@ -45,8 +45,8 @@ const state = {
 	shopIndex:{
 		shopBusinessId:'',
 		shopBusinessName:'',
-		shopStartTime:'开始时间',
-		shopStopTime:'结束时间',
+		shopStartTime:'',
+		shopStopTime:'',
 		profits:'',
 		areaCode:'',
 		areaCodeCity:'',

@@ -16,7 +16,7 @@
 							</view>
 							<view class="fz-12">{{item.distance}}km</view>
 						</view>
-						<view class="fz-12 coupon">优惠券可折扣{{item.profits}}%</view>
+						<view class="fz-12 coupon">最高可享{{profitsDiscount(item.profits)}}折</view>
 						<view class="fz-12">{{item.shopBusinessName || ''}} {{item.location}}</view>
 						<view class="address flex_center">
 							<view><image class="location" src="../../static/images/common/location.png" mode="widthFix"></image></view>
@@ -80,6 +80,11 @@
 			}
 		},
 		methods:{
+			profitsDiscount(profits){
+				let shop = ((profits*10)*(0.7*10))/100; //70%可以用优惠券抵扣
+				let transform = ((100*10)-(shop*10))/100; //100份分成10份算折扣
+				return transform;
+			},
 			changeTab(value){
 				this.current = value;
 				this.page = 0;

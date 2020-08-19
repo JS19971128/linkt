@@ -11,7 +11,7 @@
 			"path": "pages/raidersZone/index",
 			"style": {
 				"navigationBarTitleText": "夺宝专区",
-				"enablePullDownRefresh":true
+				"enablePullDownRefresh":false
 				
 			}
 		},
@@ -205,6 +205,8 @@
 						"navigationBarTitleText": "商家入驻"
 					}
 				},
+				
+				// #endif
 				{
 					"path":"wxBusinessApply/index",
 					"style": {
@@ -241,11 +243,16 @@
 						"navigationBarTitleText": "签约"
 					}
 				},
-				// #endif
 				{
 					"path":"review/index",
 					"style": {
 						"navigationBarTitleText": "商家入驻"
+					}
+				},
+				{
+					"path":"review/pass",
+					"style": {
+						"navigationBarTitleText": "进件通过"
 					}
 				},
 				// #ifdef MP-ALIPAY
