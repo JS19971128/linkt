@@ -46,6 +46,16 @@
 						<image src="../../static/images/common/more_gray.png" mode="widthFix"></image>
 					</view>
 				</view>
+				<!-- 运营中心协议 -->
+				<view class="item flex_between" @click="goWhere('/operationPages/agreement/index')">
+					<view class="title flex_center">
+						<image src="../../static/images/my/service.png" mode="widthFix"></image>
+						<text>运营中心协议</text>
+					</view>
+					<view class="more">
+						<image src="../../static/images/common/more_gray.png" mode="widthFix"></image>
+					</view>
+				</view>
 			</view>
 			<view class="bar fz-14">
 				<!-- 进件商家 -->

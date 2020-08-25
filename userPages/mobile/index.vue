@@ -90,16 +90,27 @@
 						})
 						return
 					}
-					let params = {
-					  "account": this.mobile,
-					  "loginType": 0,
-					  "openId": this.$store.state.userInfo.openId,
-					  "validationCode": Number(this.code)
-					}
+					//#ifdef MP-ALIPAY
+						let params = {
+						  "account": this.mobile,
+						  "loginType": 1,
+						  "openId": this.$store.state.userInfo.openId,
+						  "validationCode": Number(this.code),
+						}
+					//#endif
+					
+					//#ifdef MP-WEIXIN
+						let params = {
+						  "account": this.mobile,
+						  "loginType": 0,
+						  "openId": this.$store.state.userInfo.openId,
+						  "validationCode": Number(this.code),
+						}
+					//#endif
 					uni.showLoading({
 						title:'加载中'
 					})
-					let userBindPhone = await this.$fly.post('/user/userBindPhone',params)
+					let userBindPhone = await this.$fly.post('/user/userLogin',params)
 					uni.hideLoading();
 					if(userBindPhone.code!=0){
 						uni.showToast({

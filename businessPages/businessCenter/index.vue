@@ -187,6 +187,8 @@
 		},
 		onLoad:function(){
 			this.getMerchant();
+		},
+		onShow() {
 			this.getJInjian();
 		}
 	}

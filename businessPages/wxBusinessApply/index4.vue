@@ -269,7 +269,7 @@
 					contactAddress:shopIndex.address
 				}
 				for(let i in data){
-					if(!data[i]){
+					if(data[i]===''){
 						wx.showToast({
 						  title:'请填写完整所有信息',
 						  icon: 'none',
@@ -352,7 +352,7 @@
 						});
 					}
 					
-				
+					
 					
 					console.log(data)
 					let idCardStartDate = legalPerson.idCardStartDate.split('-');
@@ -374,6 +374,13 @@
 						appPayType:'WXPAY',
 						merchantCredential,
 					}
+					//对公账户传商家全称
+					if(prams.settleBankType==='TOPUBLIC'){
+						prams.accountName = prams.signName;
+					}else{
+						prams.accountName = prams.legalPerson;
+					}
+					
 					
 					this.stm(prams);
 				}else{
@@ -428,6 +435,7 @@
 						icon:'none'
 					});
 				}finally{
+					uni.hideLoading();
 				}
 			}
 		},

@@ -115,6 +115,14 @@
 				@touchstart="touchStart" 
 				@touchend="touchEnd">
 			</linkage-picker>
+			<linkage-d-picker
+				class="w-picker-wrapper"
+				v-if="mode=='linkaged'"
+				:default-props="defaultProps"
+				@change="handlerChange"
+				ref='linkageDPicker'>
+			</linkage-d-picker>
+			
 		</view>
 	</view>
 </template>
@@ -128,6 +136,8 @@
 	import selectorPicker from "./selector-picker.vue"
 	import regionPicker from "./region-picker.vue"
 	import linkagePicker from "./linkage-picker.vue"
+	import linkageDPicker from "./linkeage-d-picker.vue"
+	
 	export default {
 		name:"w-picker",
 		components:{
@@ -138,7 +148,8 @@
 			selectorPicker,
 			shorttermPicker,
 			regionPicker,
-			linkagePicker
+			linkagePicker,
+			linkageDPicker
 		},
 		props:{
 			mode:{

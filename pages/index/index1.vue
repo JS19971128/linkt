@@ -118,6 +118,7 @@
 			init(){
 				this.getWindowWidth();
 				this.banner();
+				this.navbarList = [{label:'首页',value:''}]
 				this.navbarListFun();
 			},
 			goCommodity(id){

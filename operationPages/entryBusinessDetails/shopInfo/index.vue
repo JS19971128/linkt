@@ -32,13 +32,14 @@
 				<view class="item-content flex_center fz-12">
 					<view class="upload flex_center" v-for="(item,index) in imgArr" :key="index">
 						<!-- 正面 -->
-						<view class="uploadPic flex_center" v-if="item.credentialUrl" @click="upload(index,'credentialUrl')">
-							<image :src="item.credentialUrl" mode="aspectFit"></image>
+						<view class="uploadPic flex_center" v-if="item.credentialUrl">
+							<image :src="item.credentialUrl" mode="aspectFit" @click="previewImg(item.credentialUrl)"></image>
 						</view>
-						<view class="frame flex_center" v-else @click="upload(index,'credentialUrl')">
+						<view class="frame flex_center" v-else>
 							<uni-icons class="flex_center" type="plusempty" :size="24" color="#CBCBCB"></uni-icons>
 						</view>
 					</view>
+					<view @click="upload(index,'credentialUrl')">重新上传</view>
 				</view>
 			</view>
 			<!-- 室内照 -->
@@ -47,11 +48,14 @@
 				<view class="item-content flex_center fz-12">
 					<view class="upload" v-for="(item,index) in imgArrt" :key="index">
 						<!-- 正面 -->
-						<view class="uploadPic flex_center" v-if="item.credentialUrl" @click="uploadt(index,'credentialUrl')">
-							<image :src="item.credentialUrl" mode="aspectFit"></image>
-						</view>
-						<view class="frame flex_center" v-else @click="uploadt(index,'credentialUrl')">
-							<uni-icons class="flex_center" type="plusempty" :size="24" color="#CBCBCB"></uni-icons>
+						<view style="display: flex;align-items: center;">
+							<view class="uploadPic flex_center" v-if="item.credentialUrl">
+								<image :src="item.credentialUrl" mode="aspectFit" @click="previewImg(item.credentialUrl)"></image>
+							</view>
+							<view class="frame flex_center" v-else>
+								<uni-icons class="flex_center" type="plusempty" :size="24" color="#CBCBCB"></uni-icons>
+							</view>
+							<view @click="uploadt(index,'credentialUrl')" style="margin-left: 20rpx;color: #333;">重新上传</view>
 						</view>
 						<view class="flex_center">请上传1张门店室内照，才可通过审核喔~</view>
 					</view>
@@ -108,6 +112,17 @@
 			},
 		},
 		methods:{
+			// 图片预览
+			previewImg(img){
+				uni.previewImage({
+					loop:true,
+					current:0,
+					urls: [img],
+					success:res=>{
+						console.log(res)
+					}
+				})
+			},
 			init(form){
 				this.form = form	
 			},

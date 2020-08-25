@@ -409,6 +409,12 @@
 					}
 				},
 				{
+					"path":"agreement/index",
+					"style": {
+						"navigationBarTitleText": "运营中心协议"
+					}
+				},
+				{
 					"path":"areaBusiness/index",
 					"style": {
 						"navigationBarTitleText": "区域商家",

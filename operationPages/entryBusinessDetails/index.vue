@@ -137,12 +137,9 @@
 						INTERIOR_PHOTO:'室内照'
 					}
 					for(let i of form.merchantCredential){
-						if(i.status!=='SUCCESS'){
-							imgMsg+=`${nameObj[i.credentialType]}审核未通过，`
-						}
 						i.name = nameObj[i.credentialType]
 					}
-					this.imgMsg = imgMsg&&form.msg + imgMsg+'请修改后重新上传。';
+					this.imgMsg = form.msg+'请修改后重新上传。';
 					this.form = form;
 					
 					

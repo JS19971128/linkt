@@ -7,7 +7,8 @@
 					<view class="frist_uni">0</view>
 					<view class="second_uni">夺宝券</view>
 				</view>
-				<view class="left_voucher right_my" @click="goMyTreasure">
+				<!-- @click="goMyTreasure" -->
+				<view class="left_voucher right_my">
 					<view class="frist_uni">{{drawMyData.drawCommodityCount || 0}}</view>
 					<view class="second_uni">我的夺宝</view>
 				</view>
@@ -74,7 +75,8 @@
 			<image src="../../static/images/shop/hot.png" mode=""></image>
 		</view>
 		<!-- 列表 -->
-		<view class="treasure_bdi" v-if="navList.length > 0">
+		<!-- v-if="navList.length > 0" -->
+		<view class="treasure_bdi" v-if="false">
 			
 			<view class="wrap_list_content" v-for="(item,index) in navList" :key='index' @click="goProductDetails(item.id)">
 				<view class="left_img_src">

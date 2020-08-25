@@ -181,17 +181,16 @@
 				cardSum = (parseInt(cardSum * 100)/100).toFixed(2);
 				// console.log('金额',availdDiscountMoney,discountMoney,fee)
 				 //消费金额大于5
-				if(options.money >= 5 ){ 
+				// if(options.money >= 5 ){ 
 					this.maxDiscount = (parseInt(availdDiscountMoney * 1000/10)/100).toFixed(2);
 					// console.log('可抵扣',this.maxDiscount)
-				}else{
-					let money = (parseInt(discountMoney * 1000/10)/100).toFixed(2)
-					if((options.money*1000)>=2500){
-						money = ((money * 1000) - 10)/1000;
-					}
-					this.maxDiscount = money;
-					// console.log('可抵扣',this.maxDiscount)
-				}
+				// }else{
+				// 	let money = (parseInt(discountMoney * 1000/10)/100).toFixed(2)
+				// 	if((options.money*1000)>=2500){
+				// 		money = ((money * 1000) - 10)/1000;
+				// 	}
+				// 	this.maxDiscount = money;
+				// }
 			},
 			payment(){  //支付
 				// 未拿到用户信息时提示用户再点击一次
@@ -231,7 +230,7 @@
 						if(res.code == 0){
 							let tradeNo = JSON.parse(res.data.data.rt10_payInfo);
 							// #ifdef MP-WEIXIN
-							// this.wechatPay(tradeNo);
+							this.wechatPay(tradeNo);
 							// #endif
 							// #ifdef MP-ALIPAY
 							// this.aliPay(tradeNo);

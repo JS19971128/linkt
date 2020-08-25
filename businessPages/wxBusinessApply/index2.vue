@@ -83,7 +83,12 @@
 				<view class="item flex_center">
 					<view class="item-name">经营地区</view>
 					<view class="item-content">
-						<picker-data ref="picker" @regionCodeFun="regionCodeFun"></picker-data>
+						<!-- #ifdef MP-ALIPAY -->
+							<picker-data-alipay ref="pickerM" @regionCodeFun="regionCodeFun"></picker-data-alipay>
+						<!-- #endif -->
+						<!-- #ifdef MP-WEIXIN -->
+							<picker-data ref="pickerM" @regionCodeFun="regionCodeFun"></picker-data>
+						<!-- #endif -->
 					</view>
 				</view>
 				<!-- 商家名称 -->
@@ -173,6 +178,7 @@
 <script>
 	import jylm from '@/common/util/wx_jylm.js';
 	import pickerData from '@/businessPages/wxBusinessApply/pickerData'
+	import pickerDataAlipay from '@/businessPages/wxBusinessApply/pickerDataAlipay.vue'
 	export default{
 		data() {
 			return {
@@ -207,7 +213,7 @@
 			}
 		},
 		components:{
-			pickerData
+			pickerData,pickerDataAlipay
 		},
 		computed:{
 			imgArr(){
@@ -311,14 +317,15 @@
 				let data = {...enterprise};
 				console.log(merchantCredential,data)
 				
-				
-				
-				
-				
 				if(enterprise.merchantType!=='PERSON'){
 					
+					if(data.longTerm){
+						data.businessDateLimit = '2099-12-30'
+					}
+					
 					for(let i in data){
-						if(!data[i] && i!=='longTerm'){
+						if(data[i]==='' && i!=='longTerm'){
+							console.log(data[i])
 							wx.showToast({
 							  title:'请填写完整所有信息',
 							  icon: 'none',
@@ -326,6 +333,7 @@
 							})
 							return ;
 						}
+						
 					}
 					
 					for(let i of imgArr){
@@ -366,16 +374,25 @@
 				})
 			},
 			init(){
-				this.$refs.picker.init(this.enterprise.addressName);
 				this.jylm = jylm;
 				this.categoryName();
+				//#ifdef MP-ALIPAY
+				setTimeout(()=>{
+					this.$refs['pickerM'].init(this.enterprise.addressName)
+				},500)
+				//#endif
+				//#ifdef MP-WEIXIN
+					this.$refs.pickerM.init(this.enterprise.addressName);
+				//#endif
 			},
 			async categoryName(){
 				try{
 					let {enterprise} = this;
 					let {jylxKey,jylmKey} = enterprise
 					
-					let category = await this.$fly.post(`/entry/getIndustryTypeCodeList?name=${jylxKey}-${jylmKey}`);
+					let category = await this.$fly.get(`/entry/getIndustryTypeCodeList`,{
+						name:`${jylxKey}-${jylmKey}`
+					});
 					for(let i of category){
 						let name = i.name;
 						let sl = name.slice(name.indexOf('-')+1);

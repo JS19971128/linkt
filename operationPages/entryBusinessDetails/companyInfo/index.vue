@@ -40,14 +40,27 @@
 			<view class="item flex_center">
 				<view class="item-name">经营资质</view>
 				<view class="item-content flex_center fz-12">
-					<view class="upload flex_center" v-for="(item,index) in imgArr" :key="index">
+					<!-- <view class="upload flex_center" v-for="(item,index) in imgArr" :key="index">
 						<view class="uploadPic flex_center" v-if="item.credentialUrl" @click="upload(index,'credentialUrl')">
-							<image :src="item.credentialUrl" mode="aspectFit"></image>
+							<image :src="item.credentialUrl" mode="aspectFit" @click="previewImg(item.credentialUrl)"></image>
 						</view>
 						<view class="frame flex_center" v-else @click="upload(index,'credentialUrl')">
 							<uni-icons class="flex_center" type="plusempty" :size="24" color="#CBCBCB"></uni-icons>
 						</view>
 						<view>{{item.name}}</view>
+					</view> -->
+					<view class="flex_center" style="margin-right: 20rpx;" v-for="(item,index) in imgArr" :key="index">
+						<!-- 正面 -->
+						<view class="upload flex_center" style="margin-right: 0;">
+							<view class="uploadPic flex_center" v-if="item.credentialUrl">
+								<image :src="item.credentialUrl" mode="aspectFit" @click="previewImg(item.credentialUrl)"></image>
+							</view>
+							<view class="frame flex_center" v-else>
+								<uni-icons class="flex_center" type="plusempty" :size="24" color="#CBCBCB"></uni-icons>
+							</view>
+							<view>{{item.name}}</view>
+						</view>
+						<view @click="upload(index,'credentialUrl')">重新上传</view>
 					</view>
 				</view>
 			</view>
@@ -104,6 +117,17 @@
 			},
 		},
 		methods:{
+			// 图片预览
+			previewImg(img){
+				uni.previewImage({
+					loop:true,
+					current:0,
+					urls: [img],
+					success:res=>{
+						console.log(res)
+					}
+				})
+			},
 			async init(form){
 				//初始化经营行业
 

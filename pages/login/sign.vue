@@ -129,12 +129,25 @@
 				uni.showLoading({
 					title:'加载中'
 				})
-				this.$fly.post('/user/userLogin',{
-					account:mobile,
-					openId,
-					validationCode:code,
-					loginType : 0
-				})
+				
+				//#ifdef MP-ALIPAY
+					let data = {
+						account:mobile,
+						openId,
+						validationCode:code,
+						loginType : 1
+					}
+				//#endif
+				
+				//#ifdef MP-WEIXIN
+					let data = {
+						account:mobile,
+						openId,
+						validationCode:code,
+						loginType : 0
+					}
+				//#endif
+				this.$fly.post('/user/userLogin',data)
 				.then(res=>{
 					uni.hideLoading();
 					uni.showToast({

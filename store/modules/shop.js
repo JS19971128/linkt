@@ -7,6 +7,10 @@ const state = {
 		linkman:'',
 		linkPhone:'',
 		email:'',
+		
+		IDlabel:'短期',
+		IDIndex:0,
+		isIDLong:false
 	}, //法人信息
 	enterprise:{
 		jylxLabel:'',
