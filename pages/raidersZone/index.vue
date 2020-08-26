@@ -7,7 +7,8 @@
 					<view class="frist_uni">0</view>
 					<view class="second_uni">夺宝券</view>
 				</view>
-				<view class="left_voucher right_my" @click="goMyTreasure">
+				<!-- @click="goMyTreasure" -->
+				<view class="left_voucher right_my">
 					<view class="frist_uni">{{drawMyData.drawCommodityCount || 0}}</view>
 					<view class="second_uni">我的夺宝</view>
 				</view>
@@ -22,13 +23,13 @@
 				<image class="shut_down" @click="voucherRule=false" src="../../static/images/shop/border_close.png" mode=""></image>
 				<view class="rule_title"><text class="middle_text">夺宝规则</text></view>
 				<view class="rule_text">
-                    在95折以下（不包含95折）的商家消费后，或者购买95折以下（不包含95折）的商品后，会获得夺宝券。夺宝券的面额将以消费金额中的商家折扣计算得出。
+                    在95折以下（不包含95折）的商家消费，或者购买95折以下（不包含95折）的商品后，会获得夺宝券。夺宝券的面额将以消费金额中的商家折扣计算得出。
 				</view>
 				<view class="rule_text">
-					每张夺宝券有一个专属编号，可单张或多张同时使用，给商品充能。如果该商品能量已充满，将不能继续再对此商品继续充能，可更换其他商品充能。
+					夺宝券可单张或多张同时使用。如果该商品夺宝进度已满，将不能再继续对该商品夺宝。
 				</view>
 				<view class="rule_text">
-					当商品能量充满后，将在会抽取幸运号码，拥有该幸运号码者，将直接获得该商品。
+					当商品夺宝进度充满后，将会抽取幸运号码，拥有该幸运号码夺宝券的用户，可直接获得该商品。在我的夺宝中填写收货地址，平台会将产品进行发货。
 				</view>
 			</view>
 		</view>
@@ -74,7 +75,8 @@
 			<image src="../../static/images/shop/hot.png" mode=""></image>
 		</view>
 		<!-- 列表 -->
-		<view class="treasure_bdi" v-if="navList.length > 0">
+		<!-- v-if="navList.length > 0" -->
+		<view class="treasure_bdi" v-if="false">
 			
 			<view class="wrap_list_content" v-for="(item,index) in navList" :key='index' @click="goProductDetails(item.id)">
 				<view class="left_img_src">

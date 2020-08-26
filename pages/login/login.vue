@@ -36,7 +36,7 @@
 			<button class="btn item flex_center fz-14" open-type="getAuthorize" scope="userInfo" @getAuthorize="getAliUserInfo" @error="aliAuthRefuse">开启我的链客智慧商圈</button>
 			<!-- #endif -->
 			<!-- #ifdef MP-WEIXIN -->
-			<button class="btn item flex_center fz-14" open-type="getUserInfo" @getuserinfo="getWxUserInfo">开启我的链客智慧商圈</button>
+			<button class="btn item flex_center fz-14" open-type="getUserInfo" @getuserinfo="getWxUserInfo">开启我的链客通商业联盟</button>
 			<!-- #endif -->
 			<view class="service fz-12"><text>注册表示您同意以下协议</text><text class="agreement" @click="goService">《服务协议》</text></view>
 		</view>

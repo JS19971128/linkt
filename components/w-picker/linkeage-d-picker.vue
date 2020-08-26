@@ -1,15 +1,10 @@
 <template>
-	<view>
-		<picker mode="multiSelector" :range="multiArray" @columnchange="columnchange" :value="multiIndex" @change='pickchange'>
-			<view class="flex_between">
-				<view class='right'>
-					<input type="text" v-model="addressName" disabled placeholder="请选择地址" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
-				</view>
-				<view>
-					<image src="../../static/images/common/xiala.png" mode="widthFix"></image>
-				</view>
-			</view>
-		</picker>
+	<view class="w-picker-view">
+		<picker-view class="d-picker-view" indicator-style="height: 50px" :value="multiIndex" @change="columnchange">
+			<picker-view-column v-for="(group,gIndex) in multiArray" :key="gIndex">
+				<view class="w-picker-item" v-for="(item,index) in group" :key="index">{{item}}</view>
+			</picker-view-column>
+		</picker-view>
 	</view>
 </template>
 
@@ -22,14 +17,26 @@
 				step: 0, // 默认显示请选择
 				currnetProvinceKey:'',
 				currnetCityKey:'',
-				addressName:''
-			}
+				addressName:'',
+				provinceArr:[],
+				provinceList:[],
+				cityList:[],
+				cityArr:[],
+				storeList:[],
+				storeArr:[],
+				index:[]
+			};
 		},
-		props:[],
-		methods: {
-			init(name){
-				this.addressName = name;
-				this.getProvince() // 页面加载后就调用函数 获取省级数据
+		props:{
+			itemHeight:{
+				type:String,
+				default:"34px"
+			},
+		},
+
+		methods:{
+			initData(){
+				this.getProvince()
 			},
 			getProvince() { // 获取省
 				this.$fly.get('/entry/getRegionCodeList',{level:'省'}).then((data) => {
@@ -71,38 +78,41 @@
 					var storeArr = data.map((item) => {
 						return item.name
 					})
+					
 					this.multiArray = [this.provinceArr, this.cityArr, storeArr] // 重新赋值三级数组 此时的数组大概是这样 [['江苏省', '福建省'], ['徐州市'], ['徐州第一门店','徐州第二门店']]
 					this.storeList = storeList; // 保存下门店原始数据
 					this.storeArr = storeArr;// 保存下门店名称，可以不保存
 				})
 			},
 			columnchange(e) { // 滚动选择器 触发的事件
-				var column = e.detail.column // 当前改变的列
+				console.log(e,'滚动去')
+				var column = e.detail.value // 当前改变的列
 				var data = {
 					multiIndex: JSON.parse(JSON.stringify(this.multiIndex)),
 					multiArray: JSON.parse(JSON.stringify(this.multiArray))
 				}
-				data.multiIndex[column] = e.detail.value; // 第几列改变了就是对应multiIndex的第几个，更新它
-				switch (column) { // 处理不同的逻辑
-					case 0: // 第一列更改 就是省级的更改
-						var currentProvinceKey = this.provinceList[e.detail.value].id
-						if (currentProvinceKey != this.currnetProvinceKey) { // 判断当前的key是不是真正的更新了
-							this.getCity(currentProvinceKey) // 获取当前key下面的市级数据
-						}
-
-						data.multiIndex[1] = 0 // 将市默认选择第一个
-						break;
-
-					case 1: // 市发生变化
-						var currentCitykey = this.cityList[e.detail.value].id
-						if (currentCitykey != this.currnetCityKey) { // 同样判断
-							this.getStore(currentCitykey) // 获取门店
-						}
-						data.multiIndex[2] = 0 // 门店默认为第一个
-						break;
+				console.log(column)
+				data.multiIndex = column; // 第几列改变了就是对应multiIndex的第几个，更新它
+				if(column[0]!=this.index[0]){
+					var currentProvinceKey = this.provinceList[column[0]].id
+					if (currentProvinceKey != this.currnetProvinceKey) { // 判断当前的key是不是真正的更新了
+						this.getCity(currentProvinceKey) // 获取当前key下面的市级数据
+					}
+					data.multiIndex[1] = 0 // 将市默认选择第一个
+					
+				}else if(column[1]!=this.index[1]){
+					var currentCitykey = this.cityList[column[1]].id
+					if (currentCitykey != this.currnetCityKey) { // 同样判断
+						this.getStore(currentCitykey) // 获取门店
+					}
+					data.multiIndex[2] = 0 // 门店默认为第一个
+					
 				}
+				this.index = column;
+				console.log(data.multiInde)
 				this.multiIndex = data.multiIndex;
 				this.multiArray = data.multiArray;
+				this.$emit('change',{multiIndex:this.multiIndex,multiArray:this.multiArray,storeList:this.storeList})
 				// 更新数据
 			},
 			pickchange(e) {
@@ -110,9 +120,10 @@
 				this.multiIndex = e.detail.value;// 更新下标字段
 				let {multiArray,multiIndex} = this;
 				this.addressName = multiArray[0][multiIndex[0]]+' '+multiArray[1][multiIndex[1]]+' '+multiArray[2][multiIndex[2]];
+				console.log(this.addressName)
 				this.submit()
 			},
-
+			
 			submit() { // 保存的时候 获取当前选择门店的key 丢给后端开发即可
 				var storeCode = this.storeList[this.multiIndex.length - 1].id
 				this.$emit("regionCodeFun",{regionCode:storeCode,addressName:this.addressName})
@@ -121,9 +132,7 @@
 	}
 </script>
 
-<style scoped>
-	image{
-		width: 24rpx;
-		display: block;
-	}
+<style lang="scss">
+	@import "./w-picker.css";	
 </style>
+

@@ -107,7 +107,7 @@
 				let data = {...bank};
 				console.log(data)
 				for(let i in data){
-					if(!data[i]){
+					if(data[i]===''){
 						wx.showToast({
 						  title:'请填写完整所有信息',
 						  icon: 'none',

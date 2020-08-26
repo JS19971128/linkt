@@ -87,24 +87,31 @@
 				uni.showLoading({
 					title:'加载中'
 				})
-				this.$fly.post('/entry/findMerchantEntryByUserId?userId='+this.userId).then(res=>{
-					this.signStatus = res.data.signStatus;
-					let data = res.data;
-					let prams = {
-						email:data.email,
-						phone:data.linkPhone,
-						legalPerson:data.legalPerson,
-						legalPersonID:data.legalPersonID,
-						signName:data.signName,
-						address:data.address
-					}
-					let url = `?email=${prams.email}&phone=${prams.phone}&legalPerson=${prams.legalPerson}&legalPersonID=${prams.legalPersonID}&signName=${prams.signName}&address=${prams.address}&`
-					// this.$store.commit('SETSTATUSDATA',statusData);
-					return this.$fly.post('/entry/signContract'+url);
-				}).then(res=>{
-					this.CopyUrl = res.data.data;
-					uni.hideLoading();
-				})
+				try{
+					this.$fly.post('/entry/findMerchantEntryByUserId?userId='+this.userId).then(res=>{
+						this.signStatus = res.data.signStatus;
+						let data = res.data;
+						let prams = {
+							email:data.email,
+							phone:data.linkPhone,
+							legalPerson:data.legalPerson,
+							legalPersonID:data.legalPersonID,
+							signName:data.signName,
+							address:data.address
+						}
+						let url = `?email=${prams.email}&phone=${prams.phone}&legalPerson=${prams.legalPerson}&legalPersonID=${prams.legalPersonID}&signName=${prams.signName}&address=${prams.address}&`
+						// this.$store.commit('SETSTATUSDATA',statusData);
+						return this.$fly.post('/entry/signContract'+url);
+					}).then(res=>{
+						this.CopyUrl = res.data.data;
+						uni.hideLoading();
+					})
+				}catch(e){
+					uni.showToast({
+						title: '拉去信息失败！',
+						icon: 'none'
+					})
+				}
 			},
 			// 复制
 			copy(){

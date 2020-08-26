@@ -247,7 +247,7 @@
 					})
 				}else{
 					uni.navigateTo({
-						url: '/pages/login/login'
+						url: '/pages/login/sign'
 					})
 				}
 			},
@@ -269,7 +269,7 @@
 			getJInjian(){
 				this.$fly.post('/entry/findMerchantEntryByUserId?userId='+this.userInfo.id).then(res=>{
 					if(res.code == 0){
-						if(res.data.status === 'AUDITED'){
+						if(res.data && (res.data.status === 'AUDITED' || res.data.status === 'PASS' || res.data.status === 'FINISH')){
 							this.Trurl = `/businessPages/review/index`;
 						}
 					}
@@ -352,7 +352,7 @@
 					})
 				}else{
 					uni.navigateTo({
-						url: '/pages/login/login'
+						url: '/pages/login/sign'
 					})
 				}
 			},
@@ -408,6 +408,11 @@
 				}else{
 					this.isRealName = false;
 				}
+			}
+		},
+		onShareAppMessage(){
+			return {
+				path: 'pages/my/index',
 			}
 		}
 	}

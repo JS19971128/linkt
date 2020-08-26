@@ -42,7 +42,7 @@
     },
     "quickapp" : {},
     "mp-weixin" : {
-        "appid" : "wxc0a72de6049a30ae",
+        "appid" : "wx4e73a1440b640836",
         "setting" : {
             "urlCheck" : true,
             "minified" : true,
@@ -55,6 +55,6 @@
         }
     },
     "mp-alipay" : {
-        "appid" : "2021001165667591"
+        "appid" : "2021001188690517"
     }
 }

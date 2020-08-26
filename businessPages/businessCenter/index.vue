@@ -94,6 +94,10 @@
 				<image src="../../static/images/business/shop2.png" mode="widthFix"></image>
 				<view>商城管理</view>
 			</view>
+			<view class="item flex_center jinjian" @click="jinjian(`/businessPages/wxBusinessApply/index`)">
+				<image src="../../static/images/business/jinjian.png" mode="widthFix"></image>
+				<view>自主进件</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -104,7 +108,8 @@
 			return {
 				merchant:{},
 				income:{},
-				shopCount:{}
+				shopCount:{},
+				Trurl:''
 			}
 		},
 		computed:{
@@ -125,6 +130,23 @@
 			goWhere(url){ //进入相应页面
 				uni.navigateTo({
 					url
+				})
+			},
+			jinjian(url){
+				uni.navigateTo({
+					url:this.Trurl||url
+				})
+			},
+			getJInjian(){
+				let id = this.userInfo.id;
+				this.$fly.post('/entry/findMerchantEntryByUserId?userId='+id).then(res=>{
+					if(res.code == 0){
+						if(res.data && (res.data.status === 'AUDITED' || res.data.status === 'PASS')){
+							this.Trurl = `/businessPages/review/index`;
+						}else if(res.data.status === 'FINISH'){
+							this.Trurl = `/businessPages/review/pass`;
+						}
+					}
 				})
 			},
 			getMerchant(){  //获取商户信息
@@ -165,6 +187,9 @@
 		},
 		onLoad:function(){
 			this.getMerchant();
+		},
+		onShow() {
+			this.getJInjian();
 		}
 	}
 </script>
@@ -313,6 +338,9 @@
 		}
 		.shop2{
 			background: #FACA58;
+		}
+		.jinjian{
+			background: #52C39B;
 		}
 	}
 </style>

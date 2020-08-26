@@ -58,6 +58,23 @@
 						</view>
 					</view>
 				</view>
+				<!-- 身份证期限 -->
+				<view class="item flex_center">
+					<view class="item-name">期限</view>
+					<view class="item-content ">
+						<!-- 经营类型选择 -->
+						<picker mode="selector" :range="IDArr" :value="legalPersonFrom.IDIndex" range-key="label" @change="bindTypeChange($event,'IDArr')">
+							<view class="flex_between">
+								<view>
+								<input type="text" v-model="legalPersonFrom.IDlabel" disabled placeholder="请选择身份证期限" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+								</view>
+								<view>
+									<image src="../../static/images/common/xiala.png" mode="widthFix"></image>
+								</view>
+							</view>
+						</picker>
+					</view>
+				</view>
 				<!-- 有效期 -->
 				<view class="item flex_center">
 					<view class="item-name">有效期</view>
@@ -65,14 +82,14 @@
 						<view class="">
 							<!-- 有效期选择 -->
 							<picker mode="date" @change="startDateChange">
-								<view class="flex_between" :class="{date:legalPersonFrom.idCardStartDate=='yyyymmdd',active:legalPersonFrom.idCardStartDate!=='yyyymmdd'}">{{legalPersonFrom.idCardStartDate}}</view>
+								<view class="flex_between" :class="{date:legalPersonFrom.idCardStartDate=='',active:legalPersonFrom.idCardStartDate!==''}">{{legalPersonFrom.idCardStartDate || 'yyyymmdd'}}</view>
 							</picker>
 						</view>
-						<view class="line">—</view>
-						<view class="">
+						<view class="line" v-if="!legalPersonFrom.isIDLong">—</view>
+						<view class="" v-if="!legalPersonFrom.isIDLong">
 							<!-- 有效期选择 -->
 							<picker mode="date" @change="stopDateChange">
-								<view class="flex_between" :class="{date:legalPersonFrom.idCardEndDate=='yyyymmdd',active:legalPersonFrom.idCardEndDate!=='yyyymmdd'}">{{legalPersonFrom.idCardEndDate}}</view>
+								<view class="flex_between" :class="{date:legalPersonFrom.idCardEndDate=='',active:legalPersonFrom.idCardEndDate!==''}">{{legalPersonFrom.idCardEndDate||"yyyymmdd"}}</view>
 							</picker>
 						</view>
 					</view>
@@ -101,7 +118,8 @@
 	export default{
 		data() {
 			return {				
-				
+				IDArr:[{label:'短期',key:false},{label:'长期',key:true}],
+				isIDLong:false
 			}
 		},
 		computed:{
@@ -110,7 +128,6 @@
 				let obj = {
 					FRONT_OF_ID_CARD:true,
 					BACK_OF_ID_CARD:true,
-					HANDHELD_OF_ID_CARD:true
 				};
 				for(let i of this.$store.state.shop.merchantCredential){
 					if(obj[i.credentialType]){
@@ -174,22 +191,29 @@
 					url
 				})
 			},
+			bindTypeChange($event){
+				this.legalPersonFrom.IDlabel = this.IDArr[$event.detail.value].label;
+				this.legalPersonFrom.IDIndex = $event.detail.value;
+				this.legalPersonFrom.isIDLong = this.IDArr[$event.detail.value].key;
+			},
 			next(){
-				let {legalPersonFrom,imgArr,merchantCredential} = this;
+				let {legalPersonFrom,imgArr,merchantCredential,IDArr} = this;
 				let data = {
 					...legalPersonFrom,
 					linkman:legalPersonFrom.legalPerson,
 					servicePhone:legalPersonFrom.linkPhone,
 					idType:'IDCARD',
-					accountName:legalPersonFrom.legalPerson,
 					bindMobile:legalPersonFrom.linkPhone,
 					linkManId:legalPersonFrom.legalPersonID,
 				}
-				uni.showLoading({
-					title:'加载中'
-				})
+				
+				if(data.isIDLong){
+					data.idCardEndDate = '2099-12-31'
+				}
+				
+				console.log(data)
 				for(let i in data){
-					if(!data[i]){
+					if(data[i]===''){
 						wx.showToast({
 						  title:'请填写完整所有信息',
 						  icon: 'none',
@@ -237,8 +261,10 @@
 
 <style lang="scss" scoped>
 	.container{
-		padding-bottom: 100rpx;
+		padding-bottom: 130rpx;
 		box-sizing: border-box;
+		min-height: 100vh;
+		height: auto;
 	}
 	.top{
 		padding: 50rpx 0;

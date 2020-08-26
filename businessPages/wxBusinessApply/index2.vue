@@ -63,7 +63,7 @@
 					</view>
 				</view>
 				<!-- 经营类目 -->
-				<view class="item flex_center">
+				<view class="item flex_center" v-if="enterprise.merchantType!='PERSON'">
 					<view class="item-name">经营行业</view>
 					<view class="item-content ">
 						<!-- 经营类目选择 -->
@@ -83,7 +83,12 @@
 				<view class="item flex_center">
 					<view class="item-name">经营地区</view>
 					<view class="item-content">
-						<picker-data ref="picker" @regionCodeFun="regionCodeFun"></picker-data>
+						<!-- #ifdef MP-ALIPAY -->
+							<picker-data-alipay ref="pickerM" @regionCodeFun="regionCodeFun"></picker-data-alipay>
+						<!-- #endif -->
+						<!-- #ifdef MP-WEIXIN -->
+							<picker-data ref="pickerM" @regionCodeFun="regionCodeFun"></picker-data>
+						<!-- #endif -->
 					</view>
 				</view>
 				<!-- 商家名称 -->
@@ -101,14 +106,21 @@
 					</view>
 				</view>
 				<!-- 注册号 -->
-				<view class="item flex_center">
+				<view class="item flex_center" v-if="enterprise.merchantType!='PERSON'">
 					<view class="item-name">注册号</view>
 					<view class="item-content">
 						<input type="text" v-model="enterprise.businessLicense" placeholder="请输入营业执照上的注册号" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 					</view>
 				</view>
+				<!-- 注册号 -->
+				<view class="item flex_center" v-else>
+					<view class="item-name">身份证号</view>
+					<view class="item-content">
+						<input type="text" v-model="enterprise.businessLicense" placeholder="请输入身份证号" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+					</view>
+				</view>
 				<!-- 经营资质 -->
-				<view class="item flex_center">
+				<view class="item flex_center" v-if="enterprise.merchantType!='PERSON'">
 					<view class="item-name">经营资质</view>
 					<view class="item-content flex_center fz-12">
 						<view class="upload flex_center" v-for="(item,index) in imgArr" :key="index">
@@ -123,7 +135,7 @@
 					</view>
 				</view>
 				<!-- 经营期限 -->
-				<view class="item flex_center">
+				<view class="item flex_center" v-if="enterprise.merchantType!='PERSON'">
 					<view class="item-name">经营期限</view>
 					<view class="item-content ">
 						<!-- 经营类型选择 -->
@@ -140,20 +152,20 @@
 					</view>
 				</view>
 				<!-- 起始时间 -->
-				<view class="item flex_center">
+				<view class="item flex_center" v-if="enterprise.merchantType!='PERSON'">
 					<view class="item-name">起始时间</view>
 					<view class="item-content">
 						<picker mode="date" :value="enterprise.businessDateStart" @change="startDateChange">
-							<view class="flex_between" :class="{date:enterprise.businessDateStart=='请选择营业执照上的经营起始时间',active:enterprise.businessDateStart!=='请选择营业执照上的经营起始时间'}">{{enterprise.businessDateStart}}</view>
+							<view class="flex_between" :class="{date:enterprise.businessDateStart=='',active:enterprise.businessDateStart!==''}">{{enterprise.businessDateStart||'请选择营业执照上的经营起始时间'}}</view>
 						</picker>
 					</view>
 				</view>
 				<!-- 期限时间 -->
-				<view class="item flex_center" v-if="enterprise.jyqxLabel!=='长期'">
+				<view class="item flex_center" v-if="enterprise.jyqxLabel!=='长期' && enterprise.merchantType!='PERSON'">
 					<view class="item-name">期限时间</view>
 					<view class="item-content">
 						<picker mode="date" :value="enterprise.businessDateLimit" @change="stopDateChange">
-							<view class="flex_between" :class="{date:enterprise.businessDateLimit=='请选择营业执照上的经营期限时间',active:enterprise.businessDateLimit!=='请选择营业执照上的经营期限时间'}">{{enterprise.businessDateLimit}}</view>
+							<view class="flex_between" :class="{date:enterprise.businessDateLimit=='',active:enterprise.businessDateLimit!==''}">{{enterprise.businessDateLimit||'请选择营业执照上的经营期限时间'}}</view>
 						</picker>
 					</view>
 				</view>
@@ -166,9 +178,11 @@
 <script>
 	import jylm from '@/common/util/wx_jylm.js';
 	import pickerData from '@/businessPages/wxBusinessApply/pickerData'
+	import pickerDataAlipay from '@/businessPages/wxBusinessApply/pickerDataAlipay.vue'
 	export default{
 		data() {
 			return {
+				// {label:'个人商户',type:'PERSON',key:'个人'},
 				jylx:[{label:'个体户',type:'INDIVIDUALBISS',key:'个体工商户'},{label:'企业',type:'ENTERPRISE',key:'企业'}],
 				jylxLabel:'',
 				merchantType:'',
@@ -199,7 +213,7 @@
 			}
 		},
 		components:{
-			pickerData
+			pickerData,pickerDataAlipay
 		},
 		computed:{
 			imgArr(){
@@ -302,18 +316,46 @@
 				const {enterprise,imgArr,merchantCredential} = this;
 				let data = {...enterprise};
 				console.log(merchantCredential,data)
-				for(let i in data){
-					if(!data[i] && i!=='longTerm'){
-						wx.showToast({
-						  title:'请填写完整所有信息',
-						  icon: 'none',
-						  duration: 2500
-						})
-						return ;
+				
+				if(enterprise.merchantType!=='PERSON'){
+					
+					if(data.longTerm){
+						data.businessDateLimit = '2099-12-30'
 					}
-				}
-				for(let i of imgArr){
-					if(!i.credentialUrl && i.credentialType!='PERMIT_FOR_BANK_ACCOUNT'){
+					
+					for(let i in data){
+						if(data[i]==='' && i!=='longTerm'){
+							console.log(data[i])
+							wx.showToast({
+							  title:'请填写完整所有信息',
+							  icon: 'none',
+							  duration: 2500
+							})
+							return ;
+						}
+						
+					}
+					
+					for(let i of imgArr){
+						if(!i.credentialUrl && i.credentialType!='PERMIT_FOR_BANK_ACCOUNT'){
+							wx.showToast({
+							  title:'请填写完整所有信息',
+							  icon: 'none',
+							  duration: 2500
+							})
+							return ;
+						}
+					}
+					
+					for(let i of imgArr){
+						for(let j of merchantCredential){
+							if(i.credentialType===j.credentialType){
+								j.credentialUrl = i.credentialUrl;
+							}
+						}
+					}
+				}else{
+					if(!enterprise.merchantType || !enterprise.merchantCategory || !enterprise.regionCode || !enterprise.signName || !enterprise.showName || !enterprise.businessLicense){
 						wx.showToast({
 						  title:'请填写完整所有信息',
 						  icon: 'none',
@@ -323,13 +365,6 @@
 					}
 				}
 				
-				for(let i of imgArr){
-					for(let j of merchantCredential){
-						if(i.credentialType===j.credentialType){
-							j.credentialUrl = i.credentialUrl;
-						}
-					}
-				}
 				
 				this.$store.commit('SETENTERPRISE',data);
 				this.$store.commit('SETMERCHANTCREDENTIAL',merchantCredential);
@@ -339,16 +374,25 @@
 				})
 			},
 			init(){
-				this.$refs.picker.init(this.enterprise.addressName);
 				this.jylm = jylm;
 				this.categoryName();
+				//#ifdef MP-ALIPAY
+				setTimeout(()=>{
+					this.$refs['pickerM'].init(this.enterprise.addressName)
+				},500)
+				//#endif
+				//#ifdef MP-WEIXIN
+					this.$refs.pickerM.init(this.enterprise.addressName);
+				//#endif
 			},
 			async categoryName(){
 				try{
 					let {enterprise} = this;
 					let {jylxKey,jylmKey} = enterprise
 					
-					let category = await this.$fly.post(`/entry/getIndustryTypeCodeList?name=${jylxKey}-${jylmKey}`);
+					let category = await this.$fly.get(`/entry/getIndustryTypeCodeList`,{
+						name:`${jylxKey}-${jylmKey}`
+					});
 					for(let i of category){
 						let name = i.name;
 						let sl = name.slice(name.indexOf('-')+1);

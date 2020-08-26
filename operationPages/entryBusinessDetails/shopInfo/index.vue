@@ -1,80 +1,77 @@
 <template>
 	<view class="info fz-14" v-show="ifShow">
 		<view class="main">
-			<!-- 法人姓名 -->
+			<!-- 所属行业 -->
 			<view class="item flex_center">
-				<view class="item-name">法人姓名</view>
-				<view class="item-content">
-					<input v-model="form.legalPerson" disabled class="frame" type="text" placeholder="请输入法人姓名" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
-				</view>
-			</view> 
-			<!-- 证件号码 -->
+				<view class="item-name">所属行业</view>
+				<view class="item-content">{{form.shopBusinessName}}</view>
+			</view>
+			<!-- 让利比率 -->
 			<view class="item flex_center">
-				<view class="item-name">身份证号</view>
-				<view class="item-content">
-					<input v-model="form.legalPersonID" disabled class="frame" type="text" placeholder="请输入身份证号" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
-				</view>
-			</view> 
-			<!-- 证件照 -->
+				<view class="item-name">让利比率</view>
+				<view class="item-content">{{form.profits||0}}%</view>
+			</view>
+			<!-- 店铺地址 -->
 			<view class="item flex_center">
-				<view class="item-name">身份证照</view>
+				<view class="item-name">店铺地址</view>
+				<view class="item-content">{{form.area}}</view>
+			</view>
+			<!-- 详细地址 -->
+			<view class="item flex_center">
+				<view class="item-name">详细地址</view>
+				<view class="item-content">{{form.address}}</view>
+			</view>
+			<!-- 营业时间 -->
+			<view class="item flex_center">
+				<view class="item-name">营业时间</view>
+				<view class="item-content">{{form.shopStartTime}}-{{form.shopStopTime}}</view>
+			</view>
+			<!-- 门头照 -->
+			<view class="item flex_center">
+				<view class="item-name">门头照</view>
 				<view class="item-content flex_center fz-12">
-					<view class="flex_center" style="margin-right: 20rpx;" v-for="(item,index) in imgArr" :key="index">
+					<view class="upload flex_center" v-for="(item,index) in imgArr" :key="index">
 						<!-- 正面 -->
-						<view class="upload flex_center" style="margin-right: 0;">
+						<view class="uploadPic flex_center" v-if="item.credentialUrl">
+							<image :src="item.credentialUrl" mode="aspectFit" @click="previewImg(item.credentialUrl)"></image>
+						</view>
+						<view class="frame flex_center" v-else>
+							<uni-icons class="flex_center" type="plusempty" :size="24" color="#CBCBCB"></uni-icons>
+						</view>
+					</view>
+					<view @click="upload(index,'credentialUrl')">重新上传</view>
+				</view>
+			</view>
+			<!-- 室内照 -->
+			<view class="item flex_center">
+				<view class="item-name">室内照</view>
+				<view class="item-content flex_center fz-12">
+					<view class="upload" v-for="(item,index) in imgArrt" :key="index">
+						<!-- 正面 -->
+						<view style="display: flex;align-items: center;">
 							<view class="uploadPic flex_center" v-if="item.credentialUrl">
 								<image :src="item.credentialUrl" mode="aspectFit" @click="previewImg(item.credentialUrl)"></image>
 							</view>
 							<view class="frame flex_center" v-else>
 								<uni-icons class="flex_center" type="plusempty" :size="24" color="#CBCBCB"></uni-icons>
 							</view>
-							<view>{{item.name}}</view>
+							<view @click="uploadt(index,'credentialUrl')" style="margin-left: 20rpx;color: #333;">重新上传</view>
 						</view>
-						<view @click="upload(index,'credentialUrl')">重新上传</view>
-					</view>
-					
-				</view>
-			</view>
-			<!-- 有效期 -->
-			<view class="item flex_center">
-				<view class="item-name">有效期</view>
-				<view class="item-content flex_center">
-					<view class="">
-						<!-- 有效期选择 -->
-						{{form.idCardStartDate | dateTime}}
-					</view>
-					<view class="line">—</view>
-					<view class="">
-						<!-- 有效期选择 -->
-						{{form.idCardEndDate | dateTime}}
+						<view class="flex_center">请上传1张门店室内照，才可通过审核喔~</view>
 					</view>
 				</view>
 			</view>
-			<!-- 证件号码 -->
-			<view class="item flex_center">
-				<view class="item-name">联系电话</view>
-				<view class="item-content">
-					<input v-model="form.linkPhone" disabled class="frame" type="text" placeholder="请输入联系电话" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
-				</view>
-			</view> 
-			<!-- 联系邮箱 -->
-			<view class="item flex_center">
-				<view class="item-name">联系邮箱</view>
-				<view class="item-content">
-					<input v-model="form.email" disabled class="frame" type="text" placeholder="请输入联系邮箱" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
-				</view>
-			</view> 
 		</view>
 	</view>
 </template>
 
 <script>
 	export default{
-		name:'legalInfo',
+		name:'bankInfo',
 		props:["show"],
 		data() {
 			return {
-				form:{}
+				form:{},
 			}
 		},
 		computed:{
@@ -84,8 +81,23 @@
 			imgArr(){
 				let arr = [];
 				let obj = {
-					FRONT_OF_ID_CARD:true,
-					BACK_OF_ID_CARD:true,
+					SIGN_BOARD:true,
+				};
+				console.log(this.form)
+				if(JSON.stringify(this.form) == "{}"){
+					return;
+				}
+				for(let i of this.form.merchantCredential){
+					if(obj[i.credentialType]){
+						arr.push(i)
+					}
+				}
+				return arr;
+			},
+			imgArrt(){
+				let arr = [];
+				let obj = {
+					INTERIOR_PHOTO:true,
 				};
 				console.log(this.form)
 				if(JSON.stringify(this.form) == "{}"){
@@ -100,7 +112,27 @@
 			},
 		},
 		methods:{
+			// 图片预览
+			previewImg(img){
+				uni.previewImage({
+					loop:true,
+					current:0,
+					urls: [img],
+					success:res=>{
+						console.log(res)
+					}
+				})
+			},
+			init(form){
+				this.form = form	
+			},
 			upload(index,type){
+				this.uploadIndex(index,type,'imgArr')
+			},
+			uploadt(index,type){
+				this.uploadIndex(index,type,'imgArrt')
+			},
+			uploadIndex(index,type,name){
 				uni.chooseImage({
 					count:1,
 					success: res => {
@@ -121,7 +153,7 @@
 										name:' file',
 										success:res=>{
 											let url = JSON.parse(res.data).data;
-											this.imgArr[index][type] = url.replace('http','https');
+											this[name][index][type] = url.replace('http','https');
 										}
 									})
 								}
@@ -129,25 +161,6 @@
 						})
 					}
 				})
-			},
-			init(form){
-				this.form = form;
-			},
-			// 图片预览
-			previewImg(img){
-				uni.previewImage({
-					loop:true,
-					current:0,
-					urls: [img],
-					success:res=>{
-						console.log(res)
-					}
-				})
-			},
-		},
-		filters:{
-			dateTime(time){
-				return time && time.slice(0,4)+'-'+time.slice(4,6)+'-'+time.slice(6);
 			},
 		}
 	}
@@ -222,16 +235,5 @@
 				}
 			}
 		}
-	}
-	.btn{
-		width: 670rpx;
-		height: 74rpx;
-		border-radius: 37rpx;
-		background: #FF9D11;
-		color: #fff;
-		position: fixed;
-		left: 50%;
-		transform: translateX(-50%);
-		bottom: 30rpx;
 	}
 </style>
