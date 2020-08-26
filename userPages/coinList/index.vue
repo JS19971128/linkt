@@ -60,7 +60,7 @@
 		},
 		methods: {
 		    transferList() {
-			    this.$fly.post(`/transfer/list?userId=` + this.$store.state.userInfo.id + '&page=0&size=20&sort=createDate,desc')
+			    this.$fly.post(`/transfer/queryList?userId=` + this.$store.state.userInfo.id + '&page=0&size=20&sort=createDate,desc')
 				.then(res => {
 					uni.hideLoading();
 					if (res.code == 0) {
@@ -71,6 +71,7 @@
 							icon: 'none',
 							duration: 2000
 						});
+						
 					}
 				})
 		    }

@@ -8,7 +8,7 @@
 					</view>
 					<view class="number_withdraw flex_between">
 						<view class="wrap_out" v-if="list">
-							<view class="bank"><text class="name">{{list.bankName}}</text><text class="account">{{list.settleBankType}}</text></view>
+							<view class="bank"><text class="name">{{list.bankName}}</text><text class="account">{{bankType(list.settleBankType).status}}</text></view>
 							<view class="card_number">{{list.accountNo}}</view>
 						</view>
 						<view class="add_bank" v-else>
@@ -20,10 +20,10 @@
 				<view class="right_detail">
 					<view class="withdraw_title">提现金额</view>
 					<view class="number_amount">
-						<text class="icon_character">￥</text><input type="number" v-model="withdrawAmount" placeholder="请输入金额"/>
+						<text class="icon_character">￥</text><input type="digit" v-model="withdrawAmount" placeholder="请输入金额"/>
 					</view>
 					<view class="coin_withdraw margin_top">
-						<text class="left_text">零钱可提现余额￥400000.00，</text><text class="all_withdraw">全部提现</text>
+						<text class="left_text">零钱可提现余额￥{{balanceData || 0}}，</text><text class="all_withdraw" @click="allWithdraw">全部提现</text>
 					</view>
 					<view class="coin_withdraw">
 						<text class="left_text">提现手续费: 1.00元</text>
@@ -63,10 +63,22 @@
 			<uni-load-more :iconSize="20" color="#999999" :status="status" :contentText="contentText"></uni-load-more>
 			
 		</view>
+		
+		<!-- 无订单时 -->
+		<view class="flex_center no_data" v-else>
+			<view>
+				<image src="../../static/images/order/order_none.png" mode="widthFix"></image>
+			</view>
+			<view class="tip">
+				<view class="fz-14">暂无记录</view>
+				<view class="fz-12">您还没有提现过喔~</view>
+			</view>
+		</view>
 	</view>
 </template>
 
 <script>
+	import code from '@/common/util/bank_number.js'
 	export default {
 		data() {
 			return {
@@ -78,11 +90,47 @@
 				status: 'noMore', //more,loading,noMore
 				list: '',
 				page: 0,
-				withdrawAmount: '', //提现
-				transferlList: []
+				withdrawAmount: null, //提现
+				transferlList: [],
+				balanceData: '',
+			}
+		},
+		watch: {
+			withdrawAmount(newVal,oldVal) {
+				if (newVal.length == 2) {
+					if (newVal.substr(1,1) != '.' && newVal.substr(0,1) == 0) {
+						if (newVal.substr(1,1) == 0) {
+							this.withdrawAmount = '0';
+						} else {
+							this.withdrawAmount = newVal.substr(1,1);
+						}
+					}
+				}
 			}
 		},
 		methods: {
+			// 全部提现
+			allWithdraw() {
+				if (this.balanceData) {
+					this.withdrawAmount = this.balanceData;
+				} else {
+					this.withdrawAmount = '0';
+				}
+			},
+			bankType(status) {
+				switch (status) {
+					case "B2B":
+						return {
+							status: "对公账户"
+						};
+					case "B2C":
+						return {
+							status: "个人账户"
+						};
+					default:
+						return "";
+				}
+			},
 			goBankCardList() {
 				uni.navigateTo({
 					url:'/userPages/bankCardList/index'
@@ -126,6 +174,16 @@
 					});
 					return false;
 				}
+				
+				if (this.withdrawAmount <= 1) {
+					uni.showToast({
+					    title: '提现金额不能小于或等于1哦',
+						icon:'none',
+					    duration: 2000
+					});
+					return false;
+				}
+				
 				uni.showModal({
 				    title: '提示',
 				    content: '确认提现?',
@@ -140,15 +198,24 @@
 			},
 			// 确认提现
 			confirmWithdraw() {
+				var bankCode = '';
+				for (var i = 0;i < code.length; i ++) {
+					if (code[i].name == this.list.bankName) {
+						bankCode = code[i].code;
+					}
+				}
 				let param = {
 					amount: this.withdrawAmount,
 					bankAccountName: this.list.bankName,
 					bankAccountNo: this.list.accountNo,
-					// bankCode
+					bankCode,
 					bankUnionCode: this.list.bankCode,
+					biz: this.list.settleBankType,
+					feeType:'PAYER',
+					urgency: false,
                     userId: this.$store.state.userInfo.id
 				}
-				
+	
 				this.$fly.post(`/transfer/pay`, param)
 					.then(res => {
 						uni.hideLoading();
@@ -182,6 +249,20 @@
 						});
 					}
 				})
+			},
+			getBalanceSmall() {
+				this.$fly.post(`/transfer/findBalanceByUserId?userId=${this.$store.state.userInfo.id}`)
+				.then(res=>{
+					if(res.code == 0){
+						this.balanceData = res.data.balance;
+					}else{
+						uni.showToast({
+							title: res.message,
+							icon: 'none',
+							duration: 2000
+						});
+					}
+				})
 			}
 		},
 		onLoad() {
@@ -189,6 +270,8 @@
 			this.getBankInfo();
 			// 获取提现记录列表
 			this.transferList();
+			// 获取零钱可提现余额
+			this.getBalanceSmall();
 		},
 		onReachBottom: function() { //触底加载
 			if (this.status == 'noMore') {
@@ -445,6 +528,32 @@
 			   }
 			   
 		   }
+	   }
+	   .no_data {
+	   	flex-direction: column;
+	   	position: absolute;
+	   	top: 80%;
+	   	left: 50%;
+	   	transform: translate(-50%, -50%);
+	   
+	   	image {
+	   		width: 180rpx;
+	   		display: block;
+	   	}
+	   
+	   	.tip {
+	   		margin-top: 50rpx;
+	   		text-align: center;
+	   		line-height: 40rpx;
+	   
+	   		.fz-14 {
+	   			color: #999999;
+	   		}
+	   
+	   		.fz-12 {
+	   			color: #CBCBCB;
+	   		}
+	   	}
 	   }
    }
 </style>

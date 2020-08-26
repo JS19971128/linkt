@@ -95,11 +95,19 @@
 					});
 					return false;
 				}
+
+				var settleBankType = '';
+				if (this.index == 0) {
+					settleBankType = 'B2B'
+				} else {
+					settleBankType = 'B2C'
+				}
+
 				let params = {
 				   accountName: this.accountName,
 				   accountNo: this.bankName,
 				   bankName: this.bankAccount[this.bank],
-				   settleBankType: this.array[this.index],
+				   settleBankType: settleBankType,
 				   userId: this.$store.state.userInfo.id
 				}
 				if (this.index == 0) {

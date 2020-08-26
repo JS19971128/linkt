@@ -2,7 +2,7 @@
 	<view class="bank_card_list">
 	   <view class="china_bank" v-for="(item,index) in list" :class="{'bg_color': oddEven(index) == false}" @click="pickBank(item)">
 	   	  <view class="build">
-	   	  	<text class="name">{{item.bankName}}</text> <text class="account">{{item.settleBankType}}</text>
+	   	  	<text class="name">{{item.bankName}}</text> <text class="account">{{bankType(item.settleBankType).status}}</text>
 	   	  </view>
 		  <view class="card_number">
 		  	{{item.accountNo}}
@@ -37,6 +37,20 @@
 				uni.navigateTo({
 					url:'/userPages/addBankCard/index'
 				})
+			},
+			bankType(status) {
+				switch (status) {
+					case "B2B":
+						return {
+							status: "对公账户"
+						};
+					case "B2C":
+						return {
+							status: "个人账户"
+						};
+					default:
+						return "";
+				}
 			},
 			// 获取银行卡列表
 			getBankList() {

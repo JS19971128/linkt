@@ -4,27 +4,27 @@
 			<view class="my_coin flex_between" >
 				<view class="left_num" @click="goWithdrawList">
 					<view class="my_coin_text">我的零钱</view>
-					<view class="number_withdraw"><text class="amount">{{userInfo.balance}}</text><text class="withdraw">提现</text></view>
+					<view class="number_withdraw"><text class="amount">{{balanceData.balance || 0}}</text><text class="withdraw">提现</text></view>
 				</view>
 				<view class="right_detail" @click="goCoinList">
 					<text class="text_more">零钱明细</text><image class="image_common" src="../../static/images/common/more_gray.png" mode=""></image>
 				</view>
 			</view>
-			<view class="today_coin">今日零钱明细</view>
+			<view class="today_coin">今日零钱明细</view>	
 		</view>
 		
 		<!-- 零钱明细列表 -->
-		<view class="coin_list">
+		<view class="coin_list" v-if="list.length > 0">
 			
-			<view class="amount_withdraw" @click="goDetailsInfo">
+			<view class="amount_withdraw" @click="goDetailsInfo" v-for="(item,index) in list" >
 				<view class="flex_between">
 					<view class="left_list_img">
 						<view class="detail_icon">
 							<image class="balance_img" src="../../static/images/common/balance.png" mode=""></image>
 						</view>
 						<view class="flex">
-							<view class="flex_name">太兴茶餐厅（商家回馈）</view>
-							<view class="flex_date">2020-05-23 12:45:14</view>
+							<view class="flex_name">{{item.title}}</view>
+							<view class="flex_date">{{item.createDate}}</view>
 						</view>
 					</view>
 					<view class="right_amount">
@@ -33,7 +33,19 @@
 					</view>
 				</view>
 			</view>
+			<uni-load-more :iconSize="20" color="#999999" :status="status" :contentText="contentText"></uni-load-more>
 			
+		</view>
+		
+		<!-- 无订单时 -->
+		<view class="flex_center no_data" v-else>
+			<view>
+				<image src="../../static/images/order/order_none.png" mode="widthFix"></image>
+			</view>
+			<view class="tip">
+				<view class="fz-14">暂无记录</view>
+				<!-- <view class="fz-12">您还没有提现过喔~</view> -->
+			</view>
 		</view>
 	</view>
 </template>
@@ -42,7 +54,15 @@
 	export default {
 		data() {
 			return {
-				
+				balanceData: '',
+				list: [],
+				contentText: {
+					contentdown: '向上滑动加载更多',
+					contentrefresh: '加载中',
+					contentnomore: '没有更多了',
+				},
+				status: 'noMore', //more,loading,noMore
+				page: 0,
 			}
 		},
 		computed: {
@@ -67,10 +87,41 @@
 				uni.navigateTo({
 					url:'/userPages/withdrawList/index'
 				})
+			},
+			// 获取余额
+			getBalance() {
+				this.$fly.post(`/transfer/findBalanceByUserId?userId=${this.userInfo.id}`)
+				.then(res=>{
+					if(res.code == 0){
+						this.balanceData = res.data;
+					}else{
+						
+					}
+				})
+			},
+			getQueryList() {
+				var Today = new Date();
+				var date = Today.getFullYear()+ "-" + (Today.getMonth()+1) + "-" + Today.getDate();
+			    this.$fly.post(`/transfer/queryList?userId=` + this.$store.state.userInfo.id + '&beginDate=' + date + '&endDate=' + date + '&page=0&size=20&sort=createDate,desc')
+			    .then(res => {
+			    	uni.hideLoading();
+			    	if (res.code == 0) {
+			    		this.list = res.data;
+			    	} else {
+			    		uni.showToast({
+			    			title: res.message,
+			    			icon: 'none',
+			    			duration: 2000
+			    		});
+			    	}
+			    })
 			}
 		},
 		onLoad() {
-			
+			// 获取余额
+			this.getBalance();
+			// 获取零钱列表记录
+			this.getQueryList();
 		}
 	}
 </script>
@@ -212,6 +263,33 @@
 			   }
 			   
 		   }
+	   }
+	   
+	   .no_data {
+			flex-direction: column;
+			position: absolute;
+			top: 58%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		   
+			image {
+				width: 180rpx;
+				display: block;
+			}
+		   
+			.tip {
+				margin-top: 50rpx;
+				text-align: center;
+				line-height: 40rpx;
+		   
+				.fz-14 {
+					color: #999999;
+				}
+		   
+				.fz-12 {
+					color: #CBCBCB;
+				}
+			}
 	   }
    }
 </style>

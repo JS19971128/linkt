@@ -48,8 +48,8 @@
 					<view class="number" v-else>***</view>
 					<view class="text">我的好友</view>
 				</view>
-				<view class="number_text">
-					<view class="number" v-if="balanceValue">{{balanceValue.balance}}</view>
+				<view class="number_text"  @click="goWhereWithReg('/userPages/coinPurse/index')">
+					<view class="number" v-if="balanceData">{{balanceData.balance || 0}}</view>
 					<view class="number" v-else>***</view>
 					<view class="text">零钱包</view>
 				</view>
@@ -192,6 +192,7 @@
 		data() {
 			return {
 				balanceValue: '', // 优惠券，好友数量
+				balanceData: '', // 余额
 				phone:'0898-65324520', //联系电话
 				levelImg:'../../static/images/my/star.png',
 				merchantEntry: '商家入驻',
@@ -329,6 +330,17 @@
 					}
 				})
 			},
+			// 获取余额
+			getBalance() {
+				this.$fly.post(`/transfer/findBalanceByUserId?userId=${this.userInfo.id}`)
+				.then(res=>{
+					if(res.code == 0){
+						this.balanceData = res.data;
+					}else{
+						
+					}
+				})
+			},
 			businessApply(){ //商户入驻
 				if(this.userInfo.inviteCode){
 					let url = this.url;
@@ -389,6 +401,8 @@
 				this.getBussinessStatus();
 				this.getJInjian()
 				this.getUserData();
+				// 获取余额
+				this.getBalance();
 				if(this.userInfo.aliRealName){
 					this.isRealName = true;
 				}else{
