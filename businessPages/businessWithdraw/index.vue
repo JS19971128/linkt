@@ -23,10 +23,10 @@
 						<text class="icon_character">￥</text><input type="digit" v-model="withdrawAmount" placeholder="请输入金额"/>
 					</view>
 					<view class="coin_withdraw margin_top">
-						<text class="left_text">零钱可提现余额￥{{balanceData || 0}}，</text><text class="all_withdraw" @click="allWithdraw">全部提现</text>
+						<text class="left_text">可提现余额￥{{balanceData.balance - balanceData.todayBalance}}，</text><text class="all_withdraw" @click="allWithdraw">全部提现</text>
 					</view>
 					<view class="coin_withdraw text_nuxt_name">
-						<text class="left_text">提现手续费: 1.00元</text>
+						<text class="left_text">冻结余额￥{{balanceData.todayBalance}}  （按照D1结算规则，第二天才可提现）</text>
 					</view>
 				
 					<view v-if="withdrawAmount" class="withdraw_bnt active_bg" @click="withdraw">
@@ -55,7 +55,7 @@
 						</view>
 					</view>
 					<view class="right_amount">
-						<!-- <text class="add_amount">+ 320</text> -->
+						<!-- <text class="add_amount">+ 320</text> -->	
 						<text class="cut_back">- {{item.amount}}</text>
 					</view>
 				</view>
@@ -116,8 +116,9 @@
 			},
 			// 全部提现
 			allWithdraw() {
-				if (this.balanceData) {
-					this.withdrawAmount = this.balanceData;
+				let balance = this.balanceData.balance - this.balanceData.todayBalance;
+				if (balance) {
+					this.withdrawAmount = balance;
 				} else {
 					this.withdrawAmount = '0';
 				}
@@ -180,9 +181,11 @@
 					return false;
 				}
 				
-				if (this.withdrawAmount <= 1) {
+				// 可提现余额
+				let balance = balanceData.balance - balanceData.todayBalance;
+				if (this.withdrawAmount > balance) {
 					uni.showToast({
-					    title: '提现金额不能小于或等于1哦',
+					    title: '提现金额不能大于可提现余额哦',
 						icon:'none',
 					    duration: 2000
 					});
@@ -218,7 +221,7 @@
 					biz: this.list.settleBankType,
 					feeType:'PAYER',
 					urgency: false,
-					userType: 'NORMALUSER',
+					userType: 'MERCHANT',
                     userId: this.$store.state.userInfo.id
 				}
 	
@@ -244,7 +247,7 @@
 			transferList() {
 			    this.$fly.post(`/transfer/list?userId=` + this.$store.state.userInfo.id + '&page=' + this.page + '&size=20&sort=createDate,desc')
 				.then(res => {
-					uni.hideLoading();
+					uni.hideLoading();				
 					if (res.code == 0) {
 						let data = res.data;
 						this.total = data.totalElements;
@@ -268,10 +271,10 @@
 				})
 			},
 			getBalanceSmall() {
-				this.$fly.post(`/transfer/findBalanceByUserId?userId=${this.$store.state.userInfo.id}&userType=NORMALUSER`)
+				this.$fly.post(`/transfer/findBalanceByUserId?userId=${this.$store.state.userInfo.id}&userType=MERCHANT`)
 				.then(res=>{
 					if(res.code == 0){
-						this.balanceData = res.data.balance;
+						this.balanceData = res.data;
 					}else{
 						uni.showToast({
 							title: res.message,

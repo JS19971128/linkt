@@ -80,7 +80,7 @@
 			
 			<view class="wrap_list_content" v-for="(item,index) in navList" :key='index' @click="goProductDetails(item.id)">
 				<view class="left_img_src">
-					<image class="statr_oss" :src="item.listUrl " mode=""></image>
+					<image class="statr_oss" :src="item.listUrl" mode=""></image>
 				</view>
 				<view class="right_title_schedule">
 					<view class="product_title">{{item.commodityName}}</view>

@@ -12,17 +12,18 @@
 					<view class="flex_between">
 						<view class="left_list_img">
 							<view class="detail_icon">
-								<!-- <image class="balance_img" src="../../static/images/common/balance.png" mode=""></image> -->
-								<image class="balance_img" :src="item.mainUrl" mode=""></image>
+								<image v-if="item.remark == '提现退款' || item.remark == '余额提现'" class="balance_img" src="../../static/images/common/balance.png" mode=""></image>
+								<image v-else class="balance_img" :src="item.merImg" mode=""></image>
 							</view>
 							<view class="flex">
-								<view class="flex_name">{{item.title}}</view>
+								<view class="flex_name" v-if="item.remark == '提现退款' || item.remark == '余额提现'">{{item.remark}}</view>
+								<view class="flex_name" v-else>{{item.merName}}</view>
 								<view class="flex_date">{{item.createDate}}</view>
 							</view>
 						</view>
 						<view class="right_amount">
-							<!-- <text class="add_amount">+ 320</text> -->
-							<text class="cut_back">- 500</text>
+							<text class="cut_back" v-if="item.remark == '余额提现'">- {{item.amount}}</text>
+							<text class="add_amount" v-else>+ {{item.amount}}</text>	
 						</view>
 					</view>
 				</view>
@@ -56,15 +57,30 @@
 				status: 'noMore', //more,loading,noMore
 				list: [],
 				page: 0,
+				total: 0
 			}
 		},
 		methods: {
 		    transferList() {
-			    this.$fly.post(`/transfer/queryList?userId=` + this.$store.state.userInfo.id + '&page=0&size=20&sort=createDate,desc')
+			    this.$fly.post(`/transfer/queryList?userId=` + this.$store.state.userInfo.id + '&page=' + this.page + '&size=20&sort=createDate,desc')
 				.then(res => {
 					uni.hideLoading();
 					if (res.code == 0) {
-						this.list = res.data;
+						let data = res.data;
+						data.content.forEach(item=>{
+							item.createDate = this.$util.formatTime(item.createDate,'yyyy-MM-dd');
+						})
+						this.total = data.totalElements;
+						if(this.page === 0){
+							this.list = []
+						}
+						this.list = this.list.concat(data.content);
+						this.page++;
+						if(this.page > data.totalPages - 1){
+							this.status = 'noMore';
+						}else{
+							this.status = 'more';
+						}
 					} else {
 						uni.showToast({
 							title: res.message,

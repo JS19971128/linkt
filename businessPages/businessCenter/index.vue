@@ -21,20 +21,20 @@
 				<view class="total flex_between">
 					<view class="money flex_between">
 						<view class="fz-24">{{merchant.todayActualReceiveAmount}}</view>
-						<view class="fz-12">今日总实际收款金额（元)</view>
+						<view class="fz-12">商家账户余额（元） <text class="withdraw" @click="goBusinessWithdraw">提现</text></view>
 					</view>
 					<view class="more flex_center">
-						<!-- <view class="fz-12" @click="goProfitList">明细</view> -->
+						<view class="fz-12" @click="goProfitList">明细</view>
 						<image src="../../static/images/common/more_gray.png" mode="widthFix"></image>
 					</view>
 				</view>
 				<view class="today fz-12 flex_between">
 					<view class="order flex_between">
-						<view>今日预付订单总额</view>
+						<view>今日总实际收款金额</view>
 						<view class="num">{{merchant.todayOrderPricePaid}}</view>
 					</view>
 					<view class="order flex_between">
-						<view>累计实际收款总额</view>
+						<view>累计实际收款总金额</view>
 						<view class="num">{{merchant.totalActualReceiveAmount}}</view>
 					</view>
 				</view>
@@ -121,6 +121,12 @@
 			},
 		},
 		methods:{
+			// 提现
+			goBusinessWithdraw() {
+				uni.navigateTo({
+					url:`/businessPages/businessWithdraw/index`
+				})
+			},
 			//跳转订单页
 			clickOrder(index){
 				uni.navigateTo({
@@ -161,8 +167,11 @@
 				})
 			},
 			goProfitList(){ //进入分润明细列表页面
+				// uni.navigateTo({
+				// 	url:`/operationPages/profitList/index?id=${this.merchant.id}&type=LOCK_FANS_MERCHANT_PROFIT`
+				// })
 				uni.navigateTo({
-					url:`/operationPages/profitList/index?id=${this.merchant.id}&type=LOCK_FANS_MERCHANT_PROFIT`
+					url:'/userPages/coinList/index'
 				})
 			},
 			async shopCountFun(id){
@@ -244,6 +253,12 @@
 					}
 					.fz-12{
 						color: #333;
+					}
+					.withdraw {
+						font-size:26rpx;
+						font-family:'PingFang SC';
+						font-weight:800;
+						color:rgba(255,152,52,1);
 					}
 				}
 				.more{
