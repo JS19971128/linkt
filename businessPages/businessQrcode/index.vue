@@ -5,7 +5,7 @@
 			<image :src="codeUrl" mode="aspectFit"></image>
 		</view>
 		<view class="logo flex_center">
-			<image src="../../static/images/business/logo.png" mode="aspectFit"></image>
+			<image src="../../static/images/business/lianke_logo.png" mode="aspectFit"></image><text class="name_title">链客通商业联盟</text>
 		</view>
 		<view class="save_image_photo_album">
 			<view class="flex_center btn fz-16" @click="saveImg">保存至相册</view>
@@ -70,9 +70,13 @@
 		background: #fff;
 		margin-bottom: 134rpx;
 		image{
-			width: 231px;
-			height: 33px;
+			width: 97rpx;
+			height: 66rpx;
 			display: block;
+			margin-right: 20rpx;
+		}
+		text {
+			font-size: 60rpx;
 		}
 	}
 	.save_image_photo_album {

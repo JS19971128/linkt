@@ -16,21 +16,21 @@
 		<!-- 零钱明细列表 -->
 		<view class="coin_list" v-if="list.length > 0">
 			
-			<view class="amount_withdraw" @click="goDetailsInfo" v-for="(item,index) in list" >
+			<view class="amount_withdraw" v-for="(item,index) in list" @click="goDetailsInfo(item.id)">
 				<view class="flex_between">
 					<view class="left_list_img">
 						<view class="detail_icon">
-							<image v-if="item.remark == '提现退款' || item.remark == '余额提现'" class="balance_img" src="../../static/images/common/balance.png" mode=""></image>
+							<image v-if="item.remark == '提现退款' || item.remark == '余额提现' || item.remark == '零钱提现'" class="balance_img" src="../../static/images/common/balance.png" mode=""></image>
 							<image v-else class="balance_img" :src="item.merImg" mode=""></image>
 						</view>
 						<view class="flex">
-							<view class="flex_name" v-if="item.remark == '提现退款' || item.remark == '余额提现'">{{item.remark}}</view>
-							<view class="flex_name" v-else>{{item.merName}}</view>
+							<view class="flex_name" v-if="item.remark == '提现退款' || item.remark == '余额提现' || item.remark == '零钱提现'">{{item.remark}}</view>
+							<view class="flex_name" v-else>{{item.merName}} ({{item.remark}})</view>
 							<view class="flex_date">{{item.createDate}}</view>
 						</view>
 					</view>
 					<view class="right_amount">
-						<text class="cut_back" v-if="item.remark == '余额提现'">- {{item.amount}}</text>
+						<text class="cut_back" v-if="item.remark == '余额提现' || item.remark == '零钱提现'">- {{item.amount}}</text>
 						<text class="add_amount" v-else>+ {{item.amount}}</text>			
 					</view>
 				</view>
@@ -74,9 +74,9 @@
 			}
 		},
 		methods: {
-			goDetailsInfo() {
+			goDetailsInfo(id) {
 				uni.navigateTo({
-					url:'/userPages/detailedDetails/index'
+					url:'/userPages/detailedDetails/index?id=' + id
 				})
 			},
 			// 零钱明细
@@ -105,7 +105,7 @@
 			getQueryList() {
 				var Today = new Date();
 				var date = Today.getFullYear()+ "-" + (Today.getMonth()+1) + "-" + Today.getDate();
-			    this.$fly.post(`/transfer/queryList?userId=` + this.$store.state.userInfo.id + '&beginDate=' + date + '&endDate=' + date + '&page=' + this.page + '&size=20&sort=createDate,desc')
+			    this.$fly.post(`/transfer/queryList?userId=` + this.$store.state.userInfo.id + '&userType=NORMALUSER' + '&beginDate=' + date + '&endDate=' + date + '&page=' + this.page + '&size=20&sort=createDate,desc')
 			    .then(res => {
 			    	uni.hideLoading();
 			    	if (res.code == 0) {

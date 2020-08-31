@@ -28,7 +28,9 @@
 					<view class="coin_withdraw text_nuxt_name">
 						<text class="left_text">冻结余额￥{{balanceData.todayBalance}}  （按照D1结算规则，第二天才可提现）</text>
 					</view>
-				
+				    <view class="coin_withdraw text_nuxt_name">
+				    	<text class="left_text">备注: 晚上11点后提现，第二天到账</text>
+				    </view>
 					<view v-if="withdrawAmount" class="withdraw_bnt active_bg" @click="withdraw">
 						提现
 					</view>
@@ -43,7 +45,7 @@
 		<!-- 零钱明细列表 -->
 		<view class="coin_list" v-if="transferlList.length > 0">
 			
-			<view class="amount_withdraw" v-for="(item,index) in transferlList">
+			<view class="amount_withdraw" v-for="(item,index) in transferlList" @click="goDetailsInfo(item)">
 				<view class="flex_between">
 					<view class="left_list_img">
 						<view class="detail_icon">
@@ -110,6 +112,11 @@
 			}
 		},
 		methods: {
+			goDetailsInfo(item) {
+				uni.navigateTo({
+					url:'/userPages/detailedDetails/index?id=' + item.id + '&reason=' + item.reason + '&orderStatus=' + item.orderStatus + '&userType=' + item.userType
+				})
+			},
 			bankNmberShow(num) {
 				var num1 = num.replace(/(.{4})/g, "$1 ");
 				return num1;
@@ -182,7 +189,7 @@
 				}
 				
 				// 可提现余额
-				let balance = balanceData.balance - balanceData.todayBalance;
+				let balance = this.balanceData.balance - this.balanceData.todayBalance;
 				if (this.withdrawAmount > balance) {
 					uni.showToast({
 					    title: '提现金额不能大于可提现余额哦',
@@ -206,6 +213,10 @@
 			},
 			// 确认提现
 			confirmWithdraw() {
+				var _this = this;
+				uni.showLoading({
+				    title: '加载中'
+				});
 				var bankCode = '';
 				for (var i = 0;i < code.length; i ++) {
 					if (code[i].name == this.list.bankName) {
@@ -214,16 +225,16 @@
 				}
 				let param = {
 					amount: this.withdrawAmount,
-					bankAccountName: this.list.bankName,
+					bankAccountName: this.list.accountName,
 					bankAccountNo: this.list.accountNo,
 					bankCode,
 					bankUnionCode: this.list.bankCode,
 					biz: this.list.settleBankType,
-					feeType:'PAYER',
 					urgency: false,
 					userType: 'MERCHANT',
                     userId: this.$store.state.userInfo.id
 				}
+	            
 	
 				this.$fly.post(`/transfer/pay`, param)
 					.then(res => {
@@ -234,7 +245,10 @@
 								icon: 'success',
 							    duration: 2000
 							});
-							
+							// 获取提现记录列表
+							_this.transferList();
+							// 获取零钱可提现余额
+							_this.getBalanceSmall();
 						} else {
 							uni.showToast({
 							    title: res.message,
@@ -245,7 +259,7 @@
 					})
 			},
 			transferList() {
-			    this.$fly.post(`/transfer/list?userId=` + this.$store.state.userInfo.id + '&page=' + this.page + '&size=20&sort=createDate,desc')
+			    this.$fly.post(`/transfer/list?userId=` + this.$store.state.userInfo.id + '&userType=MERCHANT' + '&page=' + this.page + '&size=20&sort=createDate,desc')
 				.then(res => {
 					uni.hideLoading();				
 					if (res.code == 0) {
@@ -255,6 +269,7 @@
 							this.transferlList = []
 						}
 						this.transferlList = this.transferlList.concat(data.content);
+						console.log(this.transferlList)
 						this.page++;
 						if(this.page > data.totalPages - 1){
 							this.status = 'noMore';
@@ -295,6 +310,7 @@
 			this.transferList();
 		},
 		onShow() {
+			this.page = 0;
 			// 默认获取银行卡信息
 			this.getBankInfo();
 			// 获取提现记录列表
@@ -315,7 +331,7 @@
    .coin_purse {
 	   min-height: 100vh;
 	   background-color: #EEEEEE;
-	   padding-top: 680rpx;
+	   padding-top: 720rpx;
 	   box-sizing: border-box;
 	   padding-bottom: 20rpx;
 	   .wrap_nuxt {
@@ -324,7 +340,7 @@
 		   left: 0;
 		   right: 0;
 		   z-index: 10;
-		   height: 680rpx;
+		   height: 720rpx;
 		   padding: 20rpx 20rpx 0 20rpx;
 		   background-color: #EEEEEE;
 		   box-sizing: border-box;
@@ -339,7 +355,7 @@
 			   line-height: 80rpx;
 		   }
 		   .my_coin {
-			   height: 570rpx;
+			   height: 610rpx;
 			   background-color: #FFFFFF;
 			   box-shadow:0px 2px 6px 0px rgba(0, 0, 0, 0.15);
 			   .left_num {

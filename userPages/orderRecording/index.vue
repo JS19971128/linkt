@@ -315,7 +315,7 @@
 			}
 		}
 		.recording_list {
-			margin-top: 100rpx;
+			padding-top: 100rpx;
 			.nuxt_uni {
 				border-bottom: 1px solid #D3D3D3;
 			}

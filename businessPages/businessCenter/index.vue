@@ -20,7 +20,7 @@
 			<view class="detail">
 				<view class="total flex_between">
 					<view class="money flex_between">
-						<view class="fz-24">{{merchant.todayActualReceiveAmount}}</view>
+						<view class="fz-24">{{balanceData.balance|| 0}}</view>
 						<view class="fz-12">商家账户余额（元） <text class="withdraw" @click="goBusinessWithdraw">提现</text></view>
 					</view>
 					<view class="more flex_center">
@@ -31,11 +31,11 @@
 				<view class="today fz-12 flex_between">
 					<view class="order flex_between">
 						<view>今日总实际收款金额</view>
-						<view class="num">{{merchant.todayOrderPricePaid}}</view>
+						<view class="num">{{balanceData.todayBalance || 0}}</view>
 					</view>
 					<view class="order flex_between">
 						<view>累计实际收款总金额</view>
-						<view class="num">{{merchant.totalActualReceiveAmount}}</view>
+						<view class="num">{{balanceData.totalBalance || 0}}</view>
 					</view>
 				</view>
 				<view class="shop">
@@ -109,7 +109,8 @@
 				merchant:{},
 				income:{},
 				shopCount:{},
-				Trurl:''
+				Trurl:'',
+				balanceData: ''
 			}
 		},
 		computed:{
@@ -166,12 +167,26 @@
 					}
 				})
 			},
+			getBalanceSmall() {
+				this.$fly.post(`/transfer/findBalanceByUserId?userId=${this.$store.state.userInfo.id}&userType=MERCHANT`)
+				.then(res=>{
+					if(res.code == 0){
+						this.balanceData = res.data;
+					}else{
+						uni.showToast({
+							title: res.message,
+							icon: 'none',
+							duration: 2000
+						});
+					}
+				})
+			},
 			goProfitList(){ //进入分润明细列表页面
 				// uni.navigateTo({
 				// 	url:`/operationPages/profitList/index?id=${this.merchant.id}&type=LOCK_FANS_MERCHANT_PROFIT`
 				// })
 				uni.navigateTo({
-					url:'/userPages/coinList/index'
+					url:'/userPages/coinList/index?type=MERCHANT'
 				})
 			},
 			async shopCountFun(id){
@@ -199,6 +214,8 @@
 		},
 		onShow() {
 			this.getJInjian();
+			// 获取零钱余额
+			this.getBalanceSmall();
 		}
 	}
 </script>
