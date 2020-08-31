@@ -124,12 +124,28 @@
 			maxDiscountFun(priceTotal){ //priceTotal 总价
 				let {goods,payCommission} = this; //payCommission 商家手续费
 				let discountMoney = goods.reduce((v,i)=>{ //可抵扣金额 商品列表循环 priceSale:价格 commodityNum:数量 profits:让利比
-					return (v*10000 + (((i.priceSale*100)*i.commodityNum)*i.profits))/10000;
+					return (v*10000 + (((this.profitClass(i.priceSale)*100)*i.commodityNum)*this.profitClass(i.priceSale)))/10000;
 				},0)
 				let discountMoneyTo = discountMoney.toFixed(2);
 				let fee = (((priceTotal*10000)*(payCommission*10000))/100000000).toFixed(2); //手续费等于 总价*商家手续费
 				let maxDiscount = (((discountMoneyTo*100)*70)-(fee*10000))/10000;  //百分之七十可用优惠券抵扣 在减去手续费
 				this.maxDiscount = Math.floor(maxDiscount*100)/100;
+			},
+			profitClass(number = 5){
+				let num = Number(number);
+				let profits = num;
+				if(num>=6 && num<=11){  //商家让利6%-11%之间，消费10元拿出1%送0.1元夺宝券，剩下的5-10%用于分润和抵扣优惠券
+					profits = num - 1
+				}else if(num>=12 && num<=17){ //商家让利12%-17%之间，消费10元拿出2%送0.2元夺宝券，剩下的10-15%用于分润；
+					profits = num - 2
+				}else if(num>=18 && num<=23){  //商家让利18%-23%之间，消费10元拿出3%送0.3元夺宝券，剩下的15-20%用于分润；
+					profits = num - 3
+				}else if(num>=24 && num<=29){ //商家让利24%-29%之间，消费10元拿出4%送0.4元夺宝券，剩下的20-25%用于分润；
+					profits = num - 4
+				}else if(num===30){ //商家让利30%，消费10元拿出5%送0.5元夺宝券，，剩下的25%用于分润；
+					profits = num - 5
+				}
+				return profits;
 			},
 			getMoreCoupon(){
 				if(this.status == 'noMore'){ 

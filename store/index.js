@@ -11,9 +11,9 @@ const store = new Vuex.Store({
 		// baseUrl:'https://chainguest.3zone.net/api',
 		// baseUrl:'https://v.liankedl.com/api',
 		// baseUrl:'http://192.168.3.197:8570',  //shuguang
-		// baseUrl:'https://v.liankedl.com/api',
+		baseUrl:'https://v.liankedl.com/api',
 		// baseUrl:'http://192.168.3.150:8569', //xianwen
-		baseUrl:'http://192.168.3.148:8566', //liangrongcai
+		// baseUrl:'http://192.168.3.148:8566', //liangrongcai
 		// mapKey:'LUSBZ-5JYWP-NVMDR-VC5OY-FZI3F-OFBLO',
 		
 		webSocket:'wss://v.liankedl.com/api',

@@ -165,7 +165,7 @@
 			canDiscount(){ //计算可抵扣金额
 				let options = this.queryInfo;
 				let consumeMoney = options.money; //消费金额
-				let rate = options.profits/100; //让利比例
+				let rate = this.profitClass(options.profits)/100; //让利比例
 				let discountMoney = ((consumeMoney * 1000) * (rate * 1000))/1000000;
 				discountMoney = discountMoney.toFixed(2);  //让利金额
 				let fee = ((consumeMoney * 100000) * (options.payCommission * 100000))/10000000000; 
@@ -191,6 +191,22 @@
 				// 	}
 				// 	this.maxDiscount = money;
 				// }
+			},
+			profitClass(number = 5){
+				let num = Number(number);
+				let profits = num;
+				if(num>=6 && num<=11){  //商家让利6%-11%之间，消费10元拿出1%送0.1元夺宝券，剩下的5-10%用于分润和抵扣优惠券
+					profits = num - 1
+				}else if(num>=12 && num<=17){ //商家让利12%-17%之间，消费10元拿出2%送0.2元夺宝券，剩下的10-15%用于分润；
+					profits = num - 2
+				}else if(num>=18 && num<=23){  //商家让利18%-23%之间，消费10元拿出3%送0.3元夺宝券，剩下的15-20%用于分润；
+					profits = num - 3
+				}else if(num>=24 && num<=29){ //商家让利24%-29%之间，消费10元拿出4%送0.4元夺宝券，剩下的20-25%用于分润；
+					profits = num - 4
+				}else if(num===30){ //商家让利30%，消费10元拿出5%送0.5元夺宝券，，剩下的25%用于分润；
+					profits = num - 5
+				}
+				return profits;
 			},
 			payment(){  //支付
 				// 未拿到用户信息时提示用户再点击一次
