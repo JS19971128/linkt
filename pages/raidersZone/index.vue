@@ -4,7 +4,7 @@
 			<image src="../../static/images/shop/tu-min.png" mode=""></image>
 			<view class="voucher">
 				<view class="left_voucher">
-					<view class="frist_uni">0</view>
+					<view class="frist_uni">{{drawMyData.drawCouponCount || 0}}</view>
 					<view class="second_uni">夺宝券</view>
 				</view>
 				<!-- @click="goMyTreasure" -->
