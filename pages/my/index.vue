@@ -332,7 +332,7 @@
 			},
 			// 获取余额
 			getBalance() {
-				this.$fly.post(`/transfer/findBalanceByUserId?userId=${this.userInfo.id}`)
+				this.$fly.post(`/transfer/findBalanceByUserId?userId=${this.userInfo.id}&userType=NORMALUSER`)
 				.then(res=>{
 					if(res.code == 0){
 						this.balanceData = res.data;
@@ -355,6 +355,13 @@
 						url: '/pages/login/sign'
 					})
 				}
+				
+				// 测试
+				// this.url = '/businessPages/businessCenter/index';
+				// this.TRstatus = 'normal'
+				// uni.navigateTo({
+				// 	url: this.url
+				// })
 			},
 			
 			// 复制

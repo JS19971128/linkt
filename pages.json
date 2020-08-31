@@ -396,6 +396,12 @@
 					"style": {
 						"navigationBarTitleText": "商品描述"
 					}
+				},
+				{
+					"path":"businessWithdraw/index",
+					"style": {
+						"navigationBarTitleText": "余额提现"
+					}
 				}
 			]
 		},

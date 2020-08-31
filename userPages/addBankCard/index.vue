@@ -5,35 +5,41 @@
 			<view class="wrap_type_list">
 				<view class="left_text">账户类型</view>
 				<view class="right_check">
-					<picker @change="bindPickerChange" :value="index" :range="array">
-						<view class="uni-input">{{array[index]}}</view>
+					<picker mode="selector" @change="bindPickerChange" :value="index" :range="array">
+						<!-- <view class="uni-input">{{array[index]}}</view> -->
+						<view class="uni-input">
+							<input type="text" disabled v-model="bankType" placeholder="请选择账户类型" placeholder-style="color:#CBCBCB;font-size:28rpx" />
+						</view>
 					</picker>
 				</view>
 			</view>
 			<view class="wrap_type_list">
 				<view class="left_text">开户银行</view>
 				<view class="right_check">
-					<picker @change="bindBankChange" :value="bank" :range="bankAccount">
-						<view class="uni-input">{{bankAccount[bank]}}</view>
+					<picker mode="selector" @change="bindBankChange" :value="bank" :range="bankAccount">
+						<!-- <view class="uni-input">{{bankAccount[bank]}}</view> -->
+						<view class="uni-input">
+							<input type="text" disabled v-model="bankAccountShow" placeholder="请选择开户银行" placeholder-style="color:#CBCBCB;font-size:28rpx" />
+						</view>
 					</picker>
 				</view>
 			</view>
 			<view class="wrap_type_list" v-if="index == 0">
 				<view class="left_text">联行号</view>
 				<view class="right_check">
-					<input type="number" v-model="bankCode" placeholder="开户支行联行号，可与开户支行咨询" />
+					<input type="number" v-model="bankCode" placeholder="开户支行联行号，可与开户支行咨询" placeholder-style="color:#CBCBCB;font-size:28rpx" />
 				</view>
 			</view>
 			<view class="wrap_type_list">
 				<view class="left_text">持卡人</view>
 				<view class="right_check">
-					<input type="text" v-model="accountName" placeholder="请输入真实姓名/对公账户输入公司全称" />
+					<input type="text" v-model="accountName" placeholder="请输入真实姓名/对公账户输入公司全称" placeholder-style="color:#CBCBCB;font-size:28rpx" />
 				</view>
 			</view>
 			<view class="wrap_type_list">
 				<view class="left_text">卡号</view>
 				<view class="right_check">
-					<input type="number" v-model="bankName" placeholder="请输入银行卡号" />
+					<input type="number" v-model="bankName" placeholder="请输入银行卡号" placeholder-style="color:#CBCBCB;font-size:28rpx" />
 				</view>
 			</view>
 		</view>
@@ -46,6 +52,7 @@
 
 <script>
 	import code from '@/common/util/bank_code.js'
+	import codeNum from '@/common/util/bank_number.js'
 	export default {
 		data() {
 			return {
@@ -56,16 +63,20 @@
 				bankCode: '', // 银联号
 				accountName: '', // 持卡人
 				bankName: '', // 银行卡号
+				bankType: '', //账户类型展示
+				bankAccountShow: '', // 开户银行展示
 			}
 		},
 		methods: {
 			bindPickerChange: function(e) {
 				console.log('picker发送选择改变，携带值为', e.target.value)
 				this.index = e.target.value
+				this.bankType = this.array[this.index]
 			},
 			bindBankChange: function(e) {
 				console.log('picker发送选择改变，携带值为', e.target.value)
 				this.bank = e.target.value
+				this.bankAccountShow = this.bankAccount[this.bank]
 			},
 			// 确认添加
 			confirmAdd() {
@@ -102,12 +113,20 @@
 				} else {
 					settleBankType = 'B2C'
 				}
+				
+				var bankCode = '';
+				for (var i = 0;i < codeNum.length; i ++) {
+					if (codeNum[i].name == this.bankAccountShow) {
+						bankCode = codeNum[i].code;
+					}
+				}
 
 				let params = {
 				   accountName: this.accountName,
 				   accountNo: this.bankName,
 				   bankName: this.bankAccount[this.bank],
 				   settleBankType: settleBankType,
+				   bankUnit: bankCode,
 				   userId: this.$store.state.userInfo.id
 				}
 				if (this.index == 0) {
