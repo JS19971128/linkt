@@ -314,7 +314,7 @@
 					success: (res) => {
 						// console.log('chenggong',res)
 						if(res.resultCode == '9000'){
-							uni.redirectTo({
+							uni.reLaunch({
 								url:'/pages/coupon/index'
 							})
 						}else{
@@ -330,7 +330,6 @@
 				})
 			},
 			wechatPay(payInfo) {  //微信支付
-				debugger
 				uni.requestPayment({
 					appId: payInfo.appId,
 					timeStamp: payInfo.timeStamp,
@@ -339,7 +338,7 @@
 					signType: payInfo.signType,
 					paySign: payInfo.paySign,
 					success: (res) => {
-						uni.redirectTo({
+						uni.reLaunch({
 							url:'/pages/coupon/index'
 						})
 					},

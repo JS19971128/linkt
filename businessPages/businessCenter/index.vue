@@ -150,7 +150,7 @@
 					if(res.code == 0){
 						if(res.data && (res.data.status === 'AUDITED' || res.data.status === 'PASS')){
 							this.Trurl = `/businessPages/review/index`;
-						}else if(res.data.status === 'FINISH'){
+						}else if(res.data && res.data.status === 'FINISH'){
 							this.Trurl = `/businessPages/review/pass`;
 						}
 					}

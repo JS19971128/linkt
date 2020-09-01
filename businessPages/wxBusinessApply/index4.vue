@@ -435,7 +435,6 @@
 						icon:'none'
 					});
 				}finally{
-					uni.hideLoading();
 				}
 			}
 		},

@@ -193,7 +193,7 @@
 			return {
 				balanceValue: '', // 优惠券，好友数量
 				balanceData: '', // 余额
-				phone:'0898-65324520', //联系电话
+				phone:'4000871349', //联系电话
 				levelImg:'../../static/images/my/star.png',
 				merchantEntry: '商家入驻',
 				url:'',  //商家中心、商家入驻、商家审核状态

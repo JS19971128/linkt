@@ -288,7 +288,7 @@
 					signType: payInfo.signType,
 					paySign: payInfo.paySign,
 					success: (res) => {
-						uni.switchTab({
+						uni.reLaunch({
 							url:'/pages/coupon/index'
 						})
 					},
