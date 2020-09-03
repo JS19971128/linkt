@@ -10,7 +10,7 @@
 						<view class="fz-14">{{operator.nickName}}</view>
 						<view class="fz-12">{{operator.title || '总裁'}}</view>
 					</view>
-					<view class="fz-12">{{operator.addressInfo}}</view>
+					<view class="fz-12">{{typeSplice(operator)}}</view>
 				</view>
 			</view>
 		</view>
@@ -87,7 +87,11 @@
 	export default{
 		data() {
 			return {
-				
+				type:{
+					OPERATION_PROVINCE_CENTER:1,
+					OPERATION_CITY_CENTER:2,
+					OPERATION_AREA_CENTER:3
+				}
 			}
 		},
 		computed:{
@@ -100,6 +104,13 @@
 				uni.navigateTo({
 					url
 				})
+			},
+			typeSplice(operator){
+				let addressInfo = operator.addressInfo.split('-');
+				let {type} = this;
+				let arr = addressInfo.splice(0,type[operator.type]);
+				let str = arr.join('-');
+				return str
 			}
 		},
 	}

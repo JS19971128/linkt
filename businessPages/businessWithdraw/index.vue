@@ -23,7 +23,7 @@
 						<text class="icon_character">￥</text><input type="digit" v-model="withdrawAmount" placeholder="请输入金额"/>
 					</view>
 					<view class="coin_withdraw margin_top">
-						<text class="left_text">可提现余额￥{{(balanceData.balance*100 - balanceData.todayBalance*100)/10000}}，</text><text class="all_withdraw" @click="allWithdraw">全部提现</text>
+						<text class="left_text">可提现余额￥{{(balanceData.balance*1000 - balanceData.todayBalance*1000)/1000}}</text><text class="all_withdraw" @click="allWithdraw">全部提现</text>
 					</view>
 					<view class="coin_withdraw text_nuxt_name">
 						<text class="left_text">冻结余额￥{{balanceData.todayBalance}}  （按照D1结算规则，第二天才可提现）</text>
@@ -31,7 +31,7 @@
 				    <view class="coin_withdraw text_nuxt_name">
 				    	<text class="left_text">备注: 晚上11点后提现，隔天早上8点到账</text>
 				    </view>
-					<view v-if="withdrawAmount" class="withdraw_bnt active_bg" @click="withdraw">
+					<view v-if="withdrawAmount&&timer" class="withdraw_bnt active_bg" @click="withdraw">
 						提现
 					</view>
 					<view v-else class="withdraw_bnt">
@@ -96,6 +96,7 @@
 				withdrawAmount: null, //提现
 				transferlList: [],
 				balanceData: '',
+				timer:true
 			}
 		},
 		watch: {
@@ -169,6 +170,7 @@
 			},
 			// 提现
 			withdraw() {
+				
 				var _this = this;
 				if (this.list == '') {
 					uni.showToast({
@@ -213,6 +215,16 @@
 			},
 			// 确认提现
 			confirmWithdraw() {
+				if(this.timer){
+					this.timer = false;
+					setTimeout(()=>{
+						this.timer = true;
+					},3000)
+				}else{
+					return;
+				}
+				
+				
 				var _this = this;
 				uni.showLoading({
 				    title: '加载中'

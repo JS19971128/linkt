@@ -23,7 +23,7 @@
 						<text class="icon_character">￥</text><input type="digit" v-model="withdrawAmount" placeholder="请输入金额"/>
 					</view>
 					<view class="coin_withdraw margin_top">
-						<text class="left_text">零钱可提现余额￥{{balanceData || 0}}，</text><text class="all_withdraw" @click="allWithdraw">全部提现</text>
+						<text class="left_text">零钱可提现余额￥{{balanceData || 0}}</text><text class="all_withdraw" @click="allWithdraw">全部提现</text>
 					</view>
 					<view class="coin_withdraw text_nuxt_name">
 						<text class="left_text">提现手续费: 1.00元</text>
@@ -31,7 +31,7 @@
 					<view class="coin_withdraw text_nuxt_name">
 						<text class="left_text">备注: 晚上11点后提现，隔天早上8点到账</text>
 					</view>
-					<view v-if="withdrawAmount" class="withdraw_bnt active_bg" @click="withdraw">
+					<view v-if="withdrawAmount&&timer" class="withdraw_bnt active_bg" @click="withdraw">
 						提现
 					</view>
 					<view v-else class="withdraw_bnt">
@@ -96,6 +96,7 @@
 				withdrawAmount: null, //提现
 				transferlList: [],
 				balanceData: '',
+				timer:true
 			}
 		},
 		watch: {
@@ -210,6 +211,15 @@
 			},
 			// 确认提现
 			confirmWithdraw() {
+				if(this.timer){
+					this.timer = false;
+					setTimeout(()=>{
+						this.timer = true;
+					},3000)
+				}else{
+					return;
+				}
+				
 				var bankCode = '';
 				for (var i = 0;i < code.length; i ++) {
 					if (code[i].name == this.list.bankName) {

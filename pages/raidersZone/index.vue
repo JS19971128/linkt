@@ -303,7 +303,8 @@
 					if (res.code == 0) {
 						let data = res.data;
 						this.drawMyData = data;
-					}				
+					}
+					uni.stopPullDownRefresh();
 				})
 			}
 		}
