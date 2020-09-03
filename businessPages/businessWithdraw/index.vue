@@ -191,7 +191,7 @@
 				}
 				
 				// 可提现余额
-				let balance = this.balanceData.balance - this.balanceData.todayBalance;
+				let balance = (this.balanceData.balance*100 - this.balanceData.todayBalance*100)/100;
 				if (this.withdrawAmount > balance) {
 					uni.showToast({
 					    title: '提现金额不能大于可提现余额哦',
