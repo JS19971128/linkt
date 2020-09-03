@@ -23,7 +23,7 @@
 						<text class="icon_character">￥</text><input type="digit" v-model="withdrawAmount" placeholder="请输入金额"/>
 					</view>
 					<view class="coin_withdraw margin_top">
-						<text class="left_text">零钱可提现余额￥{{balanceData || 0}}，</text><text class="all_withdraw" @click="allWithdraw">全部提现</text>
+						<text class="left_text">零钱可提现余额￥{{balanceData || 0}} </text> <text class="all_withdraw" @click="allWithdraw"> 全部提现</text>
 					</view>
 					<view class="coin_withdraw text_nuxt_name">
 						<text class="left_text">提现手续费: 1.00元</text>

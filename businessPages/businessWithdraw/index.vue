@@ -23,7 +23,7 @@
 						<text class="icon_character">￥</text><input type="digit" v-model="withdrawAmount" placeholder="请输入金额"/>
 					</view>
 					<view class="coin_withdraw margin_top">
-						<text class="left_text">可提现余额￥{{(balanceData.balance*100 - balanceData.todayBalance*100)/10000}}，</text><text class="all_withdraw" @click="allWithdraw">全部提现</text>
+						<text class="left_text">可提现余额￥{{(balanceData.balance*100 - balanceData.todayBalance*100)/100}}，</text><text class="all_withdraw" @click="allWithdraw">全部提现</text>
 					</view>
 					<view class="coin_withdraw text_nuxt_name">
 						<text class="left_text">冻结余额￥{{balanceData.todayBalance}}  （按照D1结算规则，第二天才可提现）</text>
@@ -123,7 +123,7 @@
 			},
 			// 全部提现
 			allWithdraw() {
-				let balance = this.balanceData.balance - this.balanceData.todayBalance;
+				let balance = (this.balanceData.balance*100 - this.balanceData.todayBalance*100)/100;
 				if (balance) {
 					this.withdrawAmount = balance;
 				} else {
@@ -305,7 +305,8 @@
 			}
 		},
 		onLoad() {
-			
+			// 默认获取银行卡信息
+			this.getBankInfo();
 		},
 		onReachBottom: function() { //触底加载
 			if (this.status == 'noMore') {
@@ -315,8 +316,7 @@
 		},
 		onShow() {
 			this.page = 0;
-			// 默认获取银行卡信息
-			this.getBankInfo();
+			
 			// 获取提现记录列表
 			this.transferList();
 			// 获取零钱可提现余额
