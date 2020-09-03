@@ -214,11 +214,28 @@
 		},
 		watch:{
 			userInfo(val){
-				// console.log(val)
+				this.init()
+			}
+		},
+		methods:{
+			init(){
+				// 更新运营人员类型，商家状态，是否实名
+				// this.getOperator();
+				// this.getBussinessStatus();
+				this.getJInjian()
+				this.getUserData();
+				// 获取余额
+				this.getBalance();
+				
+				this.userInfoFun(this.userInfo)
+			},
+			userInfoFun(val){
+				console.log(val)
 				if(val){
 					// 设置等级图标
 					if(val.starExplain == '一星拓展员'){
 						this.levelImg = '../../static/images/my/star.png';
+						// this.levelImg = '../../static/images/my/moon.png';
 					}else if(val.starExplain == '二星拓展员'){
 						this.levelImg = '../../static/images/my/moon.png';
 					}else if(val.starExplain == '三星拓展员'){
@@ -236,9 +253,7 @@
 					this.getBussinessStatus();
 					this.getOperator();
 				}
-			}
-		},
-		methods:{
+			},
 			goWhereWithReg(url){ // 需要注册才能进入的页面
 				console.log(this.userInfo);
 				if(this.userInfo && this.userInfo.inviteCode){
@@ -339,6 +354,7 @@
 					}else{
 						
 					}
+					uni.stopPullDownRefresh();
 				})
 			},
 			businessApply(){ //商户入驻
@@ -403,25 +419,20 @@
 			}
 			// #endif
 			if(this.userInfo.id){
-				// 更新运营人员类型，商家状态，是否实名
-				this.getOperator();
-				this.getBussinessStatus();
-				this.getJInjian()
-				this.getUserData();
-				// 获取余额
-				this.getBalance();
-				if(this.userInfo.aliRealName){
-					this.isRealName = true;
-				}else{
-					this.isRealName = false;
-				}
+				debugger
+				this.init()
 			}
 		},
 		onShareAppMessage(){
 			return {
 				path: 'pages/my/index',
 			}
-		}
+		},
+		onPullDownRefresh: function(){
+			this.getUserData();
+			// 获取余额
+			this.getBalance();
+		},
 	}
 </script>
 

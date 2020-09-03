@@ -94,6 +94,16 @@
 						color:'#ce1212'
 					}
 				],
+				type:{
+					OPERATION_PROVINCE_CENTER:1,
+					OPERATION_CITY_CENTER:2,
+					OPERATION_AREA_CENTER:3
+				}
+			}
+		},
+		computed:{
+			operator(){ //运营人员信息
+				return this.$store.state.operatorData;
 			}
 		},
 		methods:{
@@ -122,12 +132,26 @@
 			},
 			getList(){ //获取进件商家列表
 				this.status = 'loading';
+				let {areaCode,areaCodeCity,areaCodeAreas,type} = this.operator;
 				let data = {
 					page:this.page,
 					size:10,
 					merchantNo:this.searchKey,
 					status:this.current,
 				}
+				
+				
+				if(type==='OPERATION_PROVINCE_CENTER'){
+					data.areaCode = areaCode;
+				}else if(type==='OPERATION_CITY_CENTER'){
+					data.areaCode = areaCode;
+					data.areaCodeCity = areaCodeCity;
+				}else if(type==='OPERATION_AREA_CENTER'){
+					data.areaCode = areaCode;
+					data.areaCodeCity = areaCodeCity;
+					data.areaCodeAreas = areaCodeAreas;
+				}
+				
 				this.$fly.post(`/entry/queryMerchantEntryList?${formateObjToParamStr(data)}`)
 				.then(res=>{
 					uni.stopPullDownRefresh();

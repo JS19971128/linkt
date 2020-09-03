@@ -3,11 +3,11 @@
 		<view class="top flex_center fz-14" :class="[form.status]">
 			<view class="top-left">
 				<view class="">申请编号：<text>{{form.id}}</text></view>
-				<view class="">商户号：<text>{{form.merchantNo}}</text></view>
+				<view class="">商户号：<text>{{form.merchantNo||''}}</text></view>
 			</view>
 			<view class="top-right flex_between">{{statusFun(form.status).name}}</view>
 		</view>
-		<view class="inError" v-if="form.status=='FAILED'">驳回原因：{{imgMsg}}</view>
+		<view class="inError" v-if="imgMsg&&(form.status==='FAILED'||form.signStatus==0)">驳回原因：{{imgMsg}}</view>
 		<view class="tab flex_center fz-14">
 			<view class="item flex_center" :class="{active:current == item.value}" v-for="item in tab" :key="item.id" @click="changeTab(item.value)">{{item.text}}</view>
 		</view>
@@ -139,7 +139,7 @@
 					for(let i of form.merchantCredential){
 						i.name = nameObj[i.credentialType]
 					}
-					this.imgMsg = form.msg+'请修改后重新上传。';
+					this.imgMsg = (form.msg||"") + (form.signStatus == 0?'商家未完成签章':'') + '请修改后重新上传。';
 					this.form = form;
 					
 					
@@ -278,6 +278,7 @@
 		display: flex;
 		padding: 20rpx;
 		box-sizing: border-box;
+		z-index: 99;
 		.btn{
 			flex: 1;
 			margin: 0 20rpx;

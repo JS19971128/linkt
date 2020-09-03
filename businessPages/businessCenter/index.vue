@@ -8,10 +8,10 @@
 				<view class="business fz-14">
 					<view class="fz-16">{{merchant.merchant.shopName}}</view>
 					<!-- #ifdef MP-ALIPAY -->
-					<view>商家号:{{userInfo.alipayUserId}}</view>
+					<!-- <view>商家号:{{userInfo.alipayUserId}}</view> -->
 					<!-- #endif -->
 					<!-- #ifdef MP-WEIXIN -->
-					<view>商家号:{{merchant.merchant.wxpayMchId || ''}}</view>
+					<!-- <view>商家号:{{merchant.merchant.wxpayMchId || ''}}</view> -->
 					<!-- #endif -->
 				</view>
 			</view>
@@ -163,7 +163,7 @@
 						// res.data.merchant.alipayPaymentUrl = res.data.merchant.alipayPaymentUrl;
 						this.merchant = res.data;
 						this.$store.commit('SETMerchantId',res.data.merchant.id);
-						this.shopCountFun(res.data.merchant.id)
+						this.shopCountFun(res.data.merchant.id);
 					}
 				})
 			},
@@ -179,6 +179,7 @@
 							duration: 2000
 						});
 					}
+					uni.stopPullDownRefresh();
 				})
 			},
 			goProfitList(){ //进入分润明细列表页面
@@ -216,7 +217,11 @@
 			this.getJInjian();
 			// 获取零钱余额
 			this.getBalanceSmall();
-		}
+		},
+		onPullDownRefresh: function(){
+			this.getMerchant();
+			this.getBalanceSmall();
+		},
 	}
 </script>
 

@@ -18,7 +18,7 @@
 			"path": "pages/raidersZone/index",
 			"style": {
 				"navigationBarTitleText": "夺宝专区",
-				"enablePullDownRefresh":false
+				"enablePullDownRefresh":true
 				
 			}
 		},
@@ -38,7 +38,8 @@
 		{
 			"path": "pages/my/index",
 			"style": {
-				"navigationBarTitleText": "我的"
+				"navigationBarTitleText": "我的",
+				"enablePullDownRefresh":true
 			}
 		},
 		{
@@ -303,7 +304,8 @@
 				{
 					"path":"businessCenter/index",
 					"style": {
-						"navigationBarTitleText": "商家中心"
+						"navigationBarTitleText": "商家中心",
+						"enablePullDownRefresh":true
 					}
 				},
 				{

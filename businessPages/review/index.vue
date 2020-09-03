@@ -83,32 +83,32 @@
 					url:'/businessPages/aliSign/index'
 				})
 			},
-			init(){
-				uni.showLoading({
-					title:'加载中'
-				})
+			async init(){
 				try{
-					this.$fly.post('/entry/findMerchantEntryByUserId?userId='+this.userId).then(res=>{
-						this.signStatus = res.data.signStatus;
-						let data = res.data;
-						let prams = {
-							email:data.email,
-							phone:data.linkPhone,
-							legalPerson:data.legalPerson,
-							legalPersonID:data.legalPersonID,
-							signName:data.signName,
-							address:data.address
-						}
-						let url = `?email=${prams.email}&phone=${prams.phone}&legalPerson=${prams.legalPerson}&legalPersonID=${prams.legalPersonID}&signName=${prams.signName}&address=${prams.address}&`
-						// this.$store.commit('SETSTATUSDATA',statusData);
-						return this.$fly.post('/entry/signContract'+url);
-					}).then(res=>{
-						this.CopyUrl = res.data.data;
-						uni.hideLoading();
+					uni.showLoading({
+						title:'加载中'
 					})
+					let signStatus = await this.$fly.post('/entry/findMerchantEntryByUserId?userId='+this.userId);
+					this.signStatus = signStatus.data.signStatus;
+					let data = signStatus.data;
+					let prams = {
+						email:data.email,
+						phone:data.linkPhone,
+						legalPerson:data.legalPerson,
+						legalPersonID:data.legalPersonID,
+						signName:data.signName,
+						address:data.address
+					}
+					
+					let url = `?email=${prams.email}&phone=${prams.phone}&legalPerson=${prams.legalPerson}&legalPersonID=${prams.legalPersonID}&signName=${prams.signName}&address=${prams.address}`
+					// this.$store.commit('SETSTATUSDATA',statusData);
+					let signContract = await this.$fly.post('/entry/signContract'+url);
+					this.CopyUrl = signContract.data.data;
+					uni.hideLoading();
+					
 				}catch(e){
 					uni.showToast({
-						title: '拉去信息失败！',
+						title: '服务器繁忙，请稍后重试',
 						icon: 'none'
 					})
 				}
