@@ -306,7 +306,8 @@
 			}
 		},
 		onLoad() {
-			
+			// 默认获取银行卡信息
+			this.getBankInfo();
 		},
 		onReachBottom: function() { //触底加载
 			if (this.status == 'noMore') {
@@ -316,8 +317,7 @@
 		},
 		onShow() {
 			this.page = 0;
-			// 默认获取银行卡信息
-			this.getBankInfo();
+			
 			// 获取提现记录列表
 			this.transferList();
 			// 获取零钱可提现余额
