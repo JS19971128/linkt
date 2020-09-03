@@ -23,7 +23,7 @@
 						<text class="icon_character">￥</text><input type="digit" v-model="withdrawAmount" placeholder="请输入金额"/>
 					</view>
 					<view class="coin_withdraw margin_top">
-						<text class="left_text">可提现余额￥{{(balanceData.balance*100 - balanceData.todayBalance*100)/100}}，</text><text class="all_withdraw" @click="allWithdraw">全部提现</text>
+						<text class="left_text">可提现余额￥{{Math.floor(balanceData.balance*100 - balanceData.todayBalance*100)/100}}</text><text class="all_withdraw" @click="allWithdraw">全部提现</text>
 					</view>
 					<view class="coin_withdraw text_nuxt_name">
 						<text class="left_text">冻结余额￥{{balanceData.todayBalance}}  （按照D1结算规则，第二天才可提现）</text>
@@ -124,7 +124,7 @@
 			},
 			// 全部提现
 			allWithdraw() {
-				let balance = (this.balanceData.balance*100 - this.balanceData.todayBalance*100)/100;
+				let balance = Math.floor(this.balanceData.balance*100 - this.balanceData.todayBalance*100)/100;
 				if (balance) {
 					this.withdrawAmount = balance;
 				} else {
@@ -191,7 +191,7 @@
 				}
 				
 				// 可提现余额
-				let balance = (this.balanceData.balance*100 - this.balanceData.todayBalance*100)/100;
+				let balance = Math.floor(this.balanceData.balance*100 - this.balanceData.todayBalance*100)/100;
 				if (this.withdrawAmount > balance) {
 					uni.showToast({
 					    title: '提现金额不能大于可提现余额哦',
