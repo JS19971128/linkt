@@ -45,10 +45,25 @@
 					</view>
 				</view>
 				<!-- 开户银行 -->
-				<view class="item flex_center">
+				<!-- <view class="item flex_center">
 					<view class="item-name">开户银行</view>
 					<view class="item-content">
 						<input type="text" v-model="bank.bankName" placeholder="请输入开户银行" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+					</view>
+				</view> -->
+				<view class="item flex_center">
+					<view class="item-name">开户银行</view>
+					<view class="item-content">
+						<picker mode="selector" @change="bindTypeChange($event,'khyh')" :value="bank.khyhIndex" :range="bankAccount" range-key="name">
+							<view class="flex_between">
+								<view>
+								<input type="text" v-model="bank.bankName" disabled placeholder="请选择开户银行" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+								</view>
+								<view>
+									<image src="../../static/images/common/xiala.png" mode="widthFix"></image>
+								</view>
+							</view>
+						</picker>
 					</view>
 				</view>
 				<!-- 联行号 -->
@@ -72,6 +87,7 @@
 </template>
 
 <script>
+	import codeNum from '@/common/util/bank_number.js'
 	export default{
 		data() {
 			return {
@@ -79,8 +95,11 @@
 				zhlxLabel:'',
 				zhlxIndex:0,
 				
+				bankAccount:[],
+				
 				settleBankType:'',
 				bankName:'',
+				bankUnit:'',
 				bankCode:'',
 				accountNo:''
 			}
@@ -93,9 +112,16 @@
 		methods:{ 
 			// 选择证件类型
 			bindTypeChange($event,type){
-				this.bank.zhlxLabel = this.zhlx[$event.detail.value].label;
-				this.bank.settleBankType = this.zhlx[$event.detail.value].type;
-				this.bank.zhlxIndex = $event.detail.value;
+				if(type === 'zhlx'){
+					this.bank.zhlxLabel = this.zhlx[$event.detail.value].label;
+					this.bank.settleBankType = this.zhlx[$event.detail.value].type;
+					this.bank.zhlxIndex = $event.detail.value;
+				}else if(type === 'khyh'){
+					this.bank.bankName = this.bankAccount[$event.detail.value].name;
+					this.bank.bankUnit = this.bankAccount[$event.detail.value].code;
+					this.bank.khyhIndex = $event.detail.value;
+				}
+				
 			},
 			clickURl(url){
 				uni.redirectTo({
@@ -123,6 +149,9 @@
 			}
 		},
 		created() {
+		},
+		onLoad() {
+			this.bankAccount = codeNum;
 		}
 	}
 </script>

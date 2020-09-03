@@ -43,6 +43,7 @@ const state = {
 	bank:{
 		settleBankType:'',
 		bankName:'',
+		bankUnit:'',
 		bankCode:'',
 		accountNo:''
 	},

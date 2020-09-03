@@ -23,13 +23,13 @@
 						<text class="icon_character">￥</text><input type="digit" v-model="withdrawAmount" placeholder="请输入金额"/>
 					</view>
 					<view class="coin_withdraw margin_top">
-						<text class="left_text">可提现余额￥{{balanceData.balance - balanceData.todayBalance}}，</text><text class="all_withdraw" @click="allWithdraw">全部提现</text>
+						<text class="left_text">可提现余额￥{{(balanceData.balance*100 - balanceData.todayBalance*100)/10000}}，</text><text class="all_withdraw" @click="allWithdraw">全部提现</text>
 					</view>
 					<view class="coin_withdraw text_nuxt_name">
 						<text class="left_text">冻结余额￥{{balanceData.todayBalance}}  （按照D1结算规则，第二天才可提现）</text>
 					</view>
 				    <view class="coin_withdraw text_nuxt_name">
-				    	<text class="left_text">备注: 晚上11点后提现，第二天到账</text>
+				    	<text class="left_text">备注: 晚上11点后提现，隔天早上8点到账</text>
 				    </view>
 					<view v-if="withdrawAmount" class="withdraw_bnt active_bg" @click="withdraw">
 						提现
@@ -246,9 +246,13 @@
 							    duration: 2000
 							});
 							// 获取提现记录列表
-							_this.transferList();
+							// _this.transferList();
 							// 获取零钱可提现余额
-							_this.getBalanceSmall();
+							// _this.getBalanceSmall();
+							
+							uni.navigateBack({
+							    delta: 1
+							});
 						} else {
 							uni.showToast({
 							    title: res.message,

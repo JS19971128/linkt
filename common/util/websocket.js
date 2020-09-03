@@ -26,18 +26,18 @@ const init = async (data) =>{
 	
 	ws = uni.connectSocket({
 		// 【非常重要】必须确保你的服务器是成功的,如果是手机测试千万别使用ws://127.0.0.1:9099【特别容易犯的错误】
-		url: wsUrl,
+		url: encodeURI(wsUrl),
 		success(data) {
-			console.log("websocket连接成功");
+			console.log(data,"websocket连接成功");
 		},
 	});
 	
 	ws.onClose((data)=>{
 		clearInterval(timeSend);
-		console.log(data)
+		console.log(data,'Close')
 	})
 	ws.onError((data)=>{
-		console.log(data)
+		console.log(data,'Error')
 	})
 	
 	ws.onMessage((data)=>{
@@ -68,11 +68,6 @@ const init = async (data) =>{
 			ws.send({data:'心跳内容'})
 		},10000)
 	})
-	
-	
-	
-	
-	
 }
 
 module.exports = {

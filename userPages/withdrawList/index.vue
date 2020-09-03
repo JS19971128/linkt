@@ -29,7 +29,7 @@
 						<text class="left_text">提现手续费: 1.00元</text>
 					</view>
 					<view class="coin_withdraw text_nuxt_name">
-						<text class="left_text">备注: 晚上11点后提现，第二天到账</text>
+						<text class="left_text">备注: 晚上11点后提现，隔天早上8点到账</text>
 					</view>
 					<view v-if="withdrawAmount" class="withdraw_bnt active_bg" @click="withdraw">
 						提现
@@ -237,7 +237,9 @@
 								icon: 'success',
 							    duration: 2000
 							});
-							
+							uni.navigateBack({
+							    delta: 1
+							});
 						} else {
 							uni.showToast({
 							    title: res.message,
