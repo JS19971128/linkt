@@ -2,9 +2,9 @@
 	<view class="detail_details">
 		<view class="info_show">
 			<view class="top_avatar">
-				<image class="src_image_avatar" v-if="findOne.remark == '余额提现' || findOne.remark == '零钱提现'" src="../../static/images/common/balance.png" mode=""></image>
+				<image class="src_image_avatar" v-if="findOne.remark == '余额提现' || findOne.remark == '零钱提现' || findOne.remark == '提现退款'" src="../../static/images/common/balance.png" mode=""></image>
 				<image class="src_image_avatar" v-else :src="findOne.merImg" mode=""></image>
-				<view class="title_name" v-if="findOne.remark == '余额提现'  || findOne.remark == '零钱提现'">{{findOne.remark}}</view>
+				<view class="title_name" v-if="findOne.remark == '余额提现'  || findOne.remark == '零钱提现' || findOne.remark == '提现退款'">{{findOne.remark}}</view>
 				<view class="title_name" v-else>{{findOne.merName}}</view>
 				
 				<view class="title_price_withdraw" v-if="findOne.remark == '余额提现' || findOne.remark == '零钱提现'">-{{findOne.amount}}</view>
@@ -14,29 +14,29 @@
 				<view class="wrap_flex_nuxt">
 					<view class="type_split_account">类型</view> <view class="date_time">{{findOne.remark}}</view>
 				</view>
-				<view class="wrap_flex_nuxt" v-if="findOne.remark == '余额提现' || findOne.remark == '零钱提现'">
+				<view class="wrap_flex_nuxt" v-if="findOne.remark == '余额提现' || findOne.remark == '零钱提现' || findOne.remark == '提现退款'">
 					<view class="type_split_account">提现状态</view> <view class="date_time"><text v-if="findOne.orderStatus == 'SUCCESS'">提现成功</text><text v-if="findOne.orderStatus == 'FAIL'">提现失败</text><text v-if="!findOne.orderStatus">提现中</text></view>
 				</view>
 				<view class="wrap_flex_nuxt">
 					<view class="type_split_account">交易单号</view> <view class="date_time">{{findOne.orderId}}</view>
 				</view>
-				<view class="wrap_flex_nuxt" v-if="findOne.remark != '余额提现' && findOne.remark != '零钱提现'">
+				<view class="wrap_flex_nuxt" v-if="findOne.remark != '余额提现' && findOne.remark != '零钱提现' && findOne.remark != '提现退款'">
 					<view class="type_split_account">订单金额</view> <view class="date_time">{{findOne.orderAmount || 0}}</view>
 				</view>
-				<view class="wrap_flex_nuxt" v-if="findOne.remark != '余额提现' && findOne.remark != '零钱提现'">
+				<view class="wrap_flex_nuxt" v-if="findOne.remark != '余额提现' && findOne.remark != '零钱提现' && findOne.remark != '提现退款'">
 					<view class="type_split_account">抵扣金额</view> <view class="date_time">{{findOne.discountAmount || 0}}</view>
 				</view>
-				<view class="wrap_flex_nuxt" v-if="findOne.remark != '余额提现' && findOne.remark != '零钱提现'">
+				<view class="wrap_flex_nuxt" v-if="findOne.remark != '余额提现' && findOne.remark != '零钱提现' && findOne.remark != '提现退款'">
 					<view class="type_split_account">支付时间</view> <view class="date_time">{{findOne.createDate}}</view>
 				</view>
 				
-				<view class="wrap_flex_nuxt" v-if="findOne.remark == '余额提现' || findOne.remark == '零钱提现'">
+				<view class="wrap_flex_nuxt" v-if="findOne.remark == '余额提现' || findOne.remark == '零钱提现' || findOne.remark == '提现退款'">
 					<view class="type_split_account">手续费</view> <view class="date_time"><text v-if="userType == 'NORMALUSER'">1.00</text><text v-else>0.00</text></view>
 				</view>
-				<view class="wrap_flex_nuxt" v-if="findOne.remark == '余额提现' || findOne.remark == '零钱提现'">
+				<view class="wrap_flex_nuxt" v-if="findOne.remark == '余额提现' || findOne.remark == '零钱提现' || findOne.remark == '提现退款'">
 					<view class="type_split_account">提现时间</view> <view class="date_time">{{findOne.createDate}}</view>
 				</view>
-				<view class="wrap_flex_nuxt" v-if="findOne.remark == '余额提现' || findOne.remark == '零钱提现'">
+				<view class="wrap_flex_nuxt" v-if="findOne.remark == '余额提现' || findOne.remark == '零钱提现' || findOne.remark == '提现退款'">
 					<view class="type_split_account">备注</view> <view class="date_time">{{findOne.reason || ''}}</view>
 				</view>
 			</view>
