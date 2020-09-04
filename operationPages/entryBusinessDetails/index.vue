@@ -7,7 +7,7 @@
 			</view>
 			<view class="top-right flex_between">{{statusFun(form.status).name}}</view>
 		</view>
-		<view class="inError" v-if="imgMsg&&(form.status==='FAILED'||form.signStatus==0)">驳回原因：{{imgMsg}}</view>
+		<view class="inError" v-if="imgMsg&&(form.status==='FAILED'||form.signStatus==0)">{{imgMsg}}</view>
 		<view class="tab flex_center fz-14">
 			<view class="item flex_center" :class="{active:current == item.value}" v-for="item in tab" :key="item.id" @click="changeTab(item.value)">{{item.text}}</view>
 		</view>

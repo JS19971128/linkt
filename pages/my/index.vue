@@ -214,6 +214,7 @@
 		},
 		watch:{
 			userInfo(val){
+				this.userInfoFun(this.userInfo)
 				this.init()
 			}
 		},
@@ -227,7 +228,6 @@
 				// 获取余额
 				this.getBalance();
 				
-				this.userInfoFun(this.userInfo)
 			},
 			userInfoFun(val){
 				console.log(val)
@@ -406,6 +406,16 @@
 			}
 		},
 		onShow:function(){
+			if(this.userInfo.id){
+				this.init()
+			}
+		},
+		onShareAppMessage(){
+			return {
+				path: 'pages/my/index',
+			}
+		},
+		onLoad() {
 			// 微信登录
 			// #ifdef MP-WEIXIN
 			if(!this.$store.state.userInfo.uid){
@@ -419,14 +429,9 @@
 			}
 			// #endif
 			if(this.userInfo.id){
-				debugger
-				this.init()
+				this.userInfoFun(this.userInfo)
 			}
-		},
-		onShareAppMessage(){
-			return {
-				path: 'pages/my/index',
-			}
+			
 		},
 		onPullDownRefresh: function(){
 			this.getUserData();

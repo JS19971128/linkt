@@ -33,7 +33,7 @@
 					size:10,
 					page,
 					sort:'createDate,asc',
-					userId,
+					userId:userId||'',
 					searchType,
 					commodityStatus:'online'
 				};

@@ -54,7 +54,7 @@
 					size:10,
 					page,
 					sort:'createDate,asc',
-					userId,
+					userId:userId||'',
 					key,
 					cateId,
 					sortType,
