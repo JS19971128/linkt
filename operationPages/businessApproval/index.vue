@@ -106,12 +106,12 @@
 				</view>
 			</view>
 		</view>
-		<view class="btn_wrap flex_center" v-if="info.status=='audit'">
+		<!-- <view class="btn_wrap flex_center" v-if="info.status=='audit'">
 			<view class="btn fz-14 flex_center">
 				<view class="flex_center" @click="showRefuse=true">不通过</view>
 				<view class="flex_center" @click="showPass=true">通过</view>
 			</view>
-		</view>
+		</view> -->
 		<!-- 确认通过 -->
 		<view class="pop_wrap" v-if="showPass">
 			<view class="pop_content">

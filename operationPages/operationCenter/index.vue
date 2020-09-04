@@ -59,7 +59,7 @@
 			</view>
 			<view class="bar fz-14">
 				<!-- 进件商家 -->
-				<!-- <view class="item flex_between" @click="goWhere('/operationPages/entryBusiness/index')">
+				<view class="item flex_between" @click="goWhere('/operationPages/entryBusiness/index')">
 					<view class="title flex_center">
 						<image src="../../static/images/operation/yy_icon04.png" mode="widthFix"></image>
 						<text>进件商家</text>
@@ -67,7 +67,7 @@
 					<view class="more">
 						<image src="../../static/images/common/more_gray.png" mode="widthFix"></image>
 					</view>
-				</view> -->
+				</view>
 				<!-- 电子授权牌 -->
 				<!-- <view class="item flex_between" @click="goWhere('/operationPages/authorize/index')">
 					<view class="title flex_center">

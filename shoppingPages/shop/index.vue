@@ -177,7 +177,7 @@
 						size:10,
 						page,
 						sort:'createDate,asc',
-						userId,
+						userId:userId||'',
 						merchantId,
 						sortType,
 						searchType,

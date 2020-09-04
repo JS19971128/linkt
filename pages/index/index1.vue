@@ -168,7 +168,7 @@
 					page,
 					sort:'createDate,asc',
 					rootCateId,
-					userId,
+					userId:userId||'',
 					sortType,
 					commodityStatus:'online'
 				};
