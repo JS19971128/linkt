@@ -290,11 +290,11 @@
 				.then(res=>{
 					if(res.code == 0){
 						let balance = res.data.balance - res.data.todayBalance;
-						this.balanceData = Math.floor(balance * 1000) / 1000 - 1;
+						let amount = Math.floor(balance * 1000) / 1000;
+						this.balanceData = (amount*1000 - 1000)/1000;
 						if (this.balanceData < 0) {
 						    this.balanceData = 0;
 						}
-						console.log(this.balanceData)
 					}else{
 						uni.showToast({
 							title: res.message,
