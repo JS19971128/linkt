@@ -101,6 +101,14 @@
 		},
 		watch: {
 			withdrawAmount(newVal,oldVal) {
+				var a=/^[0-9]*(\.[0-9]{1,2})?$/;
+				if(!a.test(this.withdrawAmount)) {
+					console.log('格式不du正确zhidao');
+					this.timer = false;
+					return false;
+				} else {
+					this.timer = true;
+				}
 				if (newVal.length == 2) {
 					if (newVal.substr(1,1) != '.' && newVal.substr(0,1) == 0) {
 						if (newVal.substr(1,1) == 0) {

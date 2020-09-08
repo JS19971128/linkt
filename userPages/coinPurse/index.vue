@@ -7,7 +7,7 @@
 					<view class="number_withdraw"><text class="amount">{{balanceData.balance || 0}}</text><text class="withdraw">提现</text></view>
 				</view>
 				<view class="right_detail" @click="goCoinList">
-					<text class="text_more">零钱明细</text><image class="image_common" src="../../static/images/common/more_gray.png" mode=""></image>
+					<text class="text_more">零钱明细</text><image class="image_common" src="../../static/images/common/more_gray.png" mode="widthFix"></image>
 				</view>
 			</view>
 			<view class="today_coin">今日零钱明细</view>	

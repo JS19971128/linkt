@@ -25,7 +25,7 @@
 					</view>
 					<view class="more flex_center">
 						<view class="fz-12" @click="goProfitList">明细</view>
-						<image src="../../static/images/common/more_gray.png" mode="widthFix"></image>
+						<image style="height: 12px;" src="../../static/images/common/more_gray.png" mode="widthFix"></image>
 					</view>
 				</view>
 				<view class="today fz-12 flex_between">

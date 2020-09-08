@@ -1,7 +1,7 @@
 <template>
 	<view class="raiders_zone">
 		<view class="raiders_bg">
-			<image src="../../static/images/shop/tu-min.png" mode=""></image>
+			<image src="../../static/images/shop/tu-min.png" mode="widthFix"></image>
 			<view class="voucher">
 				<view class="left_voucher">
 					<view class="frist_uni">{{drawMyData.drawCouponCount || 0}}</view>
@@ -14,13 +14,13 @@
 				</view>
 			</view>
 			<view class="treasure" @click="voucherRule=true" >
-				<image src="../../static/images/shop/rule.png" mode=""></image><text class="text_rule">夺宝规则</text>
+				<image src="../../static/images/shop/rule.png" mode="widthFix"></image><text class="text_rule">夺宝规则</text>
 			</view>
 		</view>
 		<!-- 夺宝规则 -->
 		<view class="wrap_flex_bg" v-if="voucherRule">
 			<view class="rule_bdi">
-				<image class="shut_down" @click="voucherRule=false" src="../../static/images/shop/border_close.png" mode=""></image>
+				<image class="shut_down" @click="voucherRule=false" src="../../static/images/shop/border_close.png" mode="widthFix"></image>
 				<view class="rule_title"><text class="middle_text">夺宝规则</text></view>
 				<view class="rule_text">
                     在95折以下（不包含95折）的商家消费，或者购买95折以下（不包含95折）的商品后，会获得夺宝券。夺宝券的面额将以消费金额中的商家折扣计算得出。
@@ -37,10 +37,10 @@
 		<!-- 消费夺宝--参与夺宝 -->
 		<view class="consumption" v-if="consumptionRule">
 			<view class="middle_content">
-				<image class="shut_down" @click="consumptionRule=false" src="../../static/images/shop/border_close.png" mode=""></image>
+				<image class="shut_down" @click="consumptionRule=false" src="../../static/images/shop/border_close.png" mode="widthFix"></image>
 				<view class="commodity_list">
 					<view class="left_wrap_image">
-						<image :src="participateTreasureHunt.listUrl" mode=""></image>
+						<image :src="participateTreasureHunt.listUrl" mode="widthFix"></image>
 					</view>
 					<view class="right_info_show">
 						<view class="info_title">{{participateTreasureHunt.commodityName}}</view>
@@ -70,9 +70,9 @@
 		
 		<!-- 夺宝商品 -->
 		<view class="event_goods">
-			<image src="../../static/images/shop/hot.png" mode=""></image>
+			<image src="../../static/images/shop/hot.png" mode="widthFix"></image>
 			<text class="active_text">夺宝商品</text>
-			<image src="../../static/images/shop/hot.png" mode=""></image>
+			<image src="../../static/images/shop/hot.png" mode="widthFix"></image>
 		</view>
 		<!-- 列表 -->
 		<!-- v-if="navList.length > 0" -->
@@ -80,7 +80,7 @@
 			
 			<view class="wrap_list_content" v-for="(item,index) in navList" :key='index' @click="goProductDetails(item.id)">
 				<view class="left_img_src">
-					<image class="statr_oss" :src="item.listUrl" mode=""></image>
+					<image class="statr_oss" :src="item.listUrl" mode="widthFix"></image>
 				</view>
 				<view class="right_title_schedule">
 					<view class="product_title">{{item.commodityName}}</view>
@@ -91,7 +91,7 @@
 						<view class="topline" :style="{width:Math.trunc(item.drawPercent * 100) + '%'}"></view>
 					</view>
 					<view class="treasure_icon" v-if="item.drawPercent < 1" @click.native.stop="openConsumptionRule(item)">
-						<image src="../../static/images/shop/treasure.png" mode=""></image>
+						<image src="../../static/images/shop/treasure.png" mode="widthFix"></image>
 					</view>
 					<view v-else class="carry_out_status" :style="{color:returnOrderStatus(item.drawStatus).color}">
 						{{returnOrderStatus(item.drawStatus).status}}

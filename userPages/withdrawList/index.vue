@@ -101,6 +101,15 @@
 		},
 		watch: {
 			withdrawAmount(newVal,oldVal) {
+				var a=/^[0-9]*(\.[0-9]{1,2})?$/;
+				if(!a.test(this.withdrawAmount)) {
+					console.log('格式不du正确zhidao');
+					this.timer = false;
+					return false;
+				} else {
+					this.timer = true;
+				}
+				
 				if (newVal.length == 2) {
 					if (newVal.substr(1,1) != '.' && newVal.substr(0,1) == 0) {
 						if (newVal.substr(1,1) == 0) {
@@ -125,7 +134,7 @@
 			// 全部提现
 			allWithdraw() {
 				if (this.balanceData) {
-					this.withdrawAmount = this.balanceData;
+					this.withdrawAmount = Math.floor(this.balanceData * 100) / 100;
 				} else {
 					this.withdrawAmount = '0';
 				}
@@ -187,6 +196,15 @@
 					});
 					return false;
 				}
+
+				if (this.withdrawAmount > this.balanceData) {
+					uni.showToast({
+					    title: '提现金额不能大于零钱可提现金额哦',
+						icon:'none',
+					    duration: 2000
+					});
+					return false;
+				}
 				
 				if (this.withdrawAmount <= 0) {
 					uni.showToast({
@@ -196,6 +214,7 @@
 					});
 					return false;
 				}
+				
 				
 				uni.showModal({
 				    title: '提示',

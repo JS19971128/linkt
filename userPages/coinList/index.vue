@@ -25,7 +25,7 @@
 		<view class="coin_list">
 			<view v-if="userType == 'MERCHANT'" class="all_details" :style="{height: allDetails}">
 				<view class="date_image" @click="visibleShow">
-					<text class="date_text">{{year}}年{{month}}月</text><image src="../../static/images/shop/more-up.png" mode=""></image>
+					<text class="date_text">{{year}}年{{month}}月</text><image src="../../static/images/shop/more-up.png" mode="aspectFit"></image>
 				</view>
 				<view class="income">收入￥ {{totalAmount}}</view>
 			</view>
@@ -38,8 +38,8 @@
 					<view class="flex_between">
 						<view class="left_list_img">
 							<view class="detail_icon">
-								<image v-if="item.remark == '提现退款' || item.remark == '余额提现' || item.remark == '零钱提现'" class="balance_img" src="../../static/images/common/balance.png" mode=""></image>
-								<image v-else class="balance_img" :src="item.merImg" mode=""></image>
+								<image v-if="item.remark == '提现退款' || item.remark == '余额提现' || item.remark == '零钱提现'" class="balance_img" src="../../static/images/common/balance.png" mode="aspectFill"></image>
+								<image v-else class="balance_img" :src="item.merImg" mode="aspectFill"></image>
 							</view>
 							<view class="flex">
 								<view class="flex_name" v-if="item.remark == '提现退款' || item.remark == '余额提现' || item.remark == '零钱提现'">{{item.remark}}</view>
@@ -114,24 +114,28 @@
 				indicatorStyle: `height: ${Math.round(uni.getSystemInfoSync().screenWidth/(750/100))}px;`,
 				cookiesYear: '',
 				cookiesMonth: '',
-				totalAmount: ''
+				totalAmount: '',
+				yearIndex: 30
 			}
 		},
 		methods: {
-			// 选择月份
+			// 确定选择月份
 			confirm_bnt_list() {
 				this.year = this.cookiesYear;
 				this.month = this.cookiesMonth;
-				this.value[1] = this.month - 1;
+				this.value[0] = this.yearIndex; // 年
+				this.value[1] = this.month - 1; // 月
 				this.page = 0;
 				this.visible = false;
 				this.transferList();
 			},
 			visibleShow() {
+				console.log(this.value)
 				this.visible = !this.visible;
 			},
 			bindChange: function (e) {
 				const val = e.detail.value
+				this.yearIndex = val[0];
 				this.cookiesYear = this.years[val[0]];
 				this.cookiesMonth = this.months[val[1]];
 			},
