@@ -130,8 +130,10 @@
 				this.value[0] = this.yearIndex; // 年
 				this.value[1] = this.month - 1; // 月
 				this.page = 0;
+				this.totalAmount = 0;
 				this.visible = false;
 				this.transferList();
+				this.getIncome();
 			},
 			visibleShow() {
 				console.log(this.value)
@@ -149,7 +151,7 @@
 				})
 			},
 			getIncome() {
-				this.$fly.get(`/transfer/totalAmount?userId=` + this.$store.state.userInfo.id + '&userType=' + this.userType)
+				this.$fly.get(`/transfer/totalAmount?userId=` + this.$store.state.userInfo.id + '&userType=' + this.userType + '&queryMonth=' + this.year + '-' + this.month)
 				.then(res => {
 					uni.hideLoading();
 					if (res.code == 0) {
