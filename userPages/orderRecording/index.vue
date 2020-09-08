@@ -8,7 +8,7 @@
 			<view  v-if="statusIs == 0">
 				<view class="left_consumption nuxt_uni" v-for="item in list" :key="item.orderNo" @click="goDetails(item.orderNo)">
 					<view class="flex_img">
-						<image :src="item.shopLogo" mode=""></image>
+						<image :src="item.shopLogo" mode="aspectFill"></image>
 					</view>
 					<view class="nuxt_bdi">
 						<view class="time_pay">
@@ -34,7 +34,7 @@
 						<view class="list-item">
 							<view class="left_consumption" v-for="(goods,i) in item.commodities">
 								<view class="flex_img">
-									<image :src="goods.picture"></image>
+									<image :src="goods.picture" mode="aspectFill"></image>
 								</view>
 								<view class="nuxt_bdi">
 									<view class="time_pay">

@@ -3,7 +3,7 @@
 		<view class="main" v-if="!isShop">
 			<view class="user_info flex_center">
 				<view>
-					<image :src="details.order.shopLogo" mode="widthFix"></image>
+					<image :src="details.order.shopLogo" style="width: 150rpx;height: 150rpx;" mode="aspectFill"></image>
 				</view>
 				<view class="fz-14">{{details.order.shopName}}</view>
 				<view class="fz-16">{{details.order.pricePaid > 0 ? '+' : '-'}}{{details.order.pricePaid}}</view>

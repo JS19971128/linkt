@@ -2,8 +2,8 @@
 	<view class="detail_details">
 		<view class="info_show">
 			<view class="top_avatar">
-				<image class="src_image_avatar" v-if="findOne.remark == '余额提现' || findOne.remark == '零钱提现' || findOne.remark == '提现退款'" src="../../static/images/common/balance.png" mode=""></image>
-				<image class="src_image_avatar" v-else :src="findOne.merImg" mode=""></image>
+				<image class="src_image_avatar" v-if="findOne.remark == '余额提现' || findOne.remark == '零钱提现' || findOne.remark == '提现退款'" src="../../static/images/common/balance.png" mode="aspectFill"></image>
+				<image class="src_image_avatar" v-else :src="findOne.merImg" mode="aspectFill"></image>
 				<view class="title_name" v-if="findOne.remark == '余额提现'  || findOne.remark == '零钱提现' || findOne.remark == '提现退款'">{{findOne.remark}}</view>
 				<view class="title_name" v-else>{{findOne.merName}}</view>
 				

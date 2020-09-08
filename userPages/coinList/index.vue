@@ -109,7 +109,7 @@
 				month,
 				days,
 				day,
-				value: [9999, month - 1, day - 1],
+				value: [30, month - 1, day - 1],
 				visible: false,
 				indicatorStyle: `height: ${Math.round(uni.getSystemInfoSync().screenWidth/(750/100))}px;`,
 				cookiesYear: '',
@@ -121,6 +121,10 @@
 		methods: {
 			// 确定选择月份
 			confirm_bnt_list() {
+				if (this.cookiesYear == '' || this.cookiesMonth == '') {
+					this.visible = false;
+					return false;
+				}
 				this.year = this.cookiesYear;
 				this.month = this.cookiesMonth;
 				this.value[0] = this.yearIndex; // 年
