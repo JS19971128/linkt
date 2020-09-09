@@ -94,7 +94,7 @@
 						let params = {
 						  "account": this.mobile,
 						  "loginType": 1,
-						  "openId": this.$store.state.userInfo.openId,
+						  "openId": this.$store.state.userInfo.alipayUserId,
 						  "validationCode": Number(this.code),
 						}
 					//#endif
@@ -120,7 +120,8 @@
 						});
 						return false;
 					}
-					this.$store.commit('SETUSERINFO',userBindPhone.data)
+					// this.$store.commit('SETUSERINFO',userBindPhone.data)
+					this.$store.state.userInfo = userBindPhone.data;
 					uni.switchTab({
 						url:'/pages/index/index'
 					})

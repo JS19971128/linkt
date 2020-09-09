@@ -235,6 +235,7 @@
 				params.bizType = 'AppPay';
 				params.payType = 'SCAN';
 				params.registType = 'ALIPAY';
+				params.openId = this.$store.state.userInfo.alipayUserId
 				// #endif
 				uni.showLoading({
 					title:'加载中'

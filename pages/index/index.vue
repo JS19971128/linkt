@@ -162,6 +162,12 @@
 					this.$wxLogin();
 				}
 			// #endif
+			
+			// #ifdef MP-ALIPAY
+				if(!this.$store.state.userInfo.uid){
+					this.$aliLogin();
+				}
+			// #endif
 		},
 		onPullDownRefresh: function(){
 			// 下拉刷新
