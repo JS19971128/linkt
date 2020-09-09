@@ -4,7 +4,7 @@
 			<view class="my_coin" >
 				<view class="left_num" @click="goBankCardList">
 					<view class="my_coin_text">
-						<view class="arrive"><text>到账银行卡</text><image v-if="list" class="wallet_icon" src="../../static/images/common/bank.png" mode=""></image></view>
+						<view class="arrive"><text>到账银行卡</text><image v-if="list" class="wallet_icon" src="../../static/images/common/bank.png" mode="aspectFill"></image></view>
 					</view>
 					<view class="number_withdraw flex_between">
 						<view class="wrap_out" v-if="list">
@@ -14,7 +14,7 @@
 						<view class="add_bank" v-else>
 							<text class="icon_bg">+</text> <text class="add_text_bank">添加银行卡</text>
 						</view>
-						<image class="image_common" src="../../static/images/common/more_gray.png" mode=""></image>
+						<image class="image_common" src="../../static/images/common/more_gray.png" mode="aspectFill"></image>
 					</view>
 				</view>
 				<view class="right_detail">
@@ -49,7 +49,7 @@
 				<view class="flex_between">
 					<view class="left_list_img">
 						<view class="detail_icon">
-							<image class="balance_img" src="../../static/images/common/balance.png" mode=""></image>
+							<image class="balance_img" src="../../static/images/common/balance.png" mode="aspectFill"></image>
 						</view>
 						<view class="flex">
 							<view class="flex_name">余额提现</view>
