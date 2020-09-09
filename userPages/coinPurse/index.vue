@@ -20,8 +20,8 @@
 				<view class="flex_between">
 					<view class="left_list_img">
 						<view class="detail_icon">
-							<image v-if="item.remark == '提现退款' || item.remark == '余额提现' || item.remark == '零钱提现'" class="balance_img" src="../../static/images/common/balance.png" mode=""></image>
-							<image v-else class="balance_img" :src="item.merImg" mode=""></image>
+							<image v-if="item.remark == '提现退款' || item.remark == '余额提现' || item.remark == '零钱提现'" class="balance_img" src="../../static/images/common/balance.png" mode="aspectFill"></image>
+							<image v-else class="balance_img" :src="item.merImg" mode="aspectFill"></image>
 						</view>
 						<view class="flex">
 							<view class="flex_name" v-if="item.remark == '提现退款' || item.remark == '余额提现' || item.remark == '零钱提现'">{{item.remark}}</view>
