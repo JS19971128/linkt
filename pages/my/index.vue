@@ -214,7 +214,7 @@
 		},
 		watch:{
 			userInfo(val){
-				this.userInfoFun(this.userInfo)
+				this.userInfoFun(val)
 				this.init()
 			}
 		},

@@ -133,7 +133,7 @@
 				//#ifdef MP-ALIPAY
 					let data = {
 						account:mobile,
-						openId,
+						openId:this.$store.state.userInfo.alipayUserId,
 						validationCode:code,
 						loginType : 1
 					}
