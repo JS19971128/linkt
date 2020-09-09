@@ -67,6 +67,25 @@
 				</view>
 			</view>
 		</view>
+		<!-- 同步手机号 -->
+		<view class="pop_wrap" v-if="showMobile">
+			<view class="pop_content mobile">
+				<view class="close flex_center" @click="showMobile=false">
+					<image src="../../static/images/common/close.png" mode="widthFix"></image>
+				</view>
+				<view class="box">
+					<view class="flex_center mobile-box">
+						<image class="mobile-box-img" src="../../static/images/coupon/tips.png"></image>
+						<view class="pop-title">前往获取90元优惠券</view>
+						<view class="pop-tips">同步手机号后，即可获得90元优惠券喔~</view>
+					</view>
+					<view class="btns">
+						<view class="fz-14 btn flex_center" @click="showMobile=false">残忍拒绝</view>
+						<view class="fz-14 btn flex_center" @click="goMobile">立即前往</view>
+					</view>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -86,25 +105,42 @@
 				page:0, //页码
 				uid:'', 
 				couponId:'',
+				showMobile:false
 			}
 		},
 		computed:{
 			userInfo(){
 				return this.$store.state.userInfo;
-			}
+			},
 		},
-		watch:{
-			userInfo(){ //登录后获取到用户信息则请求数据
-				this.getList();
-			}
-		},
+		// watch:{
+		// 	userInfo(){ //登录后获取到用户信息则请求数据
+		// 		this.getList();
+		// 		this.init();
+		// 	}
+		// },
 		methods:{
+			init(){
+				let userInfo = this.userInfo;
+				
+				this.getList()
+				if(userInfo.username){
+					this.showMobile = false;
+				}else{
+					this.showMobile = true;
+				}
+			},
 			getNotice(){ //获取顶部公告
 				this.$fly.get(`/notice/type/2`)
 				.then(res=>{
 					if(res.code == 0){
 						this.notice = res.data;
 					}
+				})
+			},
+			goMobile(){  // 同步手机号
+				uni.navigateTo({
+					url:'/userPages/mobile/index'
 				})
 			},
 			goNotice(){ //进入公告详情页面
@@ -176,25 +212,28 @@
 		},
 		onShow: function(){
 			// 微信登录
-			// #ifdef MP-WEIXIN
-			if(!this.$store.state.userInfo.uid){
-				this.$wxLogin();
-			}else{
-				if(this.list.length == 0){
-					this.getList();
-				}
-			}
-			// #endif
-			// 支付宝登录
-			// #ifdef MP-ALIPAY
-			if(!this.$store.state.userInfo.uid){
-				this.$aliLogin();
-			}else{
-				if(this.list.length == 0){
-					this.getList();
-				}
-			}
-			// #endif
+			// // #ifdef MP-WEIXIN
+			// if(!this.$store.state.userInfo.uid){
+			// 	this.$wxLogin();
+			// }else{
+			// 	if(this.list.length == 0){
+			// 		this.getList();
+			// 	}
+			// }
+			// // #endif
+			// // 支付宝登录
+			// // #ifdef MP-ALIPAY
+			// if(!this.$store.state.userInfo.uid){
+			// 	this.$aliLogin();
+			// }else{
+			// 	if(this.list.length == 0){
+			// 		this.getList();
+			// 	}
+			// }
+			// // #endif
+			
+			
+			this.init();
 		},
 		onReachBottom: function(){  //触底加载
 			if(this.status == 'noMore'){
@@ -204,7 +243,7 @@
 		},
 		onPullDownRefresh:function(){
 			this.page = 0;
-			this.getList();
+			this.init();
 		}
 	}
 </script>
@@ -407,6 +446,47 @@
 				border-radius: 37rpx;
 				color: #fff;
 				margin: 50rpx 0;
+			}
+		}
+		&.mobile{
+			.mobile-box{
+				display: flex;
+				flex-direction: column;
+				.mobile-box-img{
+					width: 223rpx;
+					height: 118rpx;
+				}
+				.pop-title{
+					font-size: 32rpx;
+					margin-top: 54rpx;
+					margin-bottom: 27rpx;
+					line-height: 1.5;
+					color: #333333;
+					font-weight: bold;
+				}
+				.pop-tips{
+					font-size: 24rpx;
+					line-height: 1.5;
+					color: #999;
+				}
+			}
+			.btns{
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				.btn{
+					margin-right: 30rpx;
+					height: 74rpx;
+					border:1px solid #FF9D29;
+					&:last-child{
+						margin-right: 0;
+					}
+					&:first-child{
+						background: #fff;
+						border-color:#999999;
+						color: #999999;
+					}
+				}
 			}
 		}
 	}

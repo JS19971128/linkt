@@ -157,22 +157,6 @@
 					</view>
 				</view>
 			</view>
-			<!-- #ifdef MP-ALIPAY -->
-			<view class="bar fz-14">
-				<!-- 实名信息 -->
-				<view class="item flex_between" @click="goAuth">
-					<view class="title flex_center">
-						<image src="../../static/images/my/renz.png" mode="widthFix"></image>
-						<text>实名信息</text>
-					</view>
-					<view class="more flex_center">
-						<uni-icons v-if="isRealName" class="flex_center" type="checkbox-filled" color="#47D347" :size="20"></uni-icons>
-						<text v-else class="fz-12 notice">请填写真实姓名</text>
-						<image src="../../static/images/common/more_gray.png" mode="widthFix"></image>
-					</view>
-				</view>
-			</view>
-			<!-- #endif -->
 		</view>
 		<!-- 联系我们弹框 -->
 		<uni-popup type="bottom" ref="popup">

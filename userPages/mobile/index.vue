@@ -16,6 +16,9 @@
 		<view class="notice fz-14">
 			<view class="">同步手机号后，可以同步保存您的优惠券与夺宝券数量，为您的消费保障权益喔~</view>
 		</view>
+		<view class="notice fz-14">
+			<view class="">同步手机号后，即可获得90元优惠券喔~</view>
+		</view>
 		<!-- <button class="btn item flex_center fz-14" open-type="getUserInfo" @getuserinfo="getWxUserInfo">开启我的链客智慧商圈</button> -->
 		<view class="btn flex_center fz-14" @click="checking">保存</view>
 	</view>
