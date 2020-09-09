@@ -134,7 +134,7 @@
 			// 全部提现
 			allWithdraw() {
 				if (this.balanceData) {
-					this.withdrawAmount = Math.floor(this.balanceData * 100) / 100;
+					this.withdrawAmount = Math.floor((this.balanceData * 1000)/10) / 100;
 				} else {
 					this.withdrawAmount = '0';
 				}
