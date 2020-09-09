@@ -422,6 +422,7 @@
 			// 获取余额
 			this.getBalance();
 		},
+		
 	}
 </script>
 

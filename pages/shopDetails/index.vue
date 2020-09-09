@@ -171,8 +171,32 @@
 		onLoad:function(query){
 			this.lastData = query;
 			this.getDetail(query.id);
-			
-		}
+		},
+		// 分享朋友
+		onShareAppMessage(){
+			let {id} = this.lastData;
+			let {detail} = this;
+			return {
+				title:`${detail.shopNickName}邀请您到店享受优惠`,
+				path: 'pages/shopDetails/index?id='+id,
+			}
+		},
+		// 分享朋友圈
+		// #ifdef MP-WEIXIN
+		onShareTimeline(){
+			let {id} = this.lastData;
+			let {detail} = this;
+			let title = `${detail.shopNickName}邀请您到店享受优惠`;
+			let imageUrl = detail.shopUrl;
+			return {
+				title:title,
+				query: {
+					id
+				},
+				imageUrl
+			}
+		},
+		// #endif
 	}
 </script>
 
