@@ -26,11 +26,20 @@
 			</view>
 			<view class="item flex_between">
 				<view class="title">性别</view>
-				<view class="content">{{userInfo.gender == 'FEMALE' ? '女' : '男'}}</view>
+				<view class="content flex_center">
+					<picker mode="selector" range-key="name" :range="genderArr" @change="bindTypeChange">
+						<view class="flex_between">
+							<view class="">{{userInfo.gender == 'FEMALE' ? '女' : '男'}}</view>
+							<view class="more">
+								<image src="../../static/images/common/more_gray.png" mode="widthFix"></image>
+							</view>
+						</view>
+					</picker>
+				</view>
 			</view>
 			<view class="item flex_between">
 				<view class="title">地区</view>
-				<view class="content flex_center">
+				<view class="content flex_center" @click="changeAddr">
 					<view class="">{{area}}</view>
 					<view class="more">
 						<image src="../../static/images/common/more_gray.png" mode="widthFix"></image>
@@ -82,6 +91,7 @@
 			return {
 				show:false,
 				defaultRegion:["浙江省","杭州市","滨江区"],
+				genderArr:[{name:'男',key:'MALE'},{name:'女',key:'FEMALE'}],
 				showPop:false,
 				area:'',
 				phone: ''
@@ -97,7 +107,17 @@
 				this.show = true;
 			},
 			onConfirm($event){
+				let {userInfo} = this;
+				let e = $event;
+				let area = e.obj.province.label + ' ' + e.obj.city.label + ' ' + e.obj.area.label;
+				userInfo.addressInfo = area;
+				userInfo.areaCode = e.value[0];
+				userInfo.areaCodeCity = e.value[1];
+				userInfo.areaCodeAreas = e.value[2];
 				
+				this.area = area;
+				this.$store.commit('SETUSERINFO',userInfo);
+				this.userInfoFun(userInfo,'address');
 			},
 			onCancel(){
 				this.show = false;
@@ -106,6 +126,41 @@
 				this.area = this.userInfo.addressInfo;
 				this.defaultRegion = this.userInfo.addressInfo.split(' ');
 				this.phone = this.userInfo.username;
+			},
+			
+			bindTypeChange(e){
+				let i = e.detail.value;
+				let {userInfo,genderArr} = this;
+				userInfo.gender = genderArr[i].key;
+				this.$store.commit('SETUSERINFO',userInfo);
+				this.userInfoFun(userInfo);
+			},
+			// 用户修改接口
+			async userInfoFun(userInfo,type){
+				try{
+					uni.showLoading({
+						title:'加载中'
+					})
+					let {id,gender,addressInfo,areaCode,areaCodeCity,areaCodeAreas} = userInfo,data;
+					if(type==='address'){
+						data = {userId:id,addressInfo,areaCode,areaCodeCity,areaCodeAreas}
+					}else{
+						data = {userId:id,gender}
+					}
+					let user = await this.$fly.post('/user/update',data);
+					uni.showToast({
+					    title: user.message,
+					    duration: 2000,
+						icon:'none'
+					});
+				}catch(e){
+					//TODO handle the exception
+					uni.showToast({
+					    title: '提交失败',
+					    duration: 2000,
+						icon:'none'
+					});
+				}
 			}
 		},
 		onLoad:function(){

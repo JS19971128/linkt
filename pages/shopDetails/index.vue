@@ -49,7 +49,7 @@
 			</view>
 		</view>
 		<!-- 商家商品 -->
-		<view class="album" v-if="commodityDetail.length > 0">
+		<!-- <view class="album" v-if="commodityDetail.length > 0">
 			<view class="fz-14 title flex_text"><span>商家商品</span><span @click="lookMore">更多</span></view>
 			<view class="main padding_bott flex_center">
 				<view class="item_image_text" v-for="(item,i) in commodityDetail" :key="i" @click="goCommodity(item.id)">
@@ -61,7 +61,7 @@
 					</view>
 				</view>
 			</view>
-		</view>
+		</view> -->
 		<!-- 去这里 -->
 		<view class="btn flex_center">
 			<view class="fz-14 flex_center" @click="goHere">去这里</view>
@@ -171,8 +171,32 @@
 		onLoad:function(query){
 			this.lastData = query;
 			this.getDetail(query.id);
-			
-		}
+		},
+		// 分享朋友
+		onShareAppMessage(){
+			let {id} = this.lastData;
+			let {detail} = this;
+			return {
+				title:`${detail.shopNickName}邀请您到店享受优惠`,
+				path: 'pages/shopDetails/index?id='+id,
+			}
+		},
+		// 分享朋友圈
+		// #ifdef MP-WEIXIN
+		onShareTimeline(){
+			let {id} = this.lastData;
+			let {detail} = this;
+			let title = `${detail.shopNickName}邀请您到店享受优惠`;
+			let imageUrl = detail.shopUrl;
+			return {
+				title:title,
+				query: {
+					id
+				},
+				imageUrl
+			}
+		},
+		// #endif
 	}
 </script>
 
