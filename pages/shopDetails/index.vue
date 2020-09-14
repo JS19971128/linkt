@@ -70,6 +70,7 @@
 </template>
 
 <script>
+	import {formateObjToParamStr} from '@/common/util/util.js'
 	export default{
 		data() {
 			return {
@@ -174,11 +175,11 @@
 		},
 		// 分享朋友
 		onShareAppMessage(){
-			let {id} = this.lastData;
+			let lastData = this.lastData;
 			let {detail} = this;
 			return {
 				title:`${detail.shopNickName}邀请您到店享受优惠`,
-				path: 'pages/shopDetails/index?id='+id,
+				path: 'pages/shopDetails/index?'+formateObjToParamStr(lastData),
 			}
 		},
 		// 分享朋友圈

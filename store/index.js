@@ -8,9 +8,15 @@ import shop from '@/store/modules/shop.js';//商家入驻进件
 
 const store = new Vuex.Store({
    state: {
+<<<<<<< Updated upstream
 		// baseUrl:'https://chainguest.3zone.net/api',
 		baseUrl:'https://v.liankedl.com/api',
 		// baseUrl:'http://192.168.3.197:8570',  //shuguang
+=======
+		baseUrl:'https://chainguest.3zone.net/api',
+		// baseUrl:'https://v.liankedl.com/api',
+		// baseUrl:'http://192.168.3.197:8566',  //shuguang
+>>>>>>> Stashed changes
 		// baseUrl:'https://v.liankedl.com/api',
 		// baseUrl:'http://192.168.3.150:8569', //xianwen
 		// baseUrl:'http://192.168.3.148:8566', //liangrongcai
