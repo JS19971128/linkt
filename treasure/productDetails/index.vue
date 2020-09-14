@@ -79,7 +79,7 @@
 					<view class="right_info_show">
 						<view class="info_title">{{drawDetails.commodityName}}</view>
 						<view class="info_amount">价值：{{drawDetails.priceOriginal}}</view>
-						<view class="info_amount">数量：{{drawDetails.totalCount}}张</view>
+						<view class="info_amount">数量：{{drawDetails.goodsCount}}张</view>
 					</view>
 				</view>
 				<!-- 进度条 -->
@@ -249,7 +249,7 @@
 				}
 				
 				// 夺宝劵总数减去使用劵数
-				let num = this.drawDetails.totalCount - this.drawDetails.drawCount;
+				let num = this.drawDetails.goodsCount - this.drawDetails.drawCount;
 				console.log(num);
 				if (this.voucher > num) {
 					uni.showToast({

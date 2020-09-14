@@ -40,12 +40,12 @@
 				<image class="shut_down" @click="consumptionRule=false" src="../../static/images/shop/border_close.png" mode="widthFix"></image>
 				<view class="commodity_list">
 					<view class="left_wrap_image">
-						<image :src="participateTreasureHunt.listUrl" mode="widthFix"></image>
+						<image :src="participateTreasureHunt.listUrl" mode="aspectFill"></image>
 					</view>
 					<view class="right_info_show">
 						<view class="info_title">{{participateTreasureHunt.commodityName}}</view>
 						<view class="info_amount">价值：{{participateTreasureHunt.priceOriginal }}</view>
-						<view class="info_amount">数量：{{participateTreasureHunt.totalCount }}张</view>
+						<view class="info_amount">数量：{{participateTreasureHunt.goodsCount }}张</view>
 					</view>
 				</view>
 				<!-- 进度条 -->
@@ -80,18 +80,18 @@
 			
 			<view class="wrap_list_content" v-for="(item,index) in navList" :key='index' @click="goProductDetails(item.id)">
 				<view class="left_img_src">
-					<image class="statr_oss" :src="item.listUrl" mode="widthFix"></image>
+					<image class="statr_oss" :src="item.listUrl" mode="aspectFill"></image>
 				</view>
 				<view class="right_title_schedule">
 					<view class="product_title">{{item.commodityName}}</view>
 					<view class="worth">价值：{{item.priceOriginal}}</view>
-					<view class="worth">数量：{{item.totalCount }}</view>
+					<view class="worth">数量：{{item.goodsCount}}</view>
 					<view class="worth"><text>夺宝进度：</text><text class="percentage">{{Math.trunc(item.drawPercent * 100)}}%</text></view>
 					<view class="schedule">
 						<view class="topline" :style="{width:Math.trunc(item.drawPercent * 100) + '%'}"></view>
 					</view>
 					<view class="treasure_icon" v-if="item.drawPercent < 1" @click.native.stop="openConsumptionRule(item)">
-						<image src="../../static/images/shop/treasure.png" mode="widthFix"></image>
+						<image src="../../static/images/shop/treasure.png" mode="aspectFill"></image>
 					</view>
 					<view v-else class="carry_out_status" :style="{color:returnOrderStatus(item.drawStatus).color}">
 						{{returnOrderStatus(item.drawStatus).status}}
@@ -215,7 +215,7 @@
 				}
 				
 				// 夺宝劵总数减去使用劵数
-				let num = this.participateTreasureHunt.totalCount - this.participateTreasureHunt.drawCount;
+				let num = this.participateTreasureHunt.goodsCount - this.participateTreasureHunt.drawCount;
 				console.log(num);
 				if (this.voucher > num) {
 					uni.showToast({
@@ -283,7 +283,7 @@
 				})
 			},
 			navListFun() {
-				this.$fly.get(`/app/draw/list?size=10&page=${this.page}&userId=${this.userId}&sort=createDate,desc`).then(res=>{
+				this.$fly.get(`/app/draw/list?size=10&page=${this.page}&userId=${this.userId}&sort=createDate,desc&deleteFlag=false`).then(res=>{
 					let data = res.data;
 					this.total = data.totalElements;
 					if(this.page === 0){

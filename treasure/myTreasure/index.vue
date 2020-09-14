@@ -10,12 +10,12 @@
 			<view class="treasure_list" v-for="(item,index) in list">
 				<view class="image_title_status">
 					<view class="left_image">
-						<image :src="item.listUrl" mode=""></image>
+						<image :src="item.listUrl" mode="aspectFill"></image>
 					</view>
 					<view class="right_info_name">
 						<view class="name">{{item.commodityName}}</view>
 						<view class="worth">价值：{{item.priceOriginal}}</view>
-						<view class="worth">数量：{{item.totalCount}}</view>
+						<view class="worth">数量：{{item.goodsCount}}</view>
 						<view class="worth">已参与：{{item.drawCount }}张券</view>
 						<view class="worth" v-if="drawStatus == 'success'">中奖编号：{{item.drawCommodityNo}}</view>
 						<view class="flex_between progress_bar" v-if="drawStatus == 'pending'">
@@ -46,18 +46,19 @@
 			</view>
 		</view>
 		
+		
 		<!-- 消费夺宝--参与夺宝 -->
 		<view class="consumption" v-if="consumptionRule">
 			<view class="middle_content">
 				<image class="shut_down" @click="consumptionRule=false" src="../../static/images/shop/border_close.png" mode=""></image>
 				<view class="commodity_list">
 					<view class="left_wrap_image">
-						<image :src="drawDetails.listUrl" mode=""></image>
+						<image :src="drawDetails.listUrl" mode="aspectFill"></image>
 					</view>
 					<view class="right_info_show">
 						<view class="info_title">{{drawDetails.commodityName}}</view>
 						<view class="info_amount">价值：{{drawDetails.priceOriginal}}</view>
-						<view class="info_amount">数量：{{drawDetails.totalCount}}张</view>
+						<view class="info_amount">数量：{{drawDetails.goodsCount}}张</view>
 					</view>
 				</view>
 				<!-- 进度条 -->
@@ -154,7 +155,7 @@
 				}
 				
 				// 夺宝劵总数减去使用劵数
-				let num = this.drawDetails.totalCount - this.drawDetails.drawCount;
+				let num = this.drawDetails.goodsCount - this.drawDetails.drawCount;
 				console.log(num);
 				if (this.voucher > num) {
 					uni.showToast({
