@@ -124,12 +124,13 @@
 			maxDiscountFun(priceTotal){ //priceTotal 总价
 				let {goods,payCommission} = this; //payCommission 商家手续费
 				let discountMoney = goods.reduce((v,i)=>{ //可抵扣金额 商品列表循环 priceSale:价格 commodityNum:数量 profits:让利比
-					return (v*10000 + (((this.profitClass(i.priceSale)*100)*i.commodityNum)*this.profitClass(i.priceSale)))/10000;
+					return (v*10000 + (((i.priceSale*100)*i.commodityNum)*this.profitClass(i.profits)))/10000;
 				},0)
 				let discountMoneyTo = discountMoney.toFixed(2);
 				let fee = (((priceTotal*10000)*(payCommission*10000))/100000000).toFixed(2); //手续费等于 总价*商家手续费
 				let maxDiscount = (((discountMoneyTo*100)*70)-(fee*10000))/10000;  //百分之七十可用优惠券抵扣 在减去手续费
-				this.maxDiscount = Math.floor(maxDiscount*100)/100;
+				console.log(discountMoneyTo,fee,maxDiscount)
+				this.maxDiscount = maxDiscount.toFixed(2);
 			},
 			profitClass(number = 5){
 				let num = Number(number);

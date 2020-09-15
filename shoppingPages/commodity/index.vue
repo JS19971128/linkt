@@ -73,6 +73,14 @@
 		<view class="commodiy-btn" v-if="!isSpecs">
 			<!-- <button type="default" class="btn-go" @click="isSpecsStatus">立即购买</button> -->
 			<!-- <button type="default"></button> -->
+			<!-- #ifdef MP-WEIXIN -->
+			<view class="commoodiy-fx">
+				<button class="fx-btn" open-type="share">
+					<image class="fx-img" src="../../static/images/shop/fenx.png"></image>
+				</button>
+				<view class="fx-txt">分享</view>
+			</view>
+			<!-- #endif -->
 			<view class="btns">
 				<button type="default" class="btn-go" @click="cartUrl">加入购物车</button>
 				<button type="default" class="btn-go red" @click="isSpecsStatus">立即购买</button>
@@ -233,6 +241,14 @@
 		},
 		onUnload(){
 			this.$store.commit('SETISSPECS',false);
+		},
+		onShareAppMessage() {
+			console.log(this.goods)
+			let {commodityName,id} = this.goods;
+			return {
+			  title: commodityName,
+			  path: '/shoppingPages/commodity/index?id='+id
+			}
 		}
 
 	}
@@ -470,8 +486,33 @@
 		bottom: 0;
 		z-index: 999;
 		justify-content: center;
-		padding: 16rpx 20rpx;
+		padding: 0rpx 20rpx;
 		box-sizing: border-box;
+		.commoodiy-fx{
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			margin-left: 10rpx;
+			.fx-btn{
+				padding: 0;
+				width: 36rpx;
+				height: 36rpx;
+				line-height: 0;
+				background-color: #fff;
+				margin-bottom: 10rpx;
+				.fx-img{
+					width: 36rpx;
+					height: 36rpx;
+				}
+				&::after{
+					border:none;
+				}
+			}
+			.fx-txt{
+				font-size: 24rpx;
+				color: #333;
+			}
+		}
 		.btns{
 			display: flex;
 			align-items: center;
