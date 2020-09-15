@@ -155,7 +155,7 @@
 				}
 				
 				// 夺宝劵总数减去使用劵数
-				let num = this.drawDetails.goodsCount - this.drawDetails.drawCount;
+				let num = this.drawDetails.totalCount - this.drawDetails.drawCount;
 				console.log(num);
 				if (this.voucher > num) {
 					uni.showToast({

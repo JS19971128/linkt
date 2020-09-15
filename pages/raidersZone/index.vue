@@ -215,7 +215,7 @@
 				}
 				
 				// 夺宝劵总数减去使用劵数
-				let num = this.participateTreasureHunt.goodsCount - this.participateTreasureHunt.drawCount;
+				let num = this.participateTreasureHunt.totalCount - this.participateTreasureHunt.drawCount;
 				console.log(num);
 				if (this.voucher > num) {
 					uni.showToast({
