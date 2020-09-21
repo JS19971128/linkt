@@ -1,14 +1,14 @@
 <template>
 	<view class="my_treasure">
 		<view class="treasure_table">
-			<view class="table_title" :class="{'active': drawStatus == 'pending'}" @click="tabItem('pending')">夺宝中 {{myDrawCount.drawingCount}}</view>
-			<view class="table_title" :class="{'active': drawStatus == 'success'}" @click="tabItem('success')">已中奖 {{myDrawCount.successCount}}</view>
-			<view class="table_title" :class="{'active': drawStatus == 'gameOver'}" @click="tabItem('gameOver')">已结束 {{myDrawCount.gameOverCount}}</view>
+			<view class="table_title" :class="{'active': drawStatus == 'pending'}" @click="tabItem('pending')">夺宝中</view>
+			<view class="table_title" :class="{'active': drawStatus == 'success'}" @click="tabItem('success')">已中奖</view>
+			<view class="table_title" :class="{'active': drawStatus == 'gameOver'}" @click="tabItem('gameOver')">已结束</view>
 		</view>
 		<view class="list_bdi_wrap" v-if="list.length>0">
 			
 			<view class="treasure_list" v-for="(item,index) in list">
-				<view class="image_title_status">
+				<view class="image_title_status" @click="goProductDetails(item.id)">
 					<view class="left_image">
 						<image :src="item.listUrl" mode="aspectFill"></image>
 					</view>
@@ -28,7 +28,8 @@
 				<!-- 继续夺宝--确认订单 -->
 				<view class="Keep_winning" v-if="drawStatus == 'success' || drawStatus == 'pending'">
 					<view class="winning" v-if="drawStatus == 'pending'"><view class="winning_text" :class="{'background_active' : item.drawPercent < 1}"  @click="startTreasure(item)">继续夺宝</view></view>
-					<view class="winning" v-if="drawStatus == 'success'" ><view class="winning_text background_active" @click="confirmOrder(item)">确认订单</view></view>
+					<view class="winning" v-if="drawStatus == 'success' && item.orderStatus == 1" ><view class="winning_text background_active" @click="confirmOrder(item)">确认订单</view></view>
+					<view class="winning" v-if="drawStatus == 'success' && item.orderStatus == 3" ><view class="winning_text background_active" @click="lookOrder(item)">查看订单</view></view>
 				</view>
 			</view>
 			<uni-load-more :iconSize="20" color="#999999" :status="status" :contentText="contentText"></uni-load-more>
@@ -112,6 +113,12 @@
 			}
 		},
 		methods: {
+			// 查看订单
+			lookOrder(item) {
+				uni.navigateTo({
+					url: `/treasure/winningOrder/index?id=` + item.id + '&look=3&drawOrderNo=' + item.drawOrderNo
+				})
+			},
 			lessVoucher() {
 				if (this.voucher == 0) {
 					return false;
@@ -129,9 +136,13 @@
 			},
 			// 确认订单发货
 			confirmOrder(item) {
-			
 				uni.navigateTo({
 					url: `/treasure/winningOrder/index?id=` + item.id
+				})
+			},
+			goProductDetails(id) {
+				uni.navigateTo({
+					url:'/treasure/productDetails/index?id=' + id
 				})
 			},
 			// 参与夺宝
@@ -229,7 +240,7 @@
 					case "success":
 						return {
 							color: "#EF4141",
-							status: "已中奖"
+							status: "已开奖"
 						};
 					case "gameOver":
 						return {
@@ -246,7 +257,7 @@
 					title:'加载中'
 				})
 
-				this.$fly.get(`/app/draw/myDrawList?userId=${this.userInfo.id}&page=${this.page}&size=20&drawStatus=${this.drawStatus}&sort=createDate,asc`)
+				this.$fly.get(`/app/draw/myDrawList?userId=${this.userInfo.id}&page=${this.page}&size=20&drawStatus=${this.drawStatus}&sort=createDate,asc&deleteFlag=false`)
 					.then(res => {
 						uni.hideLoading();
 						if (res.code == 0) {

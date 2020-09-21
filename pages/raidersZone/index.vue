@@ -183,7 +183,7 @@
 					case "success":
 						return {
 							color: "#EF4141",
-							status: "已中奖"
+							status: "已开奖"
 						};
 					case "gameOver":
 						return {
