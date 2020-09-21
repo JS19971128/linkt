@@ -50,12 +50,13 @@
 						title:'加载中'
 					})
 					let deviceBind = await this.$fly.get('/device/bind',params);
-					uni.showToast({
-					    title: deviceBind.message,
-						icon:'none',
-					    duration: 2000
-					});
-					
+					if(type!==2){
+						uni.showToast({
+						    title: deviceBind.message,
+							icon:'none',
+						    duration: 2000
+						});
+					}
 				}catch(e){
 					//TODO handle the exception
 					uni.showToast({
