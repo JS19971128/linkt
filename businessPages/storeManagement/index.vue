@@ -5,7 +5,7 @@
 			<!-- <view :class="{active:type == 'chain'}" @click="changeTab('chain')">连锁店信息</view> -->
 		</view>
 		<!-- 主店信息 -->
-		<main-store :show='type=="main" ? true : false' :info="mainInfo"></main-store>
+		<main-store :show='type=="main" ? true : false' :info="mainInfo" :deviceName="deviceName"></main-store>
 		<!-- 连锁店信息 -->
 		<chain-store :show='type=="chain" ? true : false'></chain-store>
 	</view>
@@ -22,7 +22,13 @@
 		data() {
 			return {
 				type:'main',//main chain
-				mainInfo:{}
+				mainInfo:{},
+				deviceName:''
+			}
+		},
+		computed:{
+			userInfo(){
+				return this.$store.state.userInfo;
 			}
 		},
 		methods:{
@@ -37,6 +43,27 @@
 					}
 				})
 			},
+			async init(){
+				try{
+					// let userBindPhone = await this.$fly.post('/user/userLogin',params)
+					let {id} = this.userInfo;
+					let deviceGet = await this.$fly.get('/device/get',{userId:id});
+					if(deviceGet.data){
+						this.deviceName = deviceGet.data.deviceName;
+					}
+				}catch(e){
+					//TODO handle the exception
+					uni.showToast({
+					    title: '查询失败！',
+						icon:'none',
+					    duration: 2000
+					});
+					console.error(e)
+				}
+			},
+		},
+		onShow() {
+			this.init();
 		},
 		onLoad:function(){
 			this.getMerchant();

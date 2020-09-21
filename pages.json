@@ -333,6 +333,12 @@
 					}
 				},
 				{
+					"path":"storeManagement/voice",
+					"style": {
+						"navigationBarTitleText": "语音音箱"
+					}
+				},
+				{
 					"path":"customerList/index",
 					"style": {
 						"navigationBarTitleText": "我的客户"

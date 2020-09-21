@@ -118,6 +118,19 @@
 						<switch :checked="isOpenVoice" @change="switch1Change" />
 					</view>
 				</view>
+				<!-- 语音播报 -->
+				<view class="item flex_center" @click="checkUrl('/businessPages/storeManagement/voice')">
+					<view class="item-name">语音音箱</view>
+					<view class="item-content">
+						<view class="flex_between">
+							<view class="address"></view>
+							<view class="flex_center">
+								<uni-icons v-if="deviceName" class="flex_center" type="checkbox-filled" color="#47D347" :size="20"></uni-icons>
+								<image class="more" src="../../../static/images/common/more_gray.png" mode="widthFix"></image>
+							</view>
+						</view>
+					</view>
+				</view>
 			</view>
 		</view>
 		<view class="btn fz-14 flex_center" @click="checkForm">保存修改</view>
@@ -138,7 +151,7 @@
 <script>
 	export default{
 		name:'mainStore',
-		props:["show","info"],
+		props:["show","info",'deviceName'],
 		data() {
 			return {
 				shopName:'',
@@ -167,6 +180,9 @@
 			},
 			merchant(){
 				return this.info;
+			},
+			userInfo(){
+				return this.$store.state.userInfo;
 			}
 		},
 		watch:{
@@ -187,6 +203,9 @@
 			}
 		},
 		methods:{
+			checkUrl(url){
+				uni.navigateTo({url:`${url}?deviceName=${this.deviceName}`})
+			},
 			switch1Change(e){
 				this.isOpenVoice = e.detail.value;
 			},
