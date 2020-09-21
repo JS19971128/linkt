@@ -50,6 +50,8 @@
 					let deviceGet = await this.$fly.get('/device/get',{userId:id});
 					if(deviceGet.data){
 						this.deviceName = deviceGet.data.deviceName;
+					}else{
+						this.deviceName = '';
 					}
 				}catch(e){
 					//TODO handle the exception
