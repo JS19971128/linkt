@@ -41,12 +41,29 @@
 			<view class="detail-item-list" :class="{'active': index == 1}" @click="index = 1">
 				参与记录
 			</view>
+			<view class="detail-item-list" :class="{'active': index == 2}" @click="index = 2">
+				中奖记录
+			</view>
 		</view>
 		<view class="detail-html" v-if="index == 0">
 			<rich-text :nodes="description"></rich-text>
 			<!-- <view v-html="description"></view> -->
 		</view>
 		<view class="participation-record" v-if="index == 1">
+			
+			<view class="wrap_list_app" v-for="(item,index) in list">
+				<view class="content_border">
+					<image class="left_image_src" :src="item.wechatHeadImg" mode=""></image>
+					<view class="right_date">
+						<view class="number_account">{{item.uid}} <!-- <text class="winning">已中奖</text> --></view>
+						<view class="participate_page">参与<text class="color_nuxt">{{item.couponCount}}</text>张  <text class="date_time">{{item.drawDate}}</text></view>
+					</view>
+				</view>
+			</view>
+			<uni-load-more :iconSize="20" color="#999999" :status="status" :contentText="contentText"></uni-load-more>
+		</view>
+		
+		<view class="participation-record" v-if="index == 2">
 			
 			<view class="wrap_list_app" v-for="(item,index) in list">
 				<view class="content_border">
@@ -126,6 +143,7 @@
 				},
 				status: 'noMore', //more,loading,noMore
 				list: [],
+				winningRecord: [],
 				page: 0,
 				voucher: 0
 			}
@@ -176,6 +194,9 @@
 				this.$fly.get(`/app/draw/` + id).then(res=>{
 					if (res.code == 0) {
 						this.drawDetails = res.data;
+						console.log(this.drawDetails)
+						// 获取中奖记录
+						this.getLotteryRecord(id);
 						this.drawDetails.drawPercent = Math.trunc(this.drawDetails.drawPercent * 100);
 						this.article = res.data.mainUrl.split(';');
 						this.description = res.data.description.replace(/<img/gi, '<img style="max-width:100%;height:auto;display:block" ');
@@ -295,6 +316,21 @@
 					}
 				})
 			},
+			getLotteryRecord(id) {
+				console.log(this.drawDetails)
+				this.$fly.get(`/app/draw/draw/lottery?drawCommodityId=` + id + '&number=' + this.drawDetails.number)
+				.then(res => {
+					if (res.code == 0) {
+		                this.winningRecord = res.content;
+					} else {
+						uni.showToast({
+							title: res.message,
+							icon: 'none',
+							duration: 2000
+						});
+					}
+				})
+			}
 		},
 		
 		onLoad(option) {
