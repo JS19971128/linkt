@@ -39,6 +39,8 @@
 		onLoad:function(query){
 			console.log(query);
 			this.codeUrl = query.url.replace('http','https');
+			this.codeUrl = this.codeUrl.replace('httpss','https');
+			console.log(this.codeUrl)
 		}
 	}
 </script>

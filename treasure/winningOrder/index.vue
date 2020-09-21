@@ -1,17 +1,32 @@
 <template>
 	<view class="bg">
 		<!-- //收货地址 -->
-		<view class="order-address" v-if="address" @click="choiceAddress">
-			<view class="address-title">收货地址</view>
-			<view class="address">
-				<view class="address-name">{{address.userName}} {{address.telNumber}}</view>
-				<view class="addres-xx">{{address.provinceName}} {{address.cityName}} {{address.countyName}} {{address.detailInfo}}</view>
+		<view v-if="!detailsInfo">
+			<view class="order-address" v-if="address" @click="choiceAddress">
+				<view class="address-title">收货地址</view>
+				<view class="address">
+					<view class="address-name">{{address.userName}} {{address.telNumber}}</view>
+					<view class="addres-xx">{{address.provinceName}} {{address.cityName}} {{address.countyName}} {{address.detailInfo}}</view>
+				</view>
+				<view class="address-more">
+					<image src="../../static/images/common/more_gray.png" mode="widthFix"></image>
+				</view>
 			</view>
-			<view class="address-more">
-				<image src="../../static/images/common/more_gray.png" mode="widthFix"></image>
+			<view class="order-address" v-else @click="choiceAddress">请选择地址</view>
+		</view>
+		<view v-if="detailsInfo">
+			<view class="order-address">
+				<view class="address-title">收货地址</view>
+				<view class="address">
+					<view class="address-name">{{detailsInfo.consigneeName}} {{detailsInfo.consigneePhone}}</view>
+					<view class="addres-xx">{{detailsInfo.addrInfo}}</view>
+				</view>
+				<view class="address-more">
+					<!-- <image src="../../static/images/common/more_gray.png" mode="widthFix"></image> -->
+				</view>
 			</view>
 		</view>
-		<view class="order-address" v-else @click="choiceAddress">请选择地址</view>
+		
 		<!-- 订单合计 -->
 		<view class="order-goods">
 			<view class="goods">
@@ -33,7 +48,7 @@
 			</view> -->
 		</view>
 		<!-- 提交按钮 -->
-		<view class="commodiy-btn">
+		<view class="commodiy-btn" v-if="look == 0">
 			<view class="btn-price"></view>
 			<button type="default" class="btn-go" @click="stm">确认订单</button>
 		</view>
@@ -44,6 +59,7 @@
 	export default {
 		data() {
 			return {
+				detailsInfo: '',
 				buyNumber: 1,
 				isSpecs: true,
 				address: '',
@@ -52,7 +68,9 @@
 				orderNo:'',
 				consumerInfo:{},
 				needPay:{},
-				drawDetails: ''
+				drawDetails: '',
+				look: 0,
+				drawOrderNo: ''
 			}
 		},
 		computed:{
@@ -133,9 +151,32 @@
 					
 				})
 			},
+			shipDrawOrder() {
+				this.$fly.get(`/app/draw/order/` + this.drawOrderNo).then(res => {
+					uni.hideLoading();
+					if (res.code == 0) {
+			            this.detailsInfo = res.data;
+						console.log(this.detailsInfo)
+					} else {
+						uni.showToast({
+							title: res.message,
+							icon: 'none',
+							duration: 2000
+						});
+					}
+					
+				})
+			}
 		},
 		onLoad(res) {
 			this.getDrawDetails(res.id);
+			this.orderNo = res.id;
+			console.log(res)
+			if (res.look) {
+				this.look = 3;
+				this.drawOrderNo = res.drawOrderNo;
+				this.shipDrawOrder();
+			}
 			if(!this.$store.state.userInfo.uid){
 				this.$wxLogin();
 			}

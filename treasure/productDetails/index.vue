@@ -52,7 +52,7 @@
 				<view class="content_border">
 					<image class="left_image_src" :src="item.wechatHeadImg" mode=""></image>
 					<view class="right_date">
-						<view class="number_account">{{item.uid}}  <text class="winning">已中奖</text></view>
+						<view class="number_account">{{item.uid}} <!-- <text class="winning">已中奖</text> --></view>
 						<view class="participate_page">参与<text class="color_nuxt">{{item.couponCount}}</text>张  <text class="date_time">{{item.drawDate}}</text></view>
 					</view>
 				</view>
@@ -161,7 +161,7 @@
 					case "success":
 						return {
 							color: "#EF4141",
-							status: "已中奖"
+							status: "已开奖"
 						};
 					case "gameOver":
 						return {
@@ -198,7 +198,7 @@
 				this.voucher ++
 			},
 			getDrawList(id) {
-				this.$fly.get(`/app/draw/drawList?drawCommodityId=${id}&page=${this.page}&size=20`).then(res=>{
+				this.$fly.get(`/app/draw/drawList?drawCommodityId=${id}&page=${this.page}&size=50`).then(res=>{
 					if (res.code == 0) {
 						let data = res.data.content;
 						data.forEach(item => {
@@ -251,7 +251,8 @@
 				// 夺宝劵总数减去使用劵数
 				let num = this.drawDetails.totalCount - this.drawDetails.drawCount;
 				console.log(num);
-				if (this.voucher > num) {
+				// voucher  用户输入的夺宝劵数量
+				if (this.voucher >= num) {
 					uni.showToast({
 					    title: '夺宝失败，剩余人次不足',
 				        icon: 'none',
