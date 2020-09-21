@@ -103,7 +103,12 @@
 			<view class="bar fz-14">
 				<!-- 商家入驻 -->
 				<!-- && merchantEntry!=='商家入驻' -->
+				<!-- #ifdef MP-ALIPAY -->
+				<view class="item flex_between" @click="businessApply" v-if="!isOperator && merchantEntry!=='商家入驻'">
+				<!-- #endif -->
+				<!-- #ifdef MP-WEIXIN -->
 				<view class="item flex_between" @click="businessApply" v-if="!isOperator">
+				<!-- #endif -->
 					<view class="title flex_center">
 						<image src="../../static/images/my/business.png" mode="widthFix"></image>
 						<text>{{merchantEntry}}</text>

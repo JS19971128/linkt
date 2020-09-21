@@ -76,7 +76,7 @@
 		</view>
 		<!-- 列表 -->
 		<!-- v-if="navList.length > 0" -->
-		<view class="treasure_bdi" v-if="navList.length > 0">
+		<view class="treasure_bdi" v-if="false">
 			
 			<view class="wrap_list_content" v-for="(item,index) in navList" :key='index' @click="goProductDetails(item.id)">
 				<view class="left_img_src">
