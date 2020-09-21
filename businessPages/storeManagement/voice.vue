@@ -73,6 +73,9 @@
 				this.deviceName = o.deviceName;
 				this.ls = o.deviceName;
 				this.isNew = false;
+			}else{
+				this.deviceName = '';
+				this.isNew = true;
 			}
 		}
 	}
