@@ -8,8 +8,8 @@ import shop from '@/store/modules/shop.js';//商家入驻进件
 
 const store = new Vuex.Store({
    state: {
-		baseUrl:'https://chainguest.3zone.net/api',
-		// baseUrl:'https://v.liankedl.com/api',
+		// baseUrl:'https://chainguest.3zone.net/api',
+		baseUrl:'https://v.liankedl.com/api',
 		// baseUrl:'http://192.168.3.197:8566',  //shuguang
 		// baseUrl:'https://v.liankedl.com/api',
 		// baseUrl:'http://192.168.3.150:8569', //xianwen

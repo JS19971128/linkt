@@ -56,7 +56,7 @@
 					<image class="left_image_src" :src="item.wechatHeadImg" mode=""></image>
 					<view class="right_date">
 						<view class="number_account">{{item.uid}} <!-- <text class="winning">已中奖</text> --></view>
-						<view class="participate_page">参与<text class="color_nuxt">{{item.couponCount}}</text>张  <text class="date_time">{{item.drawDate}}</text></view>
+						<view class="participate_page">参与<text class="color_nuxt">{{item.couponCount}}</text>张  <text class="date_time">{{item.createTime}}</text></view>
 					</view>
 				</view>
 			</view>
@@ -65,12 +65,12 @@
 		
 		<view class="participation-record" v-if="index == 2">
 			
-			<view class="wrap_list_app" v-for="(item,index) in list">
+			<view class="wrap_list_app" v-if="winningRecord">
 				<view class="content_border">
-					<image class="left_image_src" :src="item.wechatHeadImg" mode=""></image>
+					<image class="left_image_src" :src="winningRecord.wechatHeadImg" mode=""></image>
 					<view class="right_date">
-						<view class="number_account">{{item.uid}} <!-- <text class="winning">已中奖</text> --></view>
-						<view class="participate_page">参与<text class="color_nuxt">{{item.couponCount}}</text>张  <text class="date_time">{{item.drawDate}}</text></view>
+						<view class="number_account">{{winningRecord.uid}} <text class="winning_number">夺宝编号: {{winningRecord.treasureCode}}</text></view>
+						<view class="participate_page"><text>{{winningRecord.drawDate}}</text></view>
 					</view>
 				</view>
 			</view>
@@ -143,7 +143,7 @@
 				},
 				status: 'noMore', //more,loading,noMore
 				list: [],
-				winningRecord: [],
+				winningRecord: '',
 				page: 0,
 				voucher: 0
 			}
@@ -223,7 +223,7 @@
 					if (res.code == 0) {
 						let data = res.data.content;
 						data.forEach(item => {
-							item.drawDate = this.$util.formatTime(item.drawDate);
+							item.createTime = this.$util.formatTime(item.createTime);
 						})
 						this.list = this.list.concat(data);
 						this.page++;
@@ -317,11 +317,13 @@
 				})
 			},
 			getLotteryRecord(id) {
-				console.log(this.drawDetails)
 				this.$fly.get(`/app/draw/draw/lottery?drawCommodityId=` + id + '&number=' + this.drawDetails.number)
 				.then(res => {
 					if (res.code == 0) {
-		                this.winningRecord = res.content;
+						if (res.data) {
+							res.data.drawDate = this.$util.formatTime(res.data.drawDate);
+							this.winningRecord = res.data;
+						}
 					} else {
 						uni.showToast({
 							title: res.message,
@@ -536,6 +538,10 @@
 								font-weight:500;
 								color:rgba(255,255,255,1);
 								margin-left: 30rpx;
+							}
+							.winning_number {
+								margin-left: 50rpx;
+								font-size: 28rpx;
 							}
 						}
 						.participate_page {
