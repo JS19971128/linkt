@@ -114,6 +114,10 @@
 				let {
 					consumerInfo
 				} = this;
+				
+				if (!this.isSpecs) {
+					return false;
+				}
 
 				if (Object.keys(consumerInfo).length == 0) return wx.showToast({
 					title: '~请选择收货地址',
@@ -128,27 +132,31 @@
 					drawNo: this.drawDetails.drawNo,
 					freight: 0,
 					orderNo: '',
-					pricePaid: 0
+					pricePaid: 0,
+					orderStatus: 'Paid'
 				}
+				this.isSpecs = false;
 				this.$fly.post(`/app/draw/order/save`,param).then(res => {
 					uni.hideLoading();
 					if (res.code == 0) {
 						wx.showToast({
 						  title: '成功！',
-						  icon: 'none',
+						  icon: 'success',
 						  duration: 2500
 						})
-						uni.navigateBack({
-						    delta: 1
-						});
+						setTimeout(() => {
+							uni.navigateBack({
+							    delta: 1
+							});
+						},1000)
 					} else {
 						uni.showToast({
 							title: res.message,
 							icon: 'none',
 							duration: 2000
 						});
-					}
-					
+						this.isSpecs = true;
+					}	
 				})
 			},
 			shipDrawOrder() {
