@@ -7,7 +7,7 @@
 			</view>
 			<view class="discount fz-12">最多可抵扣{{maxDiscount}}元</view>
 		</view>
-		<view class="coupon-txt">温馨提示：优惠券不找零、不拆分使用，可转赠，可叠加，可全国全网通用。</view>
+		<view class="coupon-txt">温馨提示：优惠券支持拆零使用，可转赠，可叠加，可全国全网通用。使用优惠券后，扣除手续费部分的剩余部分会返回至账户。</view>
 		<view class="fz-14 coupon"><view>可使用优惠券（{{total}})</view><view class="coupon-title">使用优惠券请勾选</view></view>
 		<!-- 优惠券列表 -->
 		<view class="main" v-if="list.length>0">
@@ -240,18 +240,30 @@
 				uni.showLoading({
 					title:'加载中'
 				})
+				console.log(this.$store.state.userInfo)
+				console.log(params)
 				try{
 					this.$fly.post('/transfer/wxpay',params)
 					.then(res=>{
 						setTimeout(()=>{uni.hideLoading()},2000);
+						console.log(res)
 						if(res.code == 0){
-							let tradeNo = JSON.parse(res.data.data.rt10_payInfo);
-							// #ifdef MP-WEIXIN
-							this.wechatPay(tradeNo);
-							// #endif
-							// #ifdef MP-ALIPAY
-							// this.aliPay(tradeNo);
-							// #endif
+							if(res.data.code == 200){
+								
+								// #ifdef MP-WEIXIN
+								let tradeNo = JSON.parse(res.data.data.rt10_payInfo);
+								this.wechatPay(tradeNo);
+								// #endif
+								// #ifdef MP-ALIPAY
+								// let tradeNo = JSON.parse(res.data.data.rt8_qrcode);
+								this.aliPay(res.data.data.rt5_orderId);
+								// #endif
+							}else{
+								uni.showToast({
+									title:res.data.msg,
+									icon: 'none'
+								})
+							}
 						}else{
 							uni.showToast({
 								title:res.message,
@@ -309,6 +321,11 @@
 				// // #endif
 			},
 			aliPay(tradeNo){ //调起支付宝支付
+				console.log(tradeNo,'tradeNo')
+				// uni.navigateTo({
+				// 	url:'/pages/payment/alipay?tradeNo='+tradeNo
+				// })
+			
 				uni.requestPayment({
 					provider:"alipay",
 					orderInfo:tradeNo,
