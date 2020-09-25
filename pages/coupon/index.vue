@@ -6,7 +6,7 @@
 				<uni-notice-bar class="notice" speed="32" scrollable="true" :text="notice.title" background-color="transparent" color='#fff'></uni-notice-bar>
 			</view>
 		</view>
-		<view class="coupon-txt">温馨提示：优惠券不找零、不拆分使用，可转赠，可叠加，可全国全网通用。</view>
+		<view class="coupon-txt">温馨提示：优惠券支持拆零使用，可转赠，可叠加，可全国全网通用。使用优惠券后，扣除手续费部分的剩余部分会返回至账户。</view>
 		<!-- 优惠券列表 -->
 		<view class="main" v-if="list.length>0">
 			<view v-for="item in list" :key="item.id">
