@@ -123,7 +123,7 @@
 
 <script>
 	import goodsSpecs from '@/my-component/goodsSpecs/index'
-	import parse from '@/node_modules/mini-html-parser2'
+	import parseHtml from '../../common/util/parseHtml.js'
 	export default {
 		data() {
 			return {
@@ -195,20 +195,16 @@
 				}
 			},
 			getDrawDetails(id) {
+				var _this = this;
 				this.$fly.get(`/app/draw/` + id).then(res=>{
 					if (res.code == 0) {
 						this.drawDetails = res.data;
-						console.log(this.drawDetails)
 						// 获取中奖记录
 						this.getLotteryRecord(id);
 						this.drawDetails.drawPercent = Math.trunc(this.drawDetails.drawPercent * 100);
 						this.article = res.data.mainUrl.split(';');
 						this.description = res.data.description.replace(/<img/gi, '<img style="max-width:100%;height:auto;display:block" ');
-						let nodesList = []; // 先声明防止报错
-						parse(this.description, (err, nodesList) => {
-							this.description = nodesList;
-						})
-						
+						this.description = parseHtml(this.description);
 					} else {
 						uni.showToast({
 							title: res.message,
