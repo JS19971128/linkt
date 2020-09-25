@@ -6,7 +6,7 @@
 				<view class="address-title">收货地址</view>
 				<view class="address">
 					<view class="address-name">{{address.userName}} {{address.telNumber}}</view>
-					<view class="addres-xx">{{address.provinceName}} {{address.cityName}} {{address.countyName}} {{address.detailInfo}}</view>
+					<view class="addres-xx">{{address.provinceName}} {{address.cityName}} <text v-if="address.countyName">{{address.countyName}}</text> {{address.detailInfo}}</view>
 				</view>
 				<view class="address-more">
 					<image src="../../static/images/common/more_gray.png" mode="widthFix"></image>
@@ -85,6 +85,7 @@
 				wx.chooseAddress({
 					success: function(res) {
 						that.address = res
+						cosole.log(that.address)
 						that.consumerInfo = {
 							name: res.userName,
 							areaCode: res.postalCode,

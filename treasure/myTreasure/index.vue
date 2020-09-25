@@ -22,7 +22,7 @@
 							<view class="left_progress"><view class="bar" :style="{width:Math.trunc(item.drawPercent * 100) + '%'}"></view></view>
 							<view class="percentage">{{Math.trunc(item.drawPercent * 100)}}%</view>
 						</view>
-						<view class="treasure_status"><text class="active_status" :style="{color:returnOrderStatus(item.drawStatus).color}">{{returnOrderStatus(item.drawStatus).status}}</text><image src="../../static/images/common/more_gray.png" mode=""></image></view>
+						<view class="treasure_status"><text class="active_status" :style="{color:returnOrderStatus(item.drawStatus).color}">{{returnOrderStatus(item.drawStatus).status}}</text><image src="../../static/images/common/more_gray.png" mode="aspectFill"></image></view>
 					</view>
 				</view>
 				<!-- 继续夺宝--确认订单 -->
@@ -51,7 +51,7 @@
 		<!-- 消费夺宝--参与夺宝 -->
 		<view class="consumption" v-if="consumptionRule">
 			<view class="middle_content">
-				<image class="shut_down" @click="consumptionRule=false" src="../../static/images/shop/border_close.png" mode=""></image>
+				<image class="shut_down" @click="consumptionRule=false" src="../../static/images/shop/border_close.png" mode="aspectFill"></image>
 				<view class="commodity_list">
 					<view class="left_wrap_image">
 						<image :src="drawDetails.listUrl" mode="aspectFill"></image>
@@ -215,7 +215,7 @@
 					if (res.code == 0) {
 						let data = res.data;
 						this.drawMyData = data;
-					}				
+					}
 				})
 			},
 			startTreasure(item) {

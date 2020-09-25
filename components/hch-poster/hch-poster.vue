@@ -97,10 +97,12 @@ export default {
         codeNameMT: 20*this.systemScale,
         tips: this.attrs.tips,
         posterBgUrl: 'https://xlzx.oss-cn-shenzhen.aliyuncs.com/user/20200831161420433_bg_zf.png',
-        codeML: 84*this.systemScale,
+        codeML: 83.125,
         desTextMT:70,
         desTextML:240,
       }
+	  console.log(this.getSystem)
+	  console.log(this.systemScale)
       // if(this.simpleFlag){
 		  // 简单版海报
         // this.creatSimplePoster(this.attrs)

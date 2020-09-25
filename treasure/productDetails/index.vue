@@ -30,7 +30,7 @@
 		<!-- 参与流程 -->
 		<view class="participation_process">
 			<view class="title_name">参与流程</view>
-			<image class="image_mode" src="../../static/images/shop/participation_process.png" mode=""></image>
+			<image class="image_mode" src="../../static/images/shop/participation_process.png" mode="aspectFill"></image>
 		</view>
 		
 		<!-- 商品详情-->
@@ -53,7 +53,7 @@
 			
 			<view class="wrap_list_app" v-for="(item,index) in list">
 				<view class="content_border">
-					<image class="left_image_src" :src="item.wechatHeadImg" mode=""></image>
+					<image class="left_image_src" :src="item.wechatHeadImg" mode="aspectFill"></image>
 					<view class="right_date">
 						<view class="number_account">{{item.uid}} <!-- <text class="winning">已中奖</text> --></view>
 						<view class="participate_page">参与<text class="color_nuxt">{{item.couponCount}}</text>张  <text class="date_time">{{item.createTime}}</text></view>
@@ -67,7 +67,7 @@
 			
 			<view class="wrap_list_app" v-if="winningRecord">
 				<view class="content_border">
-					<image class="left_image_src" :src="winningRecord.wechatHeadImg" mode=""></image>
+					<image class="left_image_src" :src="winningRecord.wechatHeadImg" mode="aspectFill"></image>
 					<view class="right_date">
 						<view class="number_account">{{winningRecord.uid}} <text class="winning_number">夺宝编号: {{winningRecord.treasureCode}}</text></view>
 						<view class="participate_page"><text>{{winningRecord.drawDate}}</text></view>
@@ -88,10 +88,10 @@
 		<!-- 消费夺宝--参与夺宝 -->
 		<view class="consumption" v-if="consumptionRule">
 			<view class="middle_content">
-				<image class="shut_down" @click="consumptionRule=false" src="../../static/images/shop/border_close.png" mode=""></image>
+				<image class="shut_down" @click="consumptionRule=false" src="../../static/images/shop/border_close.png" mode="aspectFill"></image>
 				<view class="commodity_list">
 					<view class="left_wrap_image">
-						<image :src="drawDetails.listUrl" mode=""></image>
+						<image :src="drawDetails.listUrl" mode="aspectFill"></image>
 					</view>
 					<view class="right_info_show">
 						<view class="info_title">{{drawDetails.commodityName}}</view>
@@ -123,6 +123,7 @@
 
 <script>
 	import goodsSpecs from '@/my-component/goodsSpecs/index'
+	import parse from '@/node_modules/mini-html-parser2'
 	export default {
 		data() {
 			return {
@@ -147,6 +148,9 @@
 				page: 0,
 				voucher: 0
 			}
+		},
+		components: {
+			goodsSpecs
 		},
 		computed:{
 			userId(){
@@ -200,6 +204,11 @@
 						this.drawDetails.drawPercent = Math.trunc(this.drawDetails.drawPercent * 100);
 						this.article = res.data.mainUrl.split(';');
 						this.description = res.data.description.replace(/<img/gi, '<img style="max-width:100%;height:auto;display:block" ');
+						let nodesList = []; // 先声明防止报错
+						parse(this.description, (err, nodesList) => {
+							this.description = nodesList;
+						})
+						
 					} else {
 						uni.showToast({
 							title: res.message,
