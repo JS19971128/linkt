@@ -194,12 +194,12 @@
 					case "Paid":
 						return {
 							color: "#FF9834",
-							status: "待发货"
+							status: "已支付"
 						};
 					case "Shipped":
 						return {
 							color: "#2998DF",
-							status: "已支付"
+							status: "已发货"
 						};
 					case "NoCommented":
 						return {

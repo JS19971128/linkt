@@ -150,10 +150,10 @@
 			goHere(){
 				this.$fly.get(`https://apis.map.qq.com/ws/geocoder/v1/?address=${encodeURI(this.detail.area+this.detail.contactAddress)}&key=${this.$store.state.mapKey}`)
 				.then(res=>{
-					console.log(res.result.location.lat)
+					console.log(res.result.location.lat,res.result.location.lng)
 					uni.openLocation({
-						latitude: res.result.location.lat,
-						longitude: res.result.location.lng,
+						latitude: Number(this.detail.latitude),
+						longitude: Number(this.detail.longitude),
 						name: this.detail.contactAddress,
 						address:res.result.title,
 						success:res=>{
