@@ -155,6 +155,7 @@
 			// #ifdef MP-WEIXIN
 			this.getLocationAuth();
 			// #endif
+
 		},
 		onShow:function() {
 			// #ifdef MP-WEIXIN

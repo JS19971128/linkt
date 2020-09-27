@@ -232,8 +232,8 @@
 					openId:this.$store.state.userInfo.openId
 				}
 				// #ifdef MP-ALIPAY
-				params.bizType = 'AppPay';
-				params.payType = 'SCAN';
+				params.bizType = 'AppPayApplet';
+				params.payType = 'APPLET';
 				params.registType = 'ALIPAY';
 				params.openId = this.$store.state.userInfo.alipayUserId
 				// #endif
@@ -246,17 +246,15 @@
 					this.$fly.post('/transfer/wxpay',params)
 					.then(res=>{
 						setTimeout(()=>{uni.hideLoading()},2000);
-						console.log(res)
 						if(res.code == 0){
 							if(res.data.code == 200){
-								
-								// #ifdef MP-WEIXIN
 								let tradeNo = JSON.parse(res.data.data.rt10_payInfo);
+								console.log(tradeNo)
+								// #ifdef MP-WEIXIN
 								this.wechatPay(tradeNo);
 								// #endif
 								// #ifdef MP-ALIPAY
-								// let tradeNo = JSON.parse(res.data.data.rt8_qrcode);
-								this.aliPay(res.data.data.rt5_orderId);
+								this.aliPay(tradeNo.tradeNO);
 								// #endif
 							}else{
 								uni.showToast({
@@ -321,11 +319,6 @@
 				// // #endif
 			},
 			aliPay(tradeNo){ //调起支付宝支付
-				console.log(tradeNo,'tradeNo')
-				// uni.navigateTo({
-				// 	url:'/pages/payment/alipay?tradeNo='+tradeNo
-				// })
-			
 				uni.requestPayment({
 					provider:"alipay",
 					orderInfo:tradeNo,
