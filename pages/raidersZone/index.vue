@@ -283,7 +283,7 @@
 				})
 			},
 			navListFun() {
-				this.$fly.get(`/app/draw/list?size=10&page=${this.page}&userId=${this.userId}&sort=createDate,desc&deleteFlag=false`).then(res=>{
+				this.$fly.get(`/app/draw/home/list?size=10&page=${this.page}&userId=${this.userId}&sort=createDate,desc&deleteFlag=false`).then(res=>{
 					let data = res.data;
 					this.total = data.totalElements;
 					if(this.page === 0){

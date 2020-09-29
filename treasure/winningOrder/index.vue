@@ -6,7 +6,7 @@
 				<view class="address-title">收货地址</view>
 				<view class="address">
 					<view class="address-name">{{address.userName}} {{address.telNumber}}</view>
-					<view class="addres-xx">{{address.provinceName}}{{address.cityName}} <text v-if="address.countyName">{{address.countyName}}</text> {{address.detailInfo}}</view>
+					<view>{{address.provinceName}}{{address.cityName}} <text v-if="address.countyName">{{address.countyName}}</text> {{address.detailInfo}}</view>
 				</view>
 				<view class="address-more">
 					<image src="../../static/images/common/more_gray.png" mode="widthFix"></image>
@@ -86,11 +86,17 @@
 					success: function(res) {
 						that.address = res
 						console.log(that.address)
+						let addressInfo = ''
+						if (res.countyName) {
+							addressInfo = res.provinceName + ' ' + res.cityName + ' ' + res.countyName + ' ' + res.detailInfo
+						} else {
+							addressInfo = res.provinceName + ' ' + res.cityName + ' ' + res.detailInfo
+						}
 						that.consumerInfo = {
 							name: res.userName,
 							areaCode: res.postalCode,
 							mobile: res.telNumber,
-							address: res.provinceName + ' ' + res.cityName + ' ' + res.countyName + ' ' + res.detailInfo
+							address: addressInfo
 						}
 					}
 				})
@@ -230,9 +236,9 @@
 				line-height: 1;
 			}
 
-			.addres-xx {
-				line-height: 1;
-			}
+			// .addres-xx {
+			// 	line-height: 1;
+			// }
 		}
 
 		.address-more {

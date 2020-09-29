@@ -398,7 +398,7 @@
 				.status {
 					background:rgba(255,151,51,1);
 					border-radius:16rpx;
-					padding: 5rpx 10rpx;
+					padding: 3rpx 10rpx;
 					margin-right: 15rpx;
 					font-size:24rpx;
 					font-family:PingFang SC;
