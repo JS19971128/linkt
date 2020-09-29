@@ -194,7 +194,7 @@
 					case "Paid":
 						return {
 							color: "#FF9834",
-							status: "待发货"
+							status: "已支付"
 						};
 					case "Shipped":
 						return {

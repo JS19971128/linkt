@@ -138,9 +138,6 @@
 			// 用户修改接口
 			async userInfoFun(userInfo,type){
 				try{
-					uni.showLoading({
-						title:'加载中'
-					})
 					let {id,gender,addressInfo,areaCode,areaCodeCity,areaCodeAreas} = userInfo,data;
 					if(type==='address'){
 						data = {userId:id,addressInfo,areaCode,areaCodeCity,areaCodeAreas}

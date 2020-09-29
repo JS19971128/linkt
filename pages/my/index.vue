@@ -58,7 +58,7 @@
 		<view class="main mart_top">
 			<view class="fz-14">
 				<!-- 我的订单 -->
-				<view class="item flex_between" @click="goWhereWithReg('/userPages/orderRecording/index')">
+				<view class="item flex_between" @click="goWhere('/userPages/orderRecording/index')">
 					<view class="title flex_center">
 						<image src="../../static/images/my/my_order.png" mode="widthFix"></image>
 						<text>我的订单</text>
