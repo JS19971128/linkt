@@ -564,7 +564,7 @@
 							   font-family:PingFang SC;
 							   font-weight:500;
 							   color:rgba(51,51,51,1);
-							   width: 55vw;
+							   // width: 55vw;
 							   overflow: hidden;
 							   text-overflow: ellipsis;
 							   display: -webkit-box;
