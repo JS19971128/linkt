@@ -100,7 +100,7 @@
 				description: '',
 				commoditySpecList: [],
 				isCart:false,
-				shop:false
+				shop:false,
 			}
 		},
 		components: {
@@ -238,6 +238,12 @@
 			this.shop = shop || '';
 			this.commodityId = Number(id);
 			this.goodsDetails(id);
+			console.log(op)
+			if (op.shareUserId) {
+			   console.log(op.shareUserId);
+			   // 分享者id
+			   this.$store.commit('SETSHAREUSERID',op.shareUserId);
+			}
 		},
 		onUnload(){
 			this.$store.commit('SETISSPECS',false);
@@ -247,7 +253,7 @@
 			let {commodityName,id} = this.goods;
 			return {
 			  title: commodityName,
-			  path: '/shoppingPages/commodity/index?id='+id
+			  path: '/shoppingPages/commodity/index?id='+id + '&shareUserId=' + this.userId
 			}
 		}
 

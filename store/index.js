@@ -48,6 +48,7 @@ const store = new Vuex.Store({
 		},
 		operatorData:{},//运营人员信息
 		isSpecs:false,//选择规格状态
+		shareUserId: '', // 商品分享者id
 	},
    mutations: {
 		SETUSERINFO(state,key){
@@ -55,6 +56,9 @@ const store = new Vuex.Store({
 		},
 		SETISSPECS(state,status){
 			state.isSpecs = status
+		},
+		SETSHAREUSERID(state,id){
+			state.shareUserId = id
 		}
 	},
    actions: {
