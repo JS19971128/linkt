@@ -156,7 +156,7 @@
 						<text>同步手机</text>
 					</view>
 					<view class="more flex_center">
-						<uni-icons v-if="userName" class="flex_center" type="checkbox-filled" color="#47D347" :size="20"></uni-icons>
+						<uni-icons v-if="userInfo.username" class="flex_center" type="checkbox-filled" color="#47D347" :size="20"></uni-icons>
 						<text v-else class="fz-12 notice">未同步手机号</text>
 						<image src="../../static/images/common/more_gray.png" mode="widthFix"></image>
 					</view>
@@ -197,9 +197,6 @@
 			userInfo(){  
 				return this.$store.state.userInfo;
 			},
-			userName(){
-				return this.$store.state.userInfo.username;
-			}
 		},
 		watch:{
 			userInfo(val){

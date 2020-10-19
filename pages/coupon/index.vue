@@ -76,8 +76,8 @@
 				<view class="box">
 					<view class="flex_center mobile-box">
 						<image class="mobile-box-img" src="../../static/images/coupon/tips.png"></image>
-						<view class="pop-title">前往获取90元优惠券</view>
-						<view class="pop-tips">同步手机号后，即可获得90元优惠券喔~</view>
+						<view class="pop-title">前往获取100元优惠券</view>
+						<view class="pop-tips">同步手机号后，即可获得100元优惠券喔~</view>
 					</view>
 					<view class="btns">
 						<view class="fz-14 btn flex_center" @click="showMobile=false">残忍拒绝</view>

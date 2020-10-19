@@ -6,7 +6,7 @@
 				<input type="text" v-model="mobile" placeholder="请输入真实有效的手机号" placeholder-style="font-size:28rpx;line-height:28rpx;color:#BCBCBC"/>
 			</view>
 		</view>
-		<view class="top fz-14">
+		<view class="top fz-14" v-if="!username">
 			<view class="flex_center item">
 				<view class="">验证码</view>
 				<input type="number" pattern="[0-9]*" v-model="code" placeholder="请输入验证码" placeholder-style="color:#CBCBCB;font-size:14px;line-height:14px"/>
@@ -17,10 +17,10 @@
 			<view class="">同步手机号后，可以同步保存您的优惠券与夺宝券数量，为您的消费保障权益喔~</view>
 		</view>
 		<view class="notice fz-14">
-			<view class="">同步手机号后，即可获得90元优惠券喔~</view>
+			<view class="">同步手机号后，即可获得100元优惠券喔~</view>
 		</view>
 		<!-- <button class="btn item flex_center fz-14" open-type="getUserInfo" @getuserinfo="getWxUserInfo">开启我的链客智慧商圈</button> -->
-		<view class="btn flex_center fz-14" @click="checking">保存</view>
+		<view class="btn flex_center fz-14" @click="checking" v-if="!username">保存</view>
 	</view>
 </template>
 
@@ -33,6 +33,11 @@
 				codeText:'',  //验证码文字
 				timer:true,
 				userInfo:{}
+			}
+		},
+		computed:{
+			username(){
+				return this.$store.state.userInfo.username;
 			}
 		},
 		methods:{
