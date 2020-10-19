@@ -8,8 +8,8 @@ import shop from '@/store/modules/shop.js';//商家入驻进件
 
 const store = new Vuex.Store({
    state: {
-		baseUrl:'https://chainguest.3zone.net/api',
-		// baseUrl:'https://v.liankedl.com/api',
+		// baseUrl:'https://chainguest.3zone.net/api',
+		baseUrl:'https://v.liankedl.com/api',
 		// baseUrl:'http://192.168.3.197:8565',  //shuguang
 		// baseUrl:'https://v.liankedl.com/api',
 		// baseUrl:'http://192.168.3.150:8569', //xianwen
@@ -48,6 +48,7 @@ const store = new Vuex.Store({
 		},
 		operatorData:{},//运营人员信息
 		isSpecs:false,//选择规格状态
+		shareUserId: '', // 商品分享者id
 	},
    mutations: {
 		SETUSERINFO(state,key){
@@ -55,6 +56,9 @@ const store = new Vuex.Store({
 		},
 		SETISSPECS(state,status){
 			state.isSpecs = status
+		},
+		SETSHAREUSERID(state,id){
+			state.shareUserId = id
 		}
 	},
    actions: {

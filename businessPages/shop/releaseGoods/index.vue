@@ -153,6 +153,7 @@
 			//分类选择
 			classTOn(){
 				this.show = true;
+				console.log(this.classt)
 			},
 			onConfirm(e){
 				this.cateId = e.value[2];

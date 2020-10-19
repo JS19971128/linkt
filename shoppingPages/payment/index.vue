@@ -103,6 +103,9 @@
 			payCommission(){ //店铺手续费
 				return this.$store.state.order.payCommission;
 			},
+			shareUserId(){  // 商品分享者id
+				return this.$store.state.shareUserId;
+			},
 		},
 		methods:{
 			init(){ //初始化
@@ -242,6 +245,8 @@
 						})
 						return
 					}
+		
+					let openId = this.$store.state.userInfo.openId;
 					let data = {
 						couponIds:this.couponIds.toString(),
 						freight:0,
@@ -251,22 +256,28 @@
 						userId:this.userId,
 						consumerInfo:this.consumerInfo,
 						buyCommodityInfo:{...this.buyCommodityInfo,pricePaid:this.needPay},
-						payType:'WECHAT'
+						payType:'APPLET',
+						bizType:'AppPayApplet',
+						openId: openId,
+						shareUserId: this.shareUserId
 					}
 					uni.showLoading({
 						title:'加载中'
 					})
-					let order = await this.$fly.post('/app/order',data);
+					// let order = await this.$fly.post('/app/order',data);
+					let order = await this.$fly.post('/transfer/prePay',data);
+					console.log(this.shareUserId,'55555555')
 					uni.hideLoading();
-					if(order.code!=0){
+					if(order.data.code!=200){
 						wx.showToast({
-						  title: order.message,
+						  title: order.data.msg,
 						  icon: 'none',
 						  duration: 2500
 						})
 						return
 					};
-					this.wechatPay(order.data);
+					let pay = JSON.parse(order.data.data.rt10_payInfo)
+					this.wechatPay(pay);
 				}catch(e){
 					//TODO handle the exception
 					uni.hideLoading();
@@ -285,7 +296,7 @@
 					appId: payInfo.appId,
 					timeStamp: payInfo.timeStamp,
 					nonceStr: payInfo.nonceStr,
-					package: payInfo._package,
+					package: payInfo.package,
 					signType: payInfo.signType,
 					paySign: payInfo.paySign,
 					success: (res) => {

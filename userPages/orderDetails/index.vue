@@ -145,7 +145,7 @@
 							color: "#FF9834",
 							status: "待发货"
 						};
-					case "Canceled":
+					case "Shipped":
 						return {
 							color: "#2998DF",
 							status: "已发货"
