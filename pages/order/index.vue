@@ -150,6 +150,7 @@
 					title:'加载中'
 				})
 				let url = this.requestUrl;
+				debugger
 				this.$fly.get(`${url}?userId=${this.userInfo.id}&page=${this.page}`)
 					.then(res => {
 						uni.hideLoading();

@@ -245,16 +245,25 @@
 					})
 			},
 			goDetails(orderNo) { //进入订单详情页面
-			
-				if (!this.statusIs) {
-					uni.navigateTo({
-						url: `/userPages/orderDetails/index?orderNo=${orderNo}`
-					})
-				} else {
-					uni.navigateTo({
-						url: `/userPages/orderDetails/index?orderNo=${orderNo}&isShop=true`
-					})
+				let str = ``;
+				if(this.statusIs==0){
+					str = `&offline=true`
 				}
+				
+				//是否商城
+				if (this.statusIs==1) {
+					str = `&isShop=true`
+				}
+				
+				//是否爆品
+				let isBurst = false;
+				if(isBurst){
+					str = `&isBurst=true`
+				}
+				
+				uni.navigateTo({
+					url: `/userPages/orderDetails/index?orderNo=${orderNo}${str}`
+				})
 			
 			}
 		},

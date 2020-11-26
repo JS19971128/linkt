@@ -21,7 +21,7 @@
 					<text class="symbol">￥</text>{{goods.priceSale}}
 				</view>
 				<view class="goods-price-txt">
-					优惠券可折扣{{goods.profits}}%
+					最高可享{{profitsDiscount(goods.profits)}}折
 				</view>
 			</view>
 			<view class="goods-title">
@@ -70,7 +70,7 @@
 		<!-- 商品购买选择规格 -->
 		
 		<!-- 购买浮动框 -->
-		<view class="commodiy-btn" v-if="!isSpecs">
+		<view class="commodiy-btn" v-if="!isSpecs && !examine &&!shopStatus">
 			<!-- <button type="default" class="btn-go" @click="isSpecsStatus">立即购买</button> -->
 			<!-- <button type="default"></button> -->
 			<!-- #ifdef MP-WEIXIN -->
@@ -87,11 +87,21 @@
 			</view>
 		</view>
 		<!-- 购买浮动框 end-->
+		
+		<!-- 审核浮动框 -->
+		<view class="commodiy-btn" v-if="examine">
+			<view class="btns examine">
+				<button type="default" class="btn-go red" @click="goodsNo()">审核不通过</button>
+				<button type="default" class="btn-go success" @click="goodsGo()">审核通过</button>
+			</view>
+		</view>
+		<!-- 审核浮动框 end-->
 	</view>
 </template>
 
 <script>
 	import goodsSpecs from '@/my-component/goodsSpecs/index'
+	import {profitsDiscount} from '@/common/util/public.js'
 	export default {
 		data() {
 			return {
@@ -101,6 +111,10 @@
 				commoditySpecList: [],
 				isCart:false,
 				shop:false,
+				examine:false, //审核
+				shopStatus:'',
+				commodityId:'',
+				shareUserId:''
 			}
 		},
 		components: {
@@ -111,12 +125,62 @@
 				return this.$store.state.isSpecs;
 			},
 			userId(){
-				return this.$store.state.userInfo.id || 22222228;
+				return this.$store.state.userInfo.id;
 			}
 		},
 		methods: {
+			profitsDiscount,
+			goodsGo(){
+				this.ajaxNoAudit(this.goods,'success');
+			},
+			goodsNo(){
+				this.ajaxNoAudit(this.goods,'failure');
+			},
+			ajaxNoAudit(res,auditStatus){
+				let that = this;
+				let param = {
+				  auditStatus,
+				  "commodityId": res.id,
+				  "userId": this.userId
+				}
+				let txt = '通过';
+				if(auditStatus == 'failure'){
+					txt = '不通过'
+				}
+				uni.showModal({
+				    title: '提示',
+				    content: `是否审核${txt}此商品？`,
+				    success: function (res) {
+				        if (res.confirm) {
+				            console.log('用户点击确定');
+							that.$fly.post('/web/commodity/audit',param).then(res=>{
+								uni.showToast({
+								    title: res.message,
+								    duration: 2000
+								});
+								if(res.code == 0){
+									// this.addStock()
+									uni.navigateBack({
+									    delta: 1
+									})
+								}
+							})
+				        } else if (res.cancel) {
+				            console.log('用户点击取消');
+				        }
+				    }
+				});
+			},
 			//购买产品确认
 			onGoBtn(e) {
+				if(!this.userId){
+					wx.showToast({
+					  title: '请前往小程序使用完整服务',
+					  icon: 'none',
+					  duration: 2500
+					})
+					return false
+				}
 				let specId = e.specification.id
 				if(!specId) return wx.showToast({
 				  title: '请选择商品规格',
@@ -184,7 +248,7 @@
 					let {
 						data
 					} = res;
-					if(!data||data.commodityStatus==="offline"){
+					if(!data||(data.commodityStatus==="offline" && !this.examine && !this.shopStatus)){
 						uni.showModal({
 						    title: '温馨提示',
 							confirmText: "知道了",
@@ -244,18 +308,41 @@
 			   // 分享者id
 			   this.$store.commit('SETSHAREUSERID',op.shareUserId);
 			}
+			
+			
+			//判断是否可以查看所有状态的商品   商品管理传入
+			if(op.shopStatus){
+				this.shopStatus = true;
+			}
+			
+			if (op.examineName){
+				this.examine = true;
+			}
 		},
 		onUnload(){
 			this.$store.commit('SETISSPECS',false);
 		},
-		onShareAppMessage() {
-			console.log(this.goods)
+		// 分享朋友
+		onShareAppMessage(){
 			let {commodityName,id} = this.goods;
 			return {
 			  title: commodityName,
 			  path: '/shoppingPages/commodity/index?id='+id + '&shareUserId=' + this.userId
 			}
-		}
+		},
+		// 分享朋友圈
+		// #ifdef MP-WEIXIN
+		onShareTimeline(){
+			let {commodityName,id} = this.goods;
+			let article = this.article;
+			let shareUserId = this.userId
+			return {
+				title:commodityName,
+				query: `id=${id}&shareUserId=${shareUserId}`,
+				imageUrl:article[0]   
+			}
+		},
+		// #endif
 
 	}
 </script>
@@ -523,6 +610,12 @@
 			display: flex;
 			align-items: center;
 			margin-left: auto;
+			&.examine{
+				width: 100%;
+				.btn-go{
+					flex:1
+				}
+			}
 		}
 		.btn-go {
 			height: 74rpx;
@@ -538,6 +631,9 @@
 			box-sizing: border-box;	
 			&.red{
 				background: #FF2C2C;
+			}
+			&.success{
+				background: #5cbe27;
 			}
 		}
 

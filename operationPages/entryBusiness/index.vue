@@ -26,16 +26,20 @@
 			<view class="item flex_center" :class="{active:current == item.value}" v-for="item in tab" :key="item.id" @click="changeTab(item.value)">{{item.text}}</view>
 		</view>
 		<scroll-view scroll-y="true" class="list" @scrolltolower="reachBottom">
-			<view class="item flex_between" v-for="item in list" :key="item.id" @click="goCheck(item.userId)">
+			<view class="item flex_between" v-for="item in list" :key="item.id" @click="goCheck(item)">
 				<view class="info flex_center">
 					<image class="merchant_pic" :src="item.businessLicenseUrl" mode="aspectFill"></image>
 					<view class="shop">
 						<view class="fz-14">{{item.signName}}</view>
 						<view class="fz-12">{{item.createDate}}</view>
 					</view>
+					<view class="shop" style="width: 220rpx;">
+						<view class="fz-12">商家状态:{{merchantStatusFun(item.merchantStatus)}}</view>
+						<view class="fz-12" :style="{color:item.status&&statusFun(item.status).color}">进件状态:{{item.status&&statusFun(item.status).name}}</view>
+					</view>
 				</view>
 				<!-- <view class="fz-12" :class="{normal:item.status=='normal',audit:item.status=='audit',audit_fail:item.status=='audit_failtrue'}">{{item.status=='normal'?'审核通过':(item.status=='audit'?'待审核':'驳回')}}</view> -->
-				<view class="fz-12" :style="{color:item.status&&statusFun(item.status).color}">{{item.status&&statusFun(item.status).name}}</view>
+				
 			</view>
 			<uni-load-more :iconSize="20" color="#999999" :status="status" :contentText="contentText"></uni-load-more>
 		</scroll-view>
@@ -107,6 +111,13 @@
 			}
 		},
 		methods:{
+			merchantStatusFun(status){
+				if(status){
+					return '已开启'
+				}else{
+					return '未开启'
+				}
+			},
 			statusFun(status){
 				for(let i of this.statusArr){
 					if(i.type === status){
@@ -178,9 +189,9 @@
 					
 				})
 			},
-			goCheck(id){ //进件审核
+			goCheck(res){ //进件审核
 				uni.navigateTo({
-					url:`/operationPages/entryBusinessDetails/index?id=${id}`
+					url:`/operationPages/entryBusinessDetails/index?id=${res.userId}&merchantStatus=${res.merchantStatus}`
 				})
 			},
 			reachBottom(){ //触底加载
@@ -294,7 +305,7 @@
 			box-shadow: 0 0 20rpx 2rpx rgba(0,0,0,.1);
 			margin-bottom: 20rpx;
 			.info{
-				width: 78%;
+				width: 100%;
 				justify-content: flex-start;
 				.shop{
 					.fz-14{

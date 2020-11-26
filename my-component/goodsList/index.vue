@@ -7,7 +7,7 @@
 					<view class="title">{{item.commodityName}}</view>
 					<view class="rebate">
 						<view class="rebate-title">{{item.isSelfManage?'直营':'商家'}}</view>
-						可折扣{{item.profits || 0}}%
+						最高可享{{profitsDiscount(item.profits)}}折
 					</view>
 					<view class="dit">
 						<view class="price">
@@ -28,7 +28,7 @@
 					<view class="title">{{item.commodityName}}</view>
 					<view class="rebate">
 						<view class="rebate-title">{{item.isSelfManage?'直营':'商家'}}</view>
-						可折扣{{item.profits || 0}}%
+						最高可享{{profitsDiscount(item.profits)}}折
 					</view>
 					<view class="dit">
 						<view class="price">
@@ -54,7 +54,7 @@
 					<view class="detail-title">{{item.commodityName}}</view>
 					<view class="detail-active">
 						<view class="detail-active-class">{{item.isSelfManage?'直营':'商家'}}</view>
-						<view class="detail-active-coupon">优惠券可折扣{{item.profits || 0}}%</view>
+						<view class="detail-active-coupon">最高可享{{profitsDiscount(item.profits)}}折</view>
 					</view>
 					<view class="detail-info">
 						<view class="info-price">
@@ -82,7 +82,8 @@
 </template>
 
 <script>
-	import goodsSpecs from '@/my-component/goodsSpecs/index'
+	import goodsSpecs from '@/my-component/goodsSpecs/index';
+	import {profitsDiscount} from '@/common/util/public.js'
 	export default{
 		name:'goosdList',
 		data() {
@@ -133,6 +134,7 @@
 			}
 		},
 		methods:{
+			profitsDiscount,
 			//购买产品确认
 			onGoBtn(e) {
 				let specId = e.specification.id
@@ -269,7 +271,7 @@
 					display: flex;
 					align-items: center;
 					color: rgba(255,152,52,1);
-					width: 145rpx;
+					width: 190rpx;
 					border-radius: 4rpx;
 					line-height: 1;
 					&-title{

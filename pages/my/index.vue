@@ -268,10 +268,29 @@
 				})
 			},
 			getJInjian(){
-				this.$fly.post('/entry/findMerchantEntryByUserId?userId='+this.userInfo.id).then(res=>{
+				this.$fly.post('/jufuEnter/findMerchantEntryByUserId?userId='+this.userInfo.id).then(res=>{
 					if(res.code == 0){
-						if(res.data && (res.data.status === 'AUDITED' || res.data.status === 'PASS' || res.data.status === 'FINISH')){
+						
+						// if(res.data && !res.data.merchantStatus){
+						// 	this.Trurl = `/businessPages/review/index`;
+						// }
+						let obj = {
+							0: '已提交',
+							1: '生效',
+							2: '禁用',
+							3: '冻结',
+							4: '注销',
+							5: '锁定',
+							6: '未激活',
+							7: '待补全',
+							8: '待审核',
+							9: '审核失败',
+							10: '提交失败',
+						}
+						if(res.data && (obj[res.data.status] == '已提交' || obj[res.data.status] == '待审核' || (obj[res.data.status] == '生效' && !res.data.merchantStatus))){
 							this.Trurl = `/businessPages/review/index`;
+						}else if(res.data && obj[res.data.status] == '生效' && res.data.merchantStatus){
+							this.Trurl = `/businessPages/review/pass`;
 						}
 					}
 				})
@@ -292,7 +311,7 @@
 								}else{
 									var status = 0;
 								}
-								this.url = `/businessPages/review/index?status=${status}&note={res.data.note}`;
+								this.url = `/businessPages/review/index?status=${status}&note=${res.data.note}`;
 							}
 						}else{
 							// #ifdef MP-ALIPAY

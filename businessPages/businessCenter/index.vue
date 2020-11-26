@@ -21,7 +21,10 @@
 				<view class="total flex_between">
 					<view class="money flex_between">
 						<view class="fz-24">{{balanceData.balance|| 0}}</view>
-						<view class="fz-12">商家账户余额（元） <text class="withdraw" @click="goBusinessWithdraw">提现</text></view>
+						<view class="fz-12">未体现金额（元） 
+						<!-- <view class="fz-12">商家账户余额（元） -->
+						<text class="withdraw" @click="goBusinessWithdraw">提现</text>
+						</view>
 					</view>
 					<view class="more flex_center">
 						<view class="fz-12" @click="goProfitList">明细</view>
@@ -94,7 +97,7 @@
 				<image src="../../static/images/business/shop2.png" mode="widthFix"></image>
 				<view>商城管理</view>
 			</view>
-			<view class="item flex_center jinjian" @click="jinjian(`/businessPages/wxBusinessApply/index`)">
+			<view class="item flex_center jinjian" @click="jinjian(`/businessPages/wxBusinessApply/index?shopCenter=true`)">
 				<image src="../../static/images/business/jinjian.png" mode="widthFix"></image>
 				<view>自主进件</view>
 			</view>
@@ -146,11 +149,24 @@
 			},
 			getJInjian(){
 				let id = this.userInfo.id;
-				this.$fly.post('/entry/findMerchantEntryByUserId?userId='+id).then(res=>{
+				this.$fly.post('/jufuEnter/findMerchantEntryByUserId?userId='+id).then(res=>{
 					if(res.code == 0){
-						if(res.data && (res.data.status === 'AUDITED' || res.data.status === 'PASS')){
+						let obj = {
+							0: '已提交',
+							1: '生效',
+							2: '禁用',
+							3: '冻结',
+							4: '注销',
+							5: '锁定',
+							6: '未激活',
+							7: '待补全',
+							8: '待审核',
+							9: '审核失败',
+							10: '提交失败',
+						}
+						if(res.data && (obj[res.data.status] == '已提交' || obj[res.data.status] == '待审核' || (obj[res.data.status] == '生效' && !res.data.merchantStatus))){
 							this.Trurl = `/businessPages/review/index`;
-						}else if(res.data && res.data.status === 'FINISH'){
+						}else if(res.data && obj[res.data.status] == '生效' && res.data.merchantStatus){
 							this.Trurl = `/businessPages/review/pass`;
 						}
 					}

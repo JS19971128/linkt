@@ -19,9 +19,9 @@
 		<bank-info ref="bankInfoForm" :show="current == 'bank' ? true : false"></bank-info>
 		<!-- 商家信息 -->
 		<shop-info ref="shopInfoForm" :show="current == 'shop' ? true : false"></shop-info>
-		<view class="btns" v-if="form.status=='FAILED' || form.status==='PASS'">
-			<view class="btn fz-14 flex_center" v-if="form.status=='FAILED'" @click="submit">查询并更新</view>
-			<view class="btn fz-14 flex_center" v-if="form.status==='PASS'" @click="updateEntryStatus">已完成</view>
+		<view class="btns" v-if="!merchantStatus && form.status!=='FAILED'">
+			<!-- <view class="btn fz-14 flex_center" v-if="form.status=='FAILED'" @click="submit">查询并更新</view> -->
+			<view class="btn fz-14 flex_center" @click="totleOpenFun(form.id)">开启商家</view>
 		</view>
 		
 	</view>
@@ -72,6 +72,7 @@
 						color:'#ce1212'
 					}
 				],
+				merchantStatus:''
 			}
 		},
 		methods:{
@@ -89,6 +90,31 @@
 						icon:'none'
 					});
 					this.init();
+				}catch(e){
+					console.error(e)
+					uni.showToast({
+					    title: '修改失败，请稍后重试！',
+					    duration: 2000,
+						icon:'none'
+					});
+				}finally{
+					uni.hideLoading();
+				}
+			},
+			async totleOpenFun(id){
+				try{
+					uni.showLoading({
+						title:'加载中'
+					})
+					let data = await this.$fly.post(`/entry/openMerchant?id=${id}`);
+					uni.showToast({
+					    title: '开启成功！',
+					    duration: 2000,
+						icon:'none'
+					});
+					uni.navigateBack({
+					    delta: 1
+					})
 				}catch(e){
 					console.error(e)
 					uni.showToast({
@@ -192,6 +218,7 @@
 		},
 		onLoad(query) {
 			this.userId = query.id;
+			this.merchantStatus = query.merchantStatus;
 			this.init();
 		}
 	}

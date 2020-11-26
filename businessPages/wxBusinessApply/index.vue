@@ -9,7 +9,7 @@
 				<view class="line">----</view>
 				<view class="step-item flex_center" @click="clickURl('/businessPages/wxBusinessApply/index2')">
 					<view class="num flex_center">2</view>
-					<view class="">企业信息</view>
+					<view class="">商家信息</view>
 				</view>
 				<view class="line">----</view>
 				<view class="step-item flex_center" @click="clickURl('/businessPages/wxBusinessApply/index3')">
@@ -23,7 +23,7 @@
 					</view>
 					<view class="">店铺设置</view>
 				</view>
-			</view>
+			</view> 
 		</view>
 		<view class="info fz-14">
 			<view class="title">法人信息</view>
@@ -32,14 +32,14 @@
 				<view class="item flex_center">
 					<view class="item-name">法人姓名</view>
 					<view class="item-content">
-						<input type="text" v-model="legalPersonFrom.legalPerson" placeholder="请输入法人姓名" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+						<input type="text" v-model="legalPersonFrom.corporateName" placeholder="请输入法人姓名" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 					</view>
 				</view>
 				<!-- 证件号码 -->
 				<view class="item flex_center">
 					<view class="item-name">身份证号</view>
 					<view class="item-content">
-						<input type="text" v-model="legalPersonFrom.legalPersonID" placeholder="请输入法人18位身份证号码" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+						<input type="text" v-model="legalPersonFrom.corporateIdNo" placeholder="请输入法人18位身份证号码" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 					</view>
 				</view>
 				<!-- 证件照 -->
@@ -98,14 +98,14 @@
 				<view class="item flex_center">
 					<view class="item-name">联系电话</view>
 					<view class="item-content">
-						<input type="number" v-model="legalPersonFrom.linkPhone" placeholder="请输入联系电话" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+						<input type="number" v-model="legalPersonFrom.corporateTel" placeholder="请输入联系电话" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 					</view>
 				</view>
 				<!-- 联系邮箱 -->
 				<view class="item flex_center">
 					<view class="item-name">联系邮箱</view>
 					<view class="item-content">
-						<input type="text" v-model="legalPersonFrom.email" placeholder="请输入联系邮箱" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+						<input type="text" v-model="legalPersonFrom.contactEmail" placeholder="请输入联系邮箱" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 					</view>
 				</view>
 			</view>
@@ -119,34 +119,200 @@
 		data() {
 			return {				
 				IDArr:[{label:'短期',key:false},{label:'长期',key:true}],
-				isIDLong:false
+				isIDLong:false,
 			}
 		},
 		computed:{
+			
+			merchantCredential(){
+				return this.$store.state.shop.merchantCredential
+			},
+			
+			legalPersonFrom(){
+				return this.$store.state.shop.legalPerson
+			},
+			enterprise(){
+				return this.$store.state.shop.enterprise;
+			},
+			bank(){
+				return this.$store.state.shop.bank;
+			},
+			shopIndex(){
+				return this.$store.state.shop.shopIndex;
+			},
+			
+			userInfo(){
+				return this.$store.state.userInfo
+			},
 			imgArr(){
 				let arr = [];
 				let obj = {
-					FRONT_OF_ID_CARD:true,
-					BACK_OF_ID_CARD:true,
+					idNoFrontPic:true,
+					idNoBackPic:true,
+					storeFrontPic:true
 				};
 				for(let i of this.$store.state.shop.merchantCredential){
 					if(obj[i.credentialType]){
 						arr.push(i)
 					}
 				}
-				return arr;
+				return arr 
 			},
-			merchantCredential(){
-				return this.$store.state.shop.merchantCredential
-			},
-			legalPersonFrom(){
-				return this.$store.state.shop.legalPerson
-			},
-			userinfo(){
-				return this.$store.state.userInfo
-			}
 		},
 		methods:{ 
+			initJinjian(){
+				let id = this.userInfo.id;
+				let {legalPersonFrom,enterprise,bank,shopIndex,merchantCredential} = this;
+				console.log(legalPersonFrom,enterprise,bank,shopIndex,merchantCredential)
+				this.$fly.post('/entry/findMerchantEntryByUserId?userId='+id).then(res=>{
+					if(res.code == 0){
+						let data = res.data;
+						let legalPersonFromObj = {
+							...legalPersonFrom,
+							corporateName:data.legalPerson,
+							corporateIdNo:data.legalPersonID,
+							corporateTel:data.linkPhone,
+							contactEmail:data.email,
+							
+							
+							IDlabel:'短期',
+							IDIndex:0,
+							isIDLong:false,
+							corporateIdValidType:1,
+							
+							
+							cardName:data.legalPerson,
+							contactName:data.legalPerson,
+							customerName:data.legalPerson,
+							
+							contactIdNo:data.legalPersonID,
+							idNo:data.legalPersonID,
+							
+							contactTel:data.linkPhone
+						}
+						
+						
+						let idCardStartDate = data.idCardStartDate.split('');
+						idCardStartDate.splice(4,0,'-');
+						idCardStartDate.splice(7,0,'-');
+						legalPersonFromObj.idCardStartDate = idCardStartDate.join('')
+						
+						let idCardEndDate = data.idCardEndDate.split('');
+						idCardEndDate.splice(4,0,'-');
+						idCardEndDate.splice(7,0,'-');
+						legalPersonFromObj.idCardEndDate = idCardEndDate.join('')
+						
+						legalPersonFromObj.corporateIdExpDate = idCardEndDate
+						
+						if(data.idCardEndDate == '20991231'){
+							legalPersonFromObj.corporateIdExpDate = '长期'
+							legalPersonFromObj.IDlabel = '长期'
+							legalPersonFromObj.IDIndex = 1
+							legalPersonFromObj.isIDLong = true
+							legalPersonFromObj.corporateIdValidType = 2
+						}
+						this.$store.commit('SETLEGALPERSON',legalPersonFromObj);
+						
+						let enterpriseObj = {
+							...enterprise,
+							companyName:data.signName,
+							shortName:data.showName,
+							socialCreditCode:data.businessLicense,
+							
+							jyqxLabel:'短期',
+							jyqxIndex:0
+						}
+						
+						let businessDateLimit = data.businessDateLimit.split('');
+						businessDateLimit.splice(4,0,'-');
+						businessDateLimit.splice(7,0,'-');
+						enterpriseObj.businessDateLimit = businessDateLimit.join('')
+						
+						let businessDateStart = data.businessDateStart.split('');
+						businessDateStart.splice(4,0,'-');
+						businessDateStart.splice(7,0,'-');
+						enterpriseObj.businessDateStart = businessDateStart.join('')
+						// debugger
+						if(data.businessDateLimit == '20991231'){
+							enterpriseObj.jyqxLabel = '长期'
+							enterpriseObj.jyqxIndex = 1
+						}
+						
+						this.$store.commit('SETENTERPRISE',enterpriseObj);
+						
+						let bankObj = {
+							...bank,
+							cardNo:data.accountNo
+						}
+						this.$store.commit('SETBANK',bankObj);
+						
+						let shopIndexObj = {
+							...shopIndex,
+							shopBusinessName:data.shopBusinessName,
+							profits:data.profits,
+							area:data.area,
+							address:data.address,
+							shopStartTime:data.shopStartTime,
+							shopStopTime:data.shopStopTime,
+							areaCode: data.areaCode,
+							areaCodeAreas: data.areaCodeAreas,
+							areaCodeCity: data.areaCodeCity,
+							comCityName: data.city,
+							comProvinceName: data.province,
+							latitude: data.latitude,
+							longitude: data.longitude,
+							shopBusinessId:data.shopBusinessId
+						}
+						
+						for(let i of data.merchantCredential){
+							if(i.credentialType == 'SIGN_BOARD'){
+								shopIndexObj.positive = i.credentialUrl
+							}
+							if(i.credentialType == 'INTERIOR_PHOTO'){
+								shopIndexObj.piclist = i.credentialUrl
+							}
+						}
+						this.$store.commit('SETSHOPINDEX',shopIndexObj);
+						
+						
+						for(let i of data.merchantCredential){
+							if(i.credentialType == 'FRONT_OF_ID_CARD'){
+								for(let j of merchantCredential){
+									if(j.credentialType =='idNoFrontPic'){
+										j.credentialUrl = i.credentialUrl
+									}
+								}
+							}
+							
+							if(i.credentialType == 'BACK_OF_ID_CARD'){
+								for(let j of merchantCredential){
+									if(j.credentialType =='idNoBackPic'){
+										j.credentialUrl = i.credentialUrl
+									}
+								}
+							}
+							
+							if(i.credentialType == 'BUSINESS_LICENSE'){
+								for(let j of merchantCredential){
+									if(j.credentialType =='licensePic'){
+										j.credentialUrl = i.credentialUrl
+									}
+								}
+							}
+							
+							if(i.credentialType == 'PERMIT_FOR_BANK_ACCOUNT'){
+								for(let j of merchantCredential){
+									if(j.credentialType =='permitPic'){
+										j.credentialUrl = i.credentialUrl
+									}
+								}
+							}
+							
+						}
+						this.$store.commit('SETMERCHANTCREDENTIAL',merchantCredential);
+					}
+				})
+			},
 			// 上传证件照
 			upload(index,type){
 				uni.chooseImage({
@@ -200,15 +366,22 @@
 				let {legalPersonFrom,imgArr,merchantCredential,IDArr} = this;
 				let data = {
 					...legalPersonFrom,
-					linkman:legalPersonFrom.legalPerson,
-					servicePhone:legalPersonFrom.linkPhone,
-					idType:'IDCARD',
-					bindMobile:legalPersonFrom.linkPhone,
-					linkManId:legalPersonFrom.legalPersonID,
+					corporateIdValidType:1,
+					corporateIdExpDate:legalPersonFrom.idCardEndDate,
+					
+					cardName:legalPersonFrom.corporateName,
+					contactName:legalPersonFrom.corporateName,
+					customerName:legalPersonFrom.corporateName,
+					
+					contactIdNo:legalPersonFrom.corporateIdNo,
+					idNo:legalPersonFrom.corporateIdNo,
+					
+					contactTel:legalPersonFrom.corporateTel
 				}
 				
 				if(data.isIDLong){
-					data.idCardEndDate = '2099-12-31'
+					data.corporateIdExpDate = '长期'
+					data.corporateIdValidType = 2
 				}
 				
 				console.log(data)
@@ -250,11 +423,18 @@
 				})
 			}
 		},
-		onLoad() {
+		onLoad(res) {
 			// legalPersonFrom
-			if(!this.legalPersonFrom.linkPhone){
-				this.legalPersonFrom.linkPhone = this.userinfo.username
+			if(!this.legalPersonFrom.contactTel){
+				this.legalPersonFrom.contactTel = this.userInfo.username
 			}
+			
+			if(res.shopCenter){
+				this.initJinjian()
+			}
+		},
+		created() {
+			// this.initJinjian()
 		}
 	}
 </script>

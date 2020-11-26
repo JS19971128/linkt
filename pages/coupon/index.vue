@@ -124,11 +124,14 @@
 				let userInfo = this.userInfo;
 				
 				this.getList()
+				// #ifdef MP-WEIXIN
 				if(userInfo.username){
 					this.showMobile = false;
 				}else{
 					this.showMobile = true;
 				}
+				// #endif
+				
 			},
 			getNotice(){ //获取顶部公告
 				this.$fly.get(`/notice/type/2`)

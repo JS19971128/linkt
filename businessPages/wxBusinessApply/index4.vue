@@ -9,7 +9,7 @@
 				<view class="line">----</view>
 				<view class="step-item active flex_center" @click="clickURl('/businessPages/wxBusinessApply/index2')">
 					<view class="num flex_center">2</view>
-					<view class="">企业信息</view>
+					<view class="">商家信息</view>
 				</view>
 				<view class="line">----</view>
 				<view class="step-item active flex_center" @click="clickURl('/businessPages/wxBusinessApply/index3')">
@@ -111,7 +111,7 @@
 				</view>
 				<!-- 商家相册 -->
 				<view class="item flex_center">
-					<view class="item-name">室内照</view>
+					<view class="item-name">商家相册</view>
 					<view class="item-content flex_center fz-12">
 						<!-- 反面 -->
 						<view class="upload" style="flex-direction: column;display: flex;">
@@ -122,13 +122,30 @@
 							<view class="frame flex_center" v-else @click="upload('piclist')">
 								<uni-icons class="flex_center" type="plusempty" :size="24" color="#CBCBCB"></uni-icons>
 							</view>
-							<view class="mt10 flex_center">请上传1张门店室内照，才可通过审核喔~</view>
+							<!-- <view class="mt10 flex_center">请上传1张门店室内照，才可通过审核喔~</view> -->
+						</view>
+					</view>
+				</view>
+				
+				<view class="item flex_center">
+					<view class="item-name">客户协议书</view>
+					<view class="item-content flex_center fz-12">
+						<!-- 反面 -->
+						<view class="upload" style="flex-direction: column;display: flex;">
+							<!-- 正面 -->
+							<view class="uploadPic flex_center" v-if="shopIndex.openWishPic" @click="upload('openWishPic')">
+								<image :src="shopIndex.openWishPic" mode="aspectFit"></image>
+							</view>
+							<view class="frame flex_center" v-else @click="upload('openWishPic')">
+								<uni-icons class="flex_center" type="plusempty" :size="24" color="#CBCBCB"></uni-icons>
+							</view>
+							<!-- <view class="mt10 flex_center">请上传1张门店室内照，才可通过审核喔~</view> -->
 						</view>
 					</view>
 				</view>
 			</view>
 		</view>
-		<view class="service fz-12"><view class="shop-title-check checkbox" :class="{'active':isActive}" @click="txtParentActive()"></view><text>入驻需要勾选以下协议</text><text class="agreement" @click="goService">《商家隐私政策》</text></view>
+		<view class="service fz-12"><view class="shop-title-check checkbox" :class="{'active':isActive}" @click="txtParentActive()"></view><text>同意并确认</text><text class="agreement" @click="goService">《链客通商家版协议政策》</text></view>
 		<view class="btn fz-14 flex_center bc" @click="submit()">保存</view>
 		<view class="btn fz-14 flex_center" @click="submit(true)">提交审核</view>
 		<!-- 地区选择 -->
@@ -182,6 +199,9 @@
 				this.shopIndex.areaCode = adcode.substring(0,2);
 				this.shopIndex.areaCodeCity = adcode.substring(0,4);
 				this.shopIndex.areaCodeAreas = adcode;
+				
+				this.shopIndex.comProvinceName = $event.obj.province.label;
+				this.shopIndex.comCityName = $event.obj.city.label;
 			},
 			onCancel(){
 				this.show = false;
@@ -264,9 +284,14 @@
 			submit(go){
 				
 				const {shopIndex} = this;
+				console.log(shopIndex)
 				let data = {
 					...shopIndex,
-					contactAddress:shopIndex.address
+					contactAddress:shopIndex.address,
+					openWishPic:shopIndex.openWishPic,
+					doorPic:shopIndex.positive,
+					storePic:shopIndex.piclist,
+					storePic2:shopIndex.piclist
 				}
 				for(let i in data){
 					if(data[i]===''){
@@ -290,25 +315,25 @@
 				if(go){
 					let {legalPerson,enterprise,bank,merchantCredential,userId,isActive} = this;
 					
-					if(!legalPerson.legalPersonID){
+					if(!legalPerson.corporateName){
 						wx.showToast({
-						  title:'请完善法人信息',
+						  title:'请完善信息',
 						  icon: 'none',
 						  duration: 2500
 						})
 						return ;
 					}
-					if(!enterprise.merchantType){
+					if(!enterprise.jylxLabel){
 						wx.showToast({
-						  title:'请完善企业信息',
+						  title:'请完善信息',
 						  icon: 'none',
 						  duration: 2500
 						})
 						return ;
 					}
-					if(!bank.bankCode){
+					if(!bank.bankName){
 						wx.showToast({
-						  title:'请完善银行卡信息',
+						  title:'请完善信息',
 						  icon: 'none',
 						  duration: 2500
 						})
@@ -317,68 +342,68 @@
 					
 					if(!isActive){
 						wx.showToast({
-						  title:'请勾选商家隐私政策！',
+						  title:'请勾选链客通商家版协议政策！',
 						  icon: 'none',
 						  duration: 2500
 						})
 						return ;
 					}
 					
-					let SIGN_BOARD = false,INTERIOR_PHOTO = false;
-					merchantCredential.forEach((i,v)=>{
-						if(i.credentialType==='SIGN_BOARD'){
-							SIGN_BOARD = true;
-						}
-						
-						if(i.credentialType==='INTERIOR_PHOTO'){
-							INTERIOR_PHOTO = true;
-						}
-						
-						if(!i.credentialUrl){
-							merchantCredential.splice(v,1); 
-						}
-					})
 					
-					if(!SIGN_BOARD){
-						merchantCredential.push({
-							credentialType:'SIGN_BOARD',
-							credentialUrl:shopIndex.positive,
-						});
-					}
-					if(!INTERIOR_PHOTO){
-						merchantCredential.push({
-							credentialType:'INTERIOR_PHOTO',
-							credentialUrl:shopIndex.piclist,
-						});
+					let enterPicParam  = {
+						doorPic:shopIndex.positive,
+						storePic:shopIndex.piclist,
+						storePic2:shopIndex.piclist,
+						openWishPic:shopIndex.openWishPic
+					};
+					for(let i of merchantCredential){
+						enterPicParam[i.credentialType] = i.credentialUrl;
 					}
 					
-					
+					//客户协议书为空时加入链客通logo
+					// enterPicParam.openWishPic =  enterPicParam.openWishPic || 'https://xlzx.oss-cn-shenzhen.aliyuncs.com/user/20201108155146753_wx4e73a1440b640836.o6zAJs8hMULqT-LBRLQieCdAQK3k.16LWqAao7tjieedaa32bb4c51cfd2eb0af4f14cc53db.png'
 					
 					console.log(data)
-					let idCardStartDate = legalPerson.idCardStartDate.split('-');
-					let idCardEndDate = legalPerson.idCardEndDate.split('-');
-					let businessDateStart = enterprise.businessDateStart.split('-');
-					let businessDateLimit = enterprise.businessDateLimit.split('-');
+					// let idCardStartDate = legalPerson.idCardStartDate.split('-');
+					// let idCardEndDate = legalPerson.idCardEndDate.split('-');
+					// let businessDateStart = enterprise.businessDateStart;
+					// let businessDateLimit = enterprise.businessDateLimit;
+					
+					enterprise.licenseValidType = enterprise.jyqxLabel;
+					
+					if(enterprise.jyqxLabel === '长期'){
+						enterprise.licenseExpiredDate = '长期';
+						enterprise.licenseValidType = 2;
+					}else{
+						enterprise.licenseValidType = 1;
+						enterprise.licenseExpiredDate = enterprise.businessDateLimit
+					}
+					
 					let prams = {
+						registeredAddress :'',
 						...data,
 						...legalPerson,
 						...enterprise,
 						...bank,
-						
-						idCardStartDate:idCardStartDate.join(''),
-						idCardEndDate:idCardEndDate.join(''),
-						businessDateStart:businessDateStart.join(''),
-						businessDateLimit:businessDateLimit.join(''),
+						registeredCapital :'',
+						businessScope :'',
+						// idCardStartDate:idCardStartDate.join(''),
+						// idCardEndDate:idCardEndDate.join(''),
+						// businessDateStart:businessDateStart.join(''),
+						// businessDateLimit:businessDateLimit.join(''),
+						accountType:0,
 						
 						userId,
 						appPayType:'WXPAY',
-						merchantCredential,
+						enterPicParam,
 					}
+					
 					//对公账户传商家全称
-					if(prams.settleBankType==='TOPUBLIC'){
-						prams.accountName = prams.signName;
+					if(prams.zhlxLabel==='对公账户'){
+						prams.cardName = prams.companyName;
+						prams.accountType = 1
 					}else{
-						prams.accountName = prams.legalPerson;
+						prams.cardName = prams.corporateName;
 					}
 					
 					
@@ -396,7 +421,7 @@
 					uni.showLoading({
 						title:'加载中'
 					})
-					let doEntry = await this.$fly.post('/entry/doEntry',prams);
+					let doEntry = await this.$fly.post('/jufuEnter/enter',prams);
 					
 					if(doEntry.code!=0){
 						uni.showToast({
@@ -407,23 +432,23 @@
 						return ;
 					}
 					
-					if(doEntry.data.code!=200){
+					if(doEntry.data.errorcode!='0000'){
 						uni.showToast({
-						    title:doEntry.data.msg,
+						    title:doEntry.data.errormessage,
 						    duration: 2000,
 							icon:'none'
 						});
 						return ;
 					}
 					
-					if(doEntry.data.data.entryStatus!=='AUDITED'){
-						uni.showToast({
-						    title:'资料不正确，请填写真实的资料',
-						    duration: 2000,
-							icon:'none'
-						});
-						return ;
-					}
+					// if(doEntry.data.data.entryStatus!=='AUDITED'){
+					// 	uni.showToast({
+					// 	    title:'资料不正确，请填写真实的资料',
+					// 	    duration: 2000,
+					// 		icon:'none'
+					// 	});
+					// 	return ;
+					// }
 					
 					uni.redirectTo({
 						url:'/businessPages/review/index'

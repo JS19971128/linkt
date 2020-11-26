@@ -11,8 +11,12 @@
 						<view class="detail-head">
 							<view class="detail-title">{{item.commodityName}}</view>
 							<view class="detail-active">
-								<view class="detail-active-coupon">优惠券可折扣{{item.profits || 0}}%</view>
-								<view class="detail-active-status" v-if="type!=='HOME'">{{item.commodityStatus | status}}</view>
+								<view class="detail-active-coupon">最高可享{{profitsDiscount(item.profits)}}折</view>
+								<view class="detail-active-status" v-if="type!=='HOME' && type!=='examine'">
+									{{item.auditStatus==='success'?status(item.commodityStatus):auditStatus(item.auditStatus)}}
+								</view>
+								<view class="detail-active-status" v-if="type==='examine'">{{auditStatus(item.auditStatus)}}</view>
+								
 							</view>
 						</view>
 						<view class="detail-info">
@@ -28,11 +32,20 @@
 					</view>
 				</view>
 				<view class="column-item-list-action" v-if="type!=='HOME'">
-					<view class="action-btn" @click.stop="goodsDelete(item)">删除</view>
-					<view class="action-btn" @click.stop="goodsAdd(item)">修改库存</view>
-					<view class="action-btn" @click.stop="goodsShelf(item)" v-if="item.commodityStatus !== 'offline'">下架</view>
-					<view class="action-btn" @click.stop="goodsUp(item)" v-else>上架</view>
-					<view class="action-btn" @click.stop="goodsModify(item)">修改</view>
+					<block v-if="type!=='examine'">
+						<view class="action-btn" @click.stop="goodsDelete(item)">删除</view>
+						<view class="action-btn" @click.stop="goodsAdd(item)">修改库存</view>
+						<block v-if="item.auditStatus !== 'audit' && item.auditStatus !== 'failure' ">
+							<view class="action-btn" @click.stop="goodsShelf(item)" v-if="item.commodityStatus !== 'offline' ">下架</view>
+							<view class="action-btn" @click.stop="goodsUp(item)" v-else>上架</view>
+						</block>
+						<view class="action-btn" @click.stop="goodsModify(item)">修改</view>
+					</block>
+					
+					<block v-if="type==='examine' && item.auditStatus==='audit'">
+						<view class="action-btn" @click.stop="goodsNo(item)">审核不通过</view>
+						<view class="action-btn" @click.stop="goodsGo(item)">审核通过</view>
+					</block>
 				</view>
 			</view>
 		</view>
@@ -40,6 +53,7 @@
 </template>
 
 <script>
+	import {profitsDiscount} from '@/common/util/public.js'
 	export default{
 		props:{
 			list:{
@@ -52,6 +66,7 @@
 			}
 		},
 		methods:{
+			profitsDiscount,
 			//删除
 			goodsDelete(row){
 				this.$emit('goodsDelete',row);
@@ -74,13 +89,21 @@
 			},
 			//跳转商品
 			goCommodity(id){
-				let str = `?id=${id}`;
+				let str = `?id=${id}&shopStatus=true`;
+				if(this.type === 'examine'){
+					str += '&examineName=true'
+				}
+				
 				uni.navigateTo({
 					url:`/shoppingPages/commodity/index${str}`
 				})
 			},
-		},
-		filters:{
+			goodsGo(row){
+				this.$emit('goodsGo',row);
+			},
+			goodsNo(row){
+				this.$emit('goodsNo',row);
+			},
 			status(s){
 				let obj = {
 					offline:'下架',
@@ -91,7 +114,18 @@
 					cancel:'已取消'
 				}
 				return obj[s];
+			},
+			auditStatus(s){
+				let obj = {
+					audit:'待审核',
+					failure:'审核不通过',
+					success:'审核通过',
+				}
+				return obj[s];
 			}
+		},
+		filters:{
+			
 		}
 	}
 </script>

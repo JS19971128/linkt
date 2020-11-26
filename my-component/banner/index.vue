@@ -5,7 +5,7 @@
 			<view class="fz-14">公告：</view>
 			<view class="content flex_center">
 				<!-- <uni-notice-bar class="notice" scrollable="true" :text="article[0].title" background-color="transparent" color='#fff' v-if="article"></uni-notice-bar> -->
-				<swiper style="width:100%;height:80rpx" :indicator-dots="false" :autoplay="true" :circular="true" :vertical="true" :interval="2000" :duration="1000">
+				<swiper style="width:100%;height:80rpx" :indicator-dots="false" :autoplay="true" :circular="true" :vertical="true" :interval="5000" :duration="1000">
 					<swiper-item v-for="item in article" :key="item.id">
 						<view class="swiper-notice fz-14" @click="goAncm(item.id)">{{item.title}}</view>
 					</swiper-item>
@@ -13,9 +13,9 @@
 			</view>
 		</view>
 		<!-- banner -->
-		<swiper class="swiper" :indicator-dots="true" :autoplay="true" :interval="2000" :circular="true" :duration="1000">
-			<swiper-item v-for="item in article" :key="item.id">
-				<view class="swiper-item" @click="goAncm(item.id)">
+		<swiper class="swiper" :indicator-dots="true" :autoplay="true" :interval="5000" :circular="true" :duration="1000">
+			<swiper-item v-for="item in adverts" :key="item.id">
+				<view class="swiper-item" @click="goAncmBanner(item.id)">
 					<image class="banner-img" :src="item.mainUrl" mode="aspectFill"></image>
 				</view>
 			</swiper-item>
@@ -44,6 +44,11 @@
 			goAncm(id){ //进入公告详情
 				uni.navigateTo({
 					url:`/userPages/announcement/index?id=${id}`
+				})
+			},
+			goAncmBanner(id){ //进入公告详情
+				uni.navigateTo({
+					url:`/userPages/announcement/index?id=${id}&banner=true`
 				})
 			}
 		}

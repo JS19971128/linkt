@@ -68,6 +68,16 @@
 						<image src="../../static/images/common/more_gray.png" mode="widthFix"></image>
 					</view>
 				</view>
+				<!-- //商品审核 -->
+				<view class="item flex_between" @click="goWhere('/operationPages/examine/index')">
+					<view class="title flex_center">
+						<image src="../../static/images/operation/yy_icon04.png" mode="widthFix"></image>
+						<text>商品审核</text>
+					</view>
+					<view class="more">
+						<image src="../../static/images/common/more_gray.png" mode="widthFix"></image>
+					</view>
+				</view>
 				<!-- 电子授权牌 -->
 				<!-- <view class="item flex_between" @click="goWhere('/operationPages/authorize/index')">
 					<view class="title flex_center">

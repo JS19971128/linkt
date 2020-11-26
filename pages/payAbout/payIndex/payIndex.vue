@@ -131,7 +131,6 @@
 				var scene = decodeURIComponent(query.q).split('=')[1];
 				this.getMerchant(scene);
 			}
-			this.$wxLogin();
 			// #endif
 			// 支付宝登录
 			// #ifdef MP-ALIPAY
@@ -140,7 +139,6 @@
 			}else{
 				this.getMerchant(query.merchantId);
 			}
-			this.$aliLogin();
 			// #endif
 		}
 	}

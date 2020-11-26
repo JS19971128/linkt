@@ -9,7 +9,7 @@
 				<view class="line">----</view>
 				<view class="step-item active flex_center">
 					<view class="num flex_center">2</view>
-					<view class="">企业信息</view>
+					<view class="">商家信息</view>
 				</view>
 				<view class="line">----</view>
 				<view class="step-item flex_center" @click="clickURl('/businessPages/wxBusinessApply/index3')">
@@ -46,82 +46,53 @@
 					</view>
 				</view>
 				<!-- 经营类目 -->
-				<view class="item flex_center">
+				<view class="item flex_center" @click="show=true">
 					<view class="item-name">经营类目</view>
-					<view class="item-content ">
-						<!-- 经营类目选择 -->
-						<picker mode="selector" :range="jylm" :value="enterprise.jylmIndex" range-key="label" @change="bindTypeChange($event,'jylm')">
-							<view class="flex_between">
-								<view>
-								<input type="text" v-model="enterprise.jylmLabel" disabled placeholder="请选择经营类目" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
-								</view>
-								<view>
-									<image src="../../static/images/common/xiala.png" mode="widthFix"></image>
-								</view>
-							</view>
-						</picker>
-					</view>
-				</view>
-				<!-- 经营类目 -->
-				<view class="item flex_center" v-if="enterprise.merchantType!='PERSON'">
-					<view class="item-name">经营行业</view>
-					<view class="item-content ">
-						<!-- 经营类目选择 -->
-						<picker mode="selector" :range="jyhy" :value="enterprise.jyhyIndex" range-key="name" @change="bindTypeChange($event,'jyhy')">
-							<view class="flex_between">
-								<view>
-								<input type="text" v-model="enterprise.jyhyLabel" disabled placeholder="请选择经营行业" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
-								</view>
-								<view>
-									<image src="../../static/images/common/xiala.png" mode="widthFix"></image>
-								</view>
-							</view>
-						</picker>
-					</view>
-				</view>
-				<!-- 地址选择 -->
-				<view class="item flex_center">
-					<view class="item-name">经营地区</view>
 					<view class="item-content">
-						<!-- #ifdef MP-ALIPAY -->
-							<picker-data-alipay ref="pickerM" @regionCodeFun="regionCodeFun"></picker-data-alipay>
-						<!-- #endif -->
-						<!-- #ifdef MP-WEIXIN -->
-							<picker-data ref="pickerM" @regionCodeFun="regionCodeFun"></picker-data>
-						<!-- #endif -->
+						<input type="text" v-model="enterprise.industryName" disabled placeholder="请选择经营类目与行业" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 					</view>
 				</view>
 				<!-- 商家名称 -->
 				<view class="item flex_center">
 					<view class="item-name">商家名称</view>
 					<view class="item-content">
-						<input type="text" v-model="enterprise.signName" placeholder="必须与营业执照上的名称一致" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+						<input type="text" v-model="enterprise.companyName" placeholder="必须与营业执照上的名称一致" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 					</view>
 				</view>
 				<!-- 商家简称 -->
 				<view class="item flex_center">
 					<view class="item-name">商家简称</view>
 					<view class="item-content">
-						<input type="text" v-model="enterprise.showName" placeholder="请输入10个字以内的简称" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+						<input type="text" v-model="enterprise.shortName" placeholder="请输入10个字以内的简称" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+					</view>
+				</view>
+				<!-- 企业性质 -->
+				<view class="item flex_center" v-if="enterprise.jylxLabel!='小微商户'">
+					<view class="item-name">企业性质</view>
+					<view class="item-content ">
+						<!-- 企业性质 -->
+						<picker mode="selector" :range="qyxz" :value="enterprise.qyxzIndex" range-key="label" @change="bindTypeChange($event,'qyxz')">
+							<view class="flex_between">
+								<view>
+								<input type="text" v-model="enterprise.qyxzLabel" disabled placeholder="请选择企业性质" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+								</view>
+								<view>
+									<image src="../../static/images/common/xiala.png" mode="widthFix"></image>
+								</view>
+							</view>
+						</picker>
 					</view>
 				</view>
 				<!-- 注册号 -->
-				<view class="item flex_center" v-if="enterprise.merchantType!='PERSON'">
+				<view class="item flex_center" v-if="enterprise.jylxLabel!='小微商户'">
 					<view class="item-name">注册号</view>
 					<view class="item-content">
-						<input type="text" v-model="enterprise.businessLicense" placeholder="请输入营业执照上的注册号" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
-					</view>
-				</view>
-				<!-- 注册号 -->
-				<view class="item flex_center" v-else>
-					<view class="item-name">身份证号</view>
-					<view class="item-content">
-						<input type="text" v-model="enterprise.businessLicense" placeholder="请输入身份证号" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
+						<input type="text" v-model="enterprise.socialCreditCode" placeholder="请输入营业执照上的注册号" placeholder-style="color:#CBCBCB;font-size:28rpx"/>
 					</view>
 				</view>
 				<!-- 经营资质 -->
-				<view class="item flex_center" v-if="enterprise.merchantType!='PERSON'">
-					<view class="item-name">经营资质</view>
+				<view class="item flex_center" v-if="enterprise.jylxLabel!='小微商户'">
+					<view class="item-name">营业执照</view>
 					<view class="item-content flex_center fz-12">
 						<view class="upload flex_center" v-for="(item,index) in imgArr" :key="index">
 							<view class="uploadPic flex_center" v-if="item.credentialUrl" @click="upload(index,'credentialUrl')">
@@ -135,7 +106,7 @@
 					</view>
 				</view>
 				<!-- 经营期限 -->
-				<view class="item flex_center" v-if="enterprise.merchantType!='PERSON'">
+				<view class="item flex_center" v-if="enterprise.jylxLabel!='小微商户'">
 					<view class="item-name">经营期限</view>
 					<view class="item-content ">
 						<!-- 经营类型选择 -->
@@ -152,7 +123,7 @@
 					</view>
 				</view>
 				<!-- 起始时间 -->
-				<view class="item flex_center" v-if="enterprise.merchantType!='PERSON'">
+				<view class="item flex_center" v-if="enterprise.jylxLabel!='小微商户'">
 					<view class="item-name">起始时间</view>
 					<view class="item-content">
 						<picker mode="date" :value="enterprise.businessDateStart" @change="startDateChange">
@@ -161,7 +132,7 @@
 					</view>
 				</view>
 				<!-- 期限时间 -->
-				<view class="item flex_center" v-if="enterprise.jyqxLabel!=='长期' && enterprise.merchantType!='PERSON'">
+				<view class="item flex_center" v-if="enterprise.jyqxLabel!=='长期' && enterprise.jylxLabel!='小微商户'">
 					<view class="item-name">期限时间</view>
 					<view class="item-content">
 						<picker mode="date" :value="enterprise.businessDateLimit" @change="stopDateChange">
@@ -172,22 +143,72 @@
 			</view>
 		</view>
 		<view class="btn fz-14 flex_center" @click="next">保存并下一步</view>
+		
+		<w-picker
+			class="address"
+			mode="linkage" 
+			:visible.sync="show" 
+			:options="industrytype"
+			default-type="label"
+			@confirm="onConfirm($event,'linkage')" 
+			@cancel="onCancel" 
+			ref="region" 
+		></w-picker>
 	</view>
 </template>
 
 <script>
 	import jylm from '@/common/util/wx_jylm.js';
+	import industrytype from '@/common/util/industrytype.js';
 	import pickerData from '@/businessPages/wxBusinessApply/pickerData'
 	import pickerDataAlipay from '@/businessPages/wxBusinessApply/pickerDataAlipay.vue'
 	export default{
 		data() {
 			return {
 				// {label:'个人商户',type:'PERSON',key:'个人'},
-				jylx:[{label:'个体户',type:'INDIVIDUALBISS',key:'个体工商户'},{label:'企业',type:'ENTERPRISE',key:'企业'}],
+				jylx:[{label:'小微商户',key:'2'},{label:'个体商户',key:'1'},{label:'企业商户',key:'0'}],
 				jylxLabel:'',
 				merchantType:'',
 				jylxIndex:0,
 				jylxKey:'',
+				
+				industrytype:[],
+				industryName:'',
+				show:false,
+				
+				qyxz:[
+					{
+						label:'民营企业',
+						value:'01'
+					},
+					{
+						label:'国营企业',
+						value:'00'
+					},
+					
+					{
+						label:'外资企业',
+						value:'02'
+					},
+					{
+						label:'其他',
+						value:'03'
+					},
+					{
+						label:'政府机构',
+						value:'04'
+					},
+					{
+						label:'个体工商户',
+						value:'05'
+					},
+					{
+						label:'事业单位',
+						value:'06'
+					}
+				],
+				qyxzIndex:0,
+				qyxzLabel:'',
 				
 				jylm:[],
 				jylmLabel:'',
@@ -219,8 +240,9 @@
 			imgArr(){
 				let arr = [];
 				let obj = {
-					BUSINESS_LICENSE:true,
-					PERMIT_FOR_BANK_ACCOUNT:true
+					licensePic:true,
+					permitPic:true,
+					// openWishPic:true
 				};
 				for(let i of this.$store.state.shop.merchantCredential){
 					if(obj[i.credentialType]){
@@ -237,12 +259,23 @@
 			}
 		},
 		methods:{ 
+			//选择经营类目
+			onConfirm(e){
+				let col2 = e.obj.col2;
+				let col1 = e.obj.col1;
+				this.enterprise.industryName = `${col1.label} --- ${col2.label}`;
+				console.log(col2.id,'经营行业id')
+				this.enterprise.industryType = col2.id;
+			},
+			//取消选择
+			onCancel(){
+				this.show = false;
+			},
 			bindTypeChange($event,type){
 				if(type==='jylx'){
 					this.enterprise.jylxLabel = this.jylx[$event.detail.value].label;
-					this.enterprise.merchantType = this.jylx[$event.detail.value].type;
 					this.enterprise.jylxIndex = $event.detail.value;
-					this.enterprise.jylxKey = this.jylx[$event.detail.value].key;
+					this.enterprise.comType = this.jylx[$event.detail.value].key;
 					this.categoryName()
 				}else if(type==='jylm'){
 					this.enterprise.jylmLabel = this.jylm[$event.detail.value].label;
@@ -258,10 +291,11 @@
 					this.enterprise.jyqxLabel = this.jyqx[$event.detail.value].label
 					this.enterprise.jyqxIndex = $event.detail.value;
 					this.enterprise.longTerm = this.jyqx[$event.detail.value].key
+				}else if(type==='qyxz'){
+					this.enterprise.qyxzLabel = this.qyxz[$event.detail.value].label;
+					this.enterprise.qyxzIndex = $event.detail.value;
+					this.enterprise.nature = this.qyxz[$event.detail.value].value;
 				}
-			},
-			jyhyInit(){
-				this.enterprise.jyhyLabel
 			},
 			// 选择起始日期
 			startDateChange($event){
@@ -293,6 +327,7 @@
 										name:' file',
 										success:res=>{
 											let url = JSON.parse(res.data).data;
+											let picUrl = url.replace('http','https');
 											this.imgArr[index][type] = url.replace('http','https');
 										}
 									})
@@ -317,7 +352,7 @@
 				let data = {...enterprise};
 				console.log(merchantCredential,data)
 				
-				if(enterprise.merchantType!=='PERSON'){
+				if(enterprise.jylxLabel!='小微商户'){
 					
 					if(data.longTerm){
 						data.businessDateLimit = '2099-12-30'
@@ -337,9 +372,9 @@
 					}
 					
 					for(let i of imgArr){
-						if(!i.credentialUrl && i.credentialType!='PERMIT_FOR_BANK_ACCOUNT'){
+						if(!i.credentialUrl && i.credentialType!='openWishPic'){
 							wx.showToast({
-							  title:'请填写完整所有信息',
+							  title:'请上传营业执照',
 							  icon: 'none',
 							  duration: 2500
 							})
@@ -355,7 +390,7 @@
 						}
 					}
 				}else{
-					if(!enterprise.merchantType || !enterprise.merchantCategory || !enterprise.regionCode || !enterprise.signName || !enterprise.showName || !enterprise.businessLicense){
+					if(!enterprise.jylxLabel || !enterprise.industryType || !enterprise.companyName || !enterprise.shortName){
 						wx.showToast({
 						  title:'请填写完整所有信息',
 						  icon: 'none',
@@ -375,15 +410,10 @@
 			},
 			init(){
 				this.jylm = jylm;
-				this.categoryName();
-				//#ifdef MP-ALIPAY
-				setTimeout(()=>{
-					this.$refs['pickerM'].init(this.enterprise.addressName)
-				},500)
-				//#endif
-				//#ifdef MP-WEIXIN
-					this.$refs.pickerM.init(this.enterprise.addressName);
-				//#endif
+				
+				this.industrytype = industrytype;
+				// this.categoryName();
+
 			},
 			async categoryName(){
 				try{

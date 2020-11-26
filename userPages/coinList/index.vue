@@ -331,6 +331,7 @@
 						   height: 100rpx;
 						   vertical-align: top;
 						   .flex_name {
+							   width: 280rpx;
 							   font-size:30rpx;
 							   font-family:PingFang SC;
 							   font-weight:500;

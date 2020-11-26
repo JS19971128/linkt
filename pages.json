@@ -3,14 +3,14 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "商城",
+				"navigationBarTitleText": "商圈",
 				"enablePullDownRefresh":true
 			}
 		},
 		{
 			"path": "pages/find/index",
 			"style": {
-				"navigationBarTitleText": "发现",
+				"navigationBarTitleText": "商城",
 				"enablePullDownRefresh":true
 			}
 		},
@@ -58,6 +58,12 @@
 			"path": "pages/payment/index",
 			"style": {
 				"navigationBarTitleText": "支付"
+			}
+		},
+		{
+			"path": "pages/payment/h5Payment",
+			"style": {
+				"navigationBarTitleText": "h5支付"
 			}
 		},
 		{
@@ -370,6 +376,18 @@
 					}
 				},
 				{
+					"path":"shop/explode/index",
+					"style": {
+						"navigationBarTitleText": "爆品核销"
+					}
+				},
+				{
+					"path":"shop/explode/writeOff",
+					"style": {
+						"navigationBarTitleText": "确认核销"
+					}
+				},
+				{
 					"path":"shop/order",
 					"style": {
 						"navigationBarTitleText": "商城订单",
@@ -452,6 +470,13 @@
 					"path":"entryBusinessDetails/index",
 					"style": {
 						"navigationBarTitleText": "进件详情"
+					}
+				},
+				{
+					"path":"examine/index",
+					"style": {
+						"navigationBarTitleText": "商品审核",
+						"enablePullDownRefresh":true
 					}
 				},
 				{
@@ -635,15 +660,15 @@
 		"list":[
 			{
 				"pagePath":"pages/index/index",
-				"iconPath":"static/images/tabbar/wechat/shopping.png",
-				"selectedIconPath":"static/images/tabbar/wechat/shopping_on.png",
-				"text":"商城"
+				"iconPath":"static/images/tabbar/wechat/sy.png",
+				"selectedIconPath":"static/images/tabbar/wechat/sy_on.png",
+				"text":"首页"
 			},
 			{
 				"pagePath":"pages/find/index",
-				"iconPath":"static/images/tabbar/wechat/sy.png",
-				"selectedIconPath":"static/images/tabbar/wechat/sy_on.png",
-				"text":"发现"
+				"iconPath":"static/images/tabbar/wechat/shopping.png",
+				"selectedIconPath":"static/images/tabbar/wechat/shopping_on.png",
+				"text":"商城"
 			},
 			{
 				"pagePath":"pages/raidersZone/index",

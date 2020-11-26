@@ -59,7 +59,8 @@
 					cateId,
 					sortType,
 					searchType,
-					commodityStatus:'online'
+					commodityStatus:'online',
+					auditStatus:'success'
 				};
 				if(cateId){
 					param.searchType = 'category'

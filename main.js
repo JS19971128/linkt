@@ -12,6 +12,7 @@ Vue.prototype.$fly = fly
 // 公共方法
 Vue.prototype.$util = util
 
+
 Vue.config.productionTip = false
 
 //#ifdef MP-WEIXIN

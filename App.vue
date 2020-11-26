@@ -43,9 +43,22 @@ export default {
 		  });
 		});
 		
+		// #ifdef MP-WEIXIN
+			if(!this.$store.state.userInfo.uid){
+				this.$wxLogin();
+			}
+		// #endif
+		
+		// #ifdef MP-ALIPAY
+			if(!this.$store.state.userInfo.uid){
+				this.$aliLogin();
+			}
+		// #endif
 	},
 	onShow: function(options) {
 		console.log('App Show');
+		
+		
 		// 获取二维码参数
 		if(options.query && options.query.qrCode){
 			let qrCode = options.query.qrCode.split('&')[0].split('=')[1];

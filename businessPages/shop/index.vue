@@ -72,6 +72,12 @@
 					</view>
 					<view class="shop-label-list-txt">评价管理</view>
 				</view>
+				<!-- <view class="shop-label-list" @click="onClickUrl('/businessPages/shop/explode/index')">
+					<view class="shop-label-list-icon">
+						<image class="shop-label-list-icon-img" src="../../static/images/shop/pj.png"></image>
+					</view>
+					<view class="shop-label-list-txt">爆品核销</view>
+				</view> -->
 			</view>
 		</view>
 		<view class="shop-goods-title">已售完</view>

@@ -10,7 +10,7 @@ const store = new Vuex.Store({
    state: {
 		// baseUrl:'https://chainguest.3zone.net/api',
 		baseUrl:'https://v.liankedl.com/api',
-		// baseUrl:'http://192.168.3.197:8565',  //shuguang
+		// baseUrl:'http://192.168.0.196:8566',  //shuguang
 		// baseUrl:'https://v.liankedl.com/api',
 		// baseUrl:'http://192.168.3.150:8569', //xianwen
 		// baseUrl:'http://192.168.3.148:8566', //liangrongcai
@@ -19,7 +19,7 @@ const store = new Vuex.Store({
 		webSocket:'wss://v.liankedl.com/api',
 		baiduKey:'fUV7T6UmzIiGFr05ORbzj0NK',
 		baiduSecret:'Pqbpv3sEO9WIuaBdLyva5czu3kM0ASED',
-		
+ 
 		mapKey:'JJRBZ-Z32KP-ZRVDN-LTERA-LUA2F-KKBGR',
 		scanCodeQuery:'',
 		userInfo:{},

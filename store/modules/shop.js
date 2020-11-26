@@ -1,51 +1,42 @@
 const state = {
 	legalPerson:{
-		legalPerson:'',
-		legalPersonID:'',
+		
+		corporateName:'',
+		corporateIdNo:'',
+		corporateTel:'',
+		contactEmail:'',
+		
+		
 		idCardStartDate:'',
 		idCardEndDate:'',
-		linkman:'',
-		linkPhone:'',
-		email:'',
-		
 		IDlabel:'短期',
 		IDIndex:0,
 		isIDLong:false
 	}, //法人信息
 	enterprise:{
+		
 		jylxLabel:'',
-		merchantType:'',
-		jylxIndex:0,
-		jylxKey:'个体工商户',
+		industryType:'',
+		companyName:'',
+		shortName:'',
+		nature:'',
+		socialCreditCode:'',
 		
-		jylmLabel:'',
-		merchantCategory:'',
-		jylmIndex:0,
-		jylmKey:'线下零售',
-		
-		jyhyIndex:0,
-		jyhyLabel:'',
-		industryTypeCode:'',
-		
-		regionCode:'',
-		addressName:'',
-		
-		jyqxLabel:'',
-		jyqxIndex:0,
-		longTerm:true,
-		
-		signName:'',
-		showName:'',
-		businessLicense:'',
+		longTerm:'',
 		businessDateStart:'',
-		businessDateLimit:''
+		businessDateLimit:'',
+		// businessLicense:''
 	},//企业
 	bank:{
-		settleBankType:'',
+		bankBranchName:'',
 		bankName:'',
-		bankUnit:'',
-		bankCode:'',
-		accountNo:''
+		cardNo:'',
+		mobile:'',
+		
+		settleBankType:'',
+		
+		baneArea:'',
+		baneDefaultRegion:["浙江省","杭州市"],
 	},
 	shopIndex:{
 		shopBusinessId:'',
@@ -60,30 +51,49 @@ const state = {
 		address:'',
 		positive:'', //门头照
 		piclist:'', //内景照
+		openWishPic:'',
 		defaultRegion:["浙江省","杭州市","滨江区"],
 		latitude:'',
-		longitude:''
+		longitude:'',
+		comProvinceName:'',
+		comCityName:''
 	},
 	merchantCredential:[
 		{
-			credentialType:'FRONT_OF_ID_CARD',
+			credentialType:'idNoFrontPic',
 			credentialUrl:'',
 			name:'正面'
 		},
 		{
-			credentialType:'BACK_OF_ID_CARD',
+			credentialType:'idNoBackPic',
 			credentialUrl:'',
 			name:'反面'
 		},
 		{
-			credentialType:'BUSINESS_LICENSE',
+			credentialType:'storeFrontPic',
+			credentialUrl:'',
+			name:'证件补充' 
+		},
+		{
+			credentialType:'licensePic',
 			credentialUrl:'',
 			name:'营业执照'
 		},
 		{
-			credentialType:'PERMIT_FOR_BANK_ACCOUNT',
+			credentialType:'permitPic',
 			credentialUrl:'',
-			name:'开户许可证'
+			name:'资质补充'
+		},
+
+		{
+			credentialType:'bankCardFrontPic',
+			credentialUrl:'',
+			name:'正面'
+		},
+		{
+			credentialType:'bankCardBackPic',
+			credentialUrl:'',
+			name:'反面'
 		},
 		
 	], //图片集合

@@ -250,6 +250,7 @@
 						   vertical-align: top;
 						   .flex_name {
 							   font-size:30rpx;
+							   width: 280rpx;
 							   font-family:PingFang SC;
 							   font-weight:500;
 							   color:rgba(51,51,51,1);

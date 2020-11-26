@@ -176,20 +176,6 @@
 		onLoad:function(query){
 		},
 		onShow:function(){
-			// #ifdef MP-WEIXIN
-			if(!this.$store.state.userInfo.uid){
-				// 如果是扫码进来的未登录则登录获取openId
-				this.$wxLogin();
-			}
-			// #endif
-			// 支付宝登录
-			// #ifdef MP-ALIPAY
-			// 扫描推广码进来的用户，要显示邀请码，并且禁止修改
-			if(!this.$store.state.userInfo.uid){
-				// 如果是扫码进来的未登录则登录获取alipayUserId
-				this.$aliLogin();
-			}
-			// #endif
 			if(this.$store.state.countDownTime){
 				this.$util.timer(this.$store.state.countDownTime, (t) => {
 					if (t) {

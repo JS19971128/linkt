@@ -94,6 +94,7 @@
 				wx.chooseAddress({
 					success: function(res) {
 						that.address = res
+						console.log(res)
 						that.consumerInfo = {
 							name: res.userName,
 							areaCode: res.postalCode,

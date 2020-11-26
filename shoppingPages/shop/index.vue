@@ -182,7 +182,8 @@
 						sortType,
 						searchType,
 						key,
-						commodityStatus:'online'
+						commodityStatus:'online',
+						auditStatus:'success'
 					};
 					uni.showLoading({
 						title:'加载中'

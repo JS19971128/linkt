@@ -165,46 +165,55 @@
 			canDiscount(){ //计算可抵扣金额
 				let options = this.queryInfo;
 				let consumeMoney = options.money; //消费金额
-				let rate = this.profitClass(options.profits)/100; //让利比例
-				let discountMoney = ((consumeMoney * 1000) * (rate * 1000))/1000000;
-				discountMoney = discountMoney.toFixed(2);  //让利金额
-				let fee = ((consumeMoney * 100000) * (options.payCommission * 100000))/10000000000; 
-				fee = ((fee*100).toFixed())/100; //手续费
+				let rate = options.profits; //让利比例  
+				let payCommission = options.payCommission; //手续费
+				let db = this.profitClass(rate);  //夺宝比例
+				//让利金额
+				let  principal = ((consumeMoney * 1000) * ((100 - rate) * 10))/1000000;
+				principal =  Math.floor(principal * 100) / 100;
+				let discountMoney = Math.floor((consumeMoney*100) - (principal*100)) / 100;
+				console.log(discountMoney)
+				//夺宝
+				let dbPrice = ((consumeMoney * 1000) * (db * 10))/1000000
+				dbPrice = Math.floor(dbPrice * 1000) / 1000;
+				discountMoney = Math.floor((discountMoney*1000) - (dbPrice*1000)) / 1000
+				//让利金额end
+				console.log(discountMoney,dbPrice,'夺宝计算')
+				
+				//手续费
+				let fee = ((consumeMoney * 100000) * (payCommission * 100000))/10000000000;
 				console.log(fee)
-				let availdDiscountMoney = (((discountMoney*100)*70) - (fee * 10000))/10000; //让利金额*70%-手续费
-				// let showMoney;
-				let list = this.list;
-				let cardSum = 0;
-				list.map(item=>{
-					cardSum = ((cardSum * 1000) + (item.amount * 1000))/1000;
-				})
-				cardSum = (parseInt(cardSum * 100)/100).toFixed(2);
-				// console.log('金额',availdDiscountMoney,discountMoney,fee)
-				 //消费金额大于5
-				// if(options.money >= 5 ){ 
-					this.maxDiscount = (parseInt(availdDiscountMoney * 1000/10)/100).toFixed(2);
-					// console.log('可抵扣',this.maxDiscount)
-				// }else{
-				// 	let money = (parseInt(discountMoney * 1000/10)/100).toFixed(2)
-				// 	if((options.money*1000)>=2500){
-				// 		money = ((money * 1000) - 10)/1000;
-				// 	}
-				// 	this.maxDiscount = money;
-				// }
+				fee = this.round2(fee,2);
+				console.log(fee)
+				if(fee<0.01){
+					fee = 0.01;
+				}
+				//手续费end
+				console.log(((discountMoney*1000) * (70 * 10))/1000000)
+				let maxDiscount = (((discountMoney*1000) * (70 * 10)) - (fee * 1000000))/1000000;
+				
+				if(maxDiscount<0){
+					this.maxDiscount = 0;
+				}else{
+					this.maxDiscount = Math.floor(maxDiscount * 100) / 100;
+				}
+			},
+			round2(number,fractionDigits){   
+			    return Math.round(number * Math.pow(10, fractionDigits)) / Math.pow(10, fractionDigits);
 			},
 			profitClass(number = 5){
 				let num = Number(number);
-				let profits = num;
+				let profits = 0;
 				if(num>=6 && num<=11){  //商家让利6%-11%之间，消费10元拿出1%送0.1元夺宝券，剩下的5-10%用于分润和抵扣优惠券
-					profits = num - 1
+					profits = 1
 				}else if(num>=12 && num<=17){ //商家让利12%-17%之间，消费10元拿出2%送0.2元夺宝券，剩下的10-15%用于分润；
-					profits = num - 2
+					profits = 2
 				}else if(num>=18 && num<=23){  //商家让利18%-23%之间，消费10元拿出3%送0.3元夺宝券，剩下的15-20%用于分润；
-					profits = num - 3
+					profits = 3
 				}else if(num>=24 && num<=29){ //商家让利24%-29%之间，消费10元拿出4%送0.4元夺宝券，剩下的20-25%用于分润；
-					profits = num - 4
+					profits = 4
 				}else if(num===30){ //商家让利30%，消费10元拿出5%送0.5元夺宝券，，剩下的25%用于分润；
-					profits = num - 5
+					profits = 5
 				}
 				return profits;
 			},
@@ -226,14 +235,17 @@
 					"pricePaid": this.needPay,
 					"priceTotal": this.queryInfo.money,
 					"userId": this.$store.state.userInfo.id,
-					bizType:'AppPayApplet',
-					payType:'APPLET',
+					payMode:'H5_WXJSAPI',
+					terminalDevice:4,
+					// bizType:'AppPayApplet',
+					// payType:'APPLET',
 					registType:'WECHAT',
 					openId:this.$store.state.userInfo.openId
 				}
 				// #ifdef MP-ALIPAY
-				params.bizType = 'AppPayApplet';
-				params.payType = 'APPLET';
+				// params.bizType = 'AppPayApplet';
+				// params.payType = 'APPLET';
+				params.payMode = 'H5_ZFBJSAPI';
 				params.registType = 'ALIPAY';
 				params.openId = this.$store.state.userInfo.alipayUserId
 				// #endif
@@ -243,25 +255,56 @@
 				console.log(this.$store.state.userInfo)
 				console.log(params)
 				try{
-					this.$fly.post('/transfer/wxpay',params)
+					this.$fly.post('/jufupay/pay',params)
 					.then(res=>{
 						setTimeout(()=>{uni.hideLoading()},2000);
 						if(res.code == 0){
-							if(res.data.code == 200){
-								let tradeNo = JSON.parse(res.data.data.rt10_payInfo);
-								console.log(tradeNo)
+							if(res.data.errorcode!='0000'){
+								wx.showToast({
+								  title: res.data.errormessage,
+								  icon: 'none',
+								  duration: 2500
+								})
+								return;
+							}
+							console.log(res.data.pay_url)
+							let url = res.data.pay_url;
+							let obj = {}
+							console.log(url.split('&'))
+							let arr = url.split('&');
+							for(let i of arr){
+								console.log(i.split('='))
+								let dArr = i.split('=');
+								let str = dArr[1];
+								for(let j=2;j<dArr.length;j++){
+									
+									str+='='+dArr[j]
+									
+								}
+								// debugger
+								obj[dArr[0]] = str;
+							}
+							
+							console.log(obj)
+							// if(res.data.code == 200){
+							// 	let tradeNo = JSON.parse(res.data.data.rt10_payInfo);
+							// 	console.log(tradeNo)
 								// #ifdef MP-WEIXIN
-								this.wechatPay(tradeNo);
+								this.wechatPay(obj);
 								// #endif
 								// #ifdef MP-ALIPAY
-								this.aliPay(tradeNo.tradeNO);
+								this.aliPay(url);
 								// #endif
-							}else{
-								uni.showToast({
-									title:res.data.msg,
-									icon: 'none'
-								})
-							}
+							// }else{
+							// 	uni.showToast({
+							// 		title:res.data.msg,
+							// 		icon: 'none'
+							// 	})
+							// }
+							// let pay_url = res.data.pay_url;
+							// uni.navigateTo({
+							// 	url:'/pages/payment/h5Payment'+`?pay_url=${pay_url}`
+							// })
 						}else{
 							uni.showToast({
 								title:res.message,
@@ -277,46 +320,6 @@
 					})
 				}
 				
-				
-				// let params = {
-				// 	"couponIds": this.couponIds.toString(),
-				// 	"ip": "127.0.0.1",
-				// 	"merchantId": this.queryInfo.merchantId,
-				// 	"pricePaid": this.needPay,
-				// 	"priceTotal": this.queryInfo.money,
-				// 	"userId": this.$store.state.userInfo.id
-				// }
-				// // 请求后端支付接口
-				// // #ifdef MP-ALIPAY
-				// this.$fly.post('/order/pay/aliJsPay',params)
-				// .then(res=>{
-				// 	setTimeout(()=>{uni.hideLoading()},2000);
-				// 	if(res.code == 0){
-				// 		this.aliPay(res.data.tradeNo);
-				// 	}else{
-				// 		uni.showToast({
-				// 			title:res.message,
-				// 			icon: 'none'
-				// 		})
-				// 	}
-				// })
-				// .catch(err=>{})
-				// // #endif
-				// // #ifdef MP-WEIXIN
-				// this.$fly.post('/order/pay/jsPay',params)
-				// .then(res=>{
-				// 	setTimeout(()=>{uni.hideLoading()},2000);
-				// 	if(res.code == 0){
-				// 		this.wechatPay(res.data);
-				// 	}else{
-				// 		uni.showToast({
-				// 			title:res.message,
-				// 			icon: 'none'
-				// 		})
-				// 	}
-				// })
-				// .catch(err=>{})
-				// // #endif
 			},
 			aliPay(tradeNo){ //调起支付宝支付
 				uni.requestPayment({
@@ -345,7 +348,7 @@
 					appId: payInfo.appId,
 					timeStamp: payInfo.timeStamp,
 					nonceStr: payInfo.nonceStr,
-					package: payInfo.package,
+					package:payInfo.package.replace("prepay_id%3D","prepay_id="),
 					signType: payInfo.signType,
 					paySign: payInfo.paySign,
 					success: (res) => {

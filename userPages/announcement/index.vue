@@ -18,8 +18,12 @@
 			}
 		},
 		methods:{
-			getAncm(id){
-				this.$fly.get(`/notice/${id}`)
+			getAncm(id,banner){
+				let url = 'article';
+				if(!banner){
+					url="notice"
+				}
+				this.$fly.get(`/${url}/${id}`)
 				.then(res=>{
 					if(res.code == 0){
 						this.title = res.data.title;
@@ -31,7 +35,7 @@
 			}
 		},
 		onLoad:function(query){
-			this.getAncm(query.id);
+			this.getAncm(query.id,query.banner);
 		},
 		onReady:function(){
 			// this.$refs.article.setContent(this.content);

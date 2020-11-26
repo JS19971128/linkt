@@ -6,7 +6,7 @@
 			</view>
 		</view>
 		<view class="shop-order">
-			<view class="shop-order-item" v-for="(item,i) in navList" :key="item.orderNo">
+			<view class="shop-order-item" v-for="(item,i) in navList" :key="item.orderNo" @click="goDetails(item.orderNo)">
 				<view class="item-address flex_between">
 					<view class="address">
 						<view class="address-title">
@@ -49,7 +49,7 @@
 					<view class="total-payment total-right">实付 ￥{{item.pricePaid}}</view>
 				</view>
 				<view class="item-btns" v-if="item.orderStatus=='Paid' || item.orderStatus=='Shipped'">
-					<view class="btn flex_center block" @click="deliverGoods(item)" v-if="item.orderStatus=='Paid'">发货</view>
+					<view class="btn flex_center block" @click.stop="deliverGoods(item)" v-if="item.orderStatus=='Paid'">发货</view>
 					<view class="btn flex_center" v-else>已发货</view>
 				</view>
 			</view>
@@ -214,6 +214,13 @@
 					uni.hideLoading();
 				}
 			},
+			goDetails(orderNo) { //进入订单详情页面
+				uni.navigateTo({
+					url: `/userPages/orderDetails/index?orderNo=${orderNo}&isShop=true`
+				})
+				
+			
+			}
 		},
 		filters:{
 			orderStatus(status){
