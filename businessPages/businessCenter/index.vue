@@ -21,7 +21,7 @@
 				<view class="total flex_between">
 					<view class="money flex_between">
 						<view class="fz-24">{{balanceData.balance|| 0}}</view>
-						<view class="fz-12">未体现金额（元） 
+						<view class="fz-12">未提现金额（元）
 						<!-- <view class="fz-12">商家账户余额（元） -->
 						<text class="withdraw" @click="goBusinessWithdraw">提现</text>
 						</view>

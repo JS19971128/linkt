@@ -193,6 +193,7 @@
 		}
 		.main{
 			height: 90vh;
+			background-color: #fff;
 			.item{
 				width: 750rpx;
 				border-bottom: 2rpx solid #DDDDDD;

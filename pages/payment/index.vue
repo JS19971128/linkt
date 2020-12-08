@@ -99,7 +99,7 @@
 						data.forEach(item=>{
 							item.day = parseInt((item.expireDate - new Date().getTime()) / (3600 * 24 * 1000));
 							this.chooseList.push({
-								choosed:false,
+								choosed:true,
 								id:item.id,
 								amount:item.amount
 							});

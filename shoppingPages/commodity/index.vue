@@ -74,14 +74,15 @@
 			<!-- <button type="default" class="btn-go" @click="isSpecsStatus">立即购买</button> -->
 			<!-- <button type="default"></button> -->
 			<!-- #ifdef MP-WEIXIN -->
-			<view class="commoodiy-fx">
+			<!-- <view class="commoodiy-fx">
 				<button class="fx-btn" open-type="share">
 					<image class="fx-img" src="../../static/images/shop/fenx.png"></image>
 				</button>
 				<view class="fx-txt">分享</view>
-			</view>
+			</view> -->
 			<!-- #endif -->
 			<view class="btns">
+				<button type="default" class="btn-go green" open-type="share">立即分享</button>
 				<button type="default" class="btn-go" @click="cartUrl">加入购物车</button>
 				<button type="default" class="btn-go red" @click="isSpecsStatus">立即购买</button>
 			</view>
@@ -318,6 +319,10 @@
 			if (op.examineName){
 				this.examine = true;
 			}
+			wx.showShareMenu({
+			  withShareTicket: true,
+			  menus: ['shareAppMessage', 'shareTimeline']
+			})
 		},
 		onUnload(){
 			this.$store.commit('SETISSPECS',false);
@@ -634,6 +639,9 @@
 			}
 			&.success{
 				background: #5cbe27;
+			}
+			&.green{
+				background-color: #04BE02;
 			}
 		}
 
